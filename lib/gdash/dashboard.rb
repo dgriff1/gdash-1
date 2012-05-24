@@ -31,12 +31,13 @@ class GDash
       options[:from] ||= graph_from
       options[:until] ||= graph_until
 
-      graphs = Dir.entries(directory).select{|f| f.match(/\.graph$/)}
+      graphs = Dir.entries(directory).select{|f| f.match(/\.ggraph$/)}
 
       overrides = options.reject { |k,v| v.nil? }
 
       graphs.sort.map do |graph|
-        {:name => File.basename(graph, ".graph"), :graphite => GraphiteGraph.new(File.join(directory, graph), overrides)}
+        # {:name => File.basename(graph, ".graph"), :graphite => GraphiteGraph.new(File.join(directory, graph), overrides)}
+        {:name => File.basename(graph, ".ggraph"), :graphite => GangliaGraph.new(File.join(directory, graph), overrides)}
       end
     end
 
