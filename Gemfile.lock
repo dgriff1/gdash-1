@@ -1,3 +1,8 @@
+PATH
+  remote: /Users/anichols/git/ganglia-graph-dsl
+  specs:
+    ganglia_graph (0.0.1)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -16,6 +21,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  ganglia_graph!
   graphite_graph
   redcarpet
   sinatra

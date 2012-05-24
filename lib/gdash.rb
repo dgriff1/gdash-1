@@ -9,6 +9,7 @@ class GDash
   require 'gdash/monkey_patches'
   require 'gdash/sinatra_app'
   require 'graphite_graph'
+  gem 'ganglia_graph', :path => '/Users/anichols/git/ganglia-graph-dsl'
 
   attr_reader :graphite_base, :graphite_render, :dash_templates, :height, :width, :from, :until
 
@@ -50,7 +51,6 @@ class GDash
         p e
       end
     end
-
     dashboards.sort_by{|d| d[:name]}
   end
 end
