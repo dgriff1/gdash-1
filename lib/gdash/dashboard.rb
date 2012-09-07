@@ -1,52 +1,49 @@
-class GDash
-  class Dashboard
-    attr_accessor :properties
+module GDash
+  class Dashboard < Widget
+    class << self
+      def register dashboard
+        dashboards[dashboard.name] = dashboard
+      end
 
-    def initialize(short_name, dir, options={})
-      raise "Cannot find dashboard directory #{dir}" unless File.directory?(dir)
+      def [] name
+        dashboards[name]
+      end
 
-      @properties = {:graph_width => nil,
-                     :graph_height => nil,
-                     :graph_from => nil,
-                     :graph_until => nil}
+      def each
+        dashboards.values.each do |dashboard|
+          yield dashboard if block_given?
+        end
+      end
 
-      @properties[:short_name] = short_name
-      @properties[:directory] = File.join(dir, short_name)
-      @properties[:yaml] = File.join(dir, short_name, "dash.yaml")
+      private
 
-      raise "Cannot find YAML file #{yaml}" unless File.exist?(yaml)
-
-      @properties.merge!(YAML.load_file(yaml))
-
-      # Properties defined in dashboard config file are overridden when given on initialization
-      @properties[:graph_width] = options.delete(:width) || graph_width
-      @properties[:graph_height] = options.delete(:height) || graph_height
-      @properties[:graph_from] = options.delete(:from) || graph_from
-      @properties[:graph_until] = options.delete(:until) || graph_until
-    end
-
-    def graphs(options={})
-      options[:width] ||= graph_width
-      options[:height] ||= graph_height
-      options[:from] ||= graph_from
-      options[:until] ||= graph_until
-
-      graphs = Dir.entries(directory).select{|f| f.match(/\.ggraph$/)}
-
-      overrides = options.reject { |k,v| v.nil? }
-
-      graphs.sort.map do |graph|
-        # {:name => File.basename(graph, ".graph"), :graphite => GraphiteGraph.new(File.join(directory, graph), overrides)}
-        {:name => File.basename(graph, ".ggraph"), :graphite => GangliaGraph.new(File.join(directory, graph), overrides)}
+      def dashboards
+        @dashboards ||= {}
       end
     end
 
-    def method_missing(method, *args)
-      if properties.include?(method)
-        properties[method]
-      else
-        super
+    attr_accessor :name, :title, :description, :refresh
+
+    def initialize name, *args, &block
+      @refresh = 60
+      @name = name
+      super(*args, &block)
+      self.class.register self
+    end
+
+    def to_html html = nil
+      html ||= Builder::XmlMarkup.new
+
+      dashboard = html.h1 do
+        html.text!(title || "")
+        html.small description
       end
+
+      children.each do |child|
+        child.to_html html
+      end
+
+      dashboard
     end
   end
 end

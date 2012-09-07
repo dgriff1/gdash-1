@@ -1,4 +1,4 @@
-class GDash
+module GDash
   class SinatraApp < ::Sinatra::Base
     def initialize(graphite_base, graph_templates, options = {})
       # where the whisper data is

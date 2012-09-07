@@ -1,15 +1,24 @@
 require 'rubygems'
-require 'sinatra'
-require 'yaml'
-require 'erb'
-require 'redcarpet'
+require 'bundler'
 
-class GDash
-  require 'gdash/dashboard'
+Bundler.require :default
+
+require 'gdash/widget'
+require 'gdash/ganglia'
+require 'gdash/graph'
+require 'gdash/report'
+require 'gdash/dashboard'
+require 'gdash/section'
+require 'gdash/group'
+require 'gdash/url_helper'
+require 'gdash/app'
+
+module GDash
+  load 'gdash/dashboard.old'
   require 'gdash/monkey_patches'
   require 'gdash/sinatra_app'
-  require 'graphite_graph'
-  gem 'ganglia_graph', :path => '/Users/anichols/git/ganglia-graph-dsl'
+  #require 'graphite_graph'
+  #gem 'ganglia_graph', :path => '/Users/anichols/git/ganglia-graph-dsl'
 
   attr_reader :graphite_base, :graphite_render, :dash_templates, :height, :width, :from, :until
 
