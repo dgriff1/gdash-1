@@ -1,5 +1,11 @@
 require "spec_helper"
 
+GDash::Dashboard.new :foo do |dashboard|
+  dashboard.dashboard :bar
+end
+
+GDash::Dashboard.new :baz
+
 module GDash
   describe UrlHelper do
     subject do
@@ -15,11 +21,17 @@ module GDash
 
     describe :dashboard_path do
       it "should generate /:name" do
-        subject.dashboard_path(:foo).should == "/foo"
+        subject.dashboard_path(Dashboard[:foo]).should == "/foo"
       end
 
       it "should take a window option" do
-        subject.dashboard_path(:foo, :window => "hour").should == "/foo?window=hour"
+        subject.dashboard_path(Dashboard[:foo], :window => "hour").should == "/foo?window=hour"
+      end
+    end
+
+    describe :sidebar do
+      it "should create a navbar" do
+        subject.sidebar
       end
     end
   end

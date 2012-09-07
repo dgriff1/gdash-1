@@ -5,6 +5,10 @@ module GDash
 
     helpers UrlHelper
 
+    get "/" do
+      erb :index
+    end
+
     get "/:name" do
       @dashboard = Dashboard[params["name"].to_sym]
 

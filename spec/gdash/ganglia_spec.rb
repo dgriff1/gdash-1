@@ -36,7 +36,7 @@ module GDash
       end
 
       it "should default to medium" do
-        subject.size.should == "medium"
+        subject.size.should == "large"
       end
 
       it "should validate that it is in Ganglia::SIZES" do

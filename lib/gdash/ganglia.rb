@@ -27,7 +27,7 @@ module GDash
 
     def initialize *args, &block
       @window = "hour"
-      @size = "medium"
+      @size = "large"
       @aggregate = true
       @embed = true
       super

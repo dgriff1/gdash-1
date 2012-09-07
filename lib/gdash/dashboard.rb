@@ -36,6 +36,7 @@ module GDash
 
       dashboard = html.h1 do
         html.text!(title || "")
+        html.br
         html.small description
       end
 

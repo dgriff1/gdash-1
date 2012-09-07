@@ -8,43 +8,47 @@
         <script src="/js/bootstrap-scrollspy.js"></script>
         <script src="/js/bootstrap-dropdown.js"></script>
         <script src="/js/bootstrap-popover.js"></script>
-        <title><%= @dashboard.title %></title>
-        <meta http-equiv="refresh" content="<%= @dashboard.refresh %>">
+        <% if @dashboard %>
+          <title><%= @dashboard.title %></title>
+          <meta http-equiv="refresh" content="<%= @dashboard.refresh %>">
+        <% else %>
+          <title>Ops Dashboard</title>
+        <% end %>
     </head>
     <body style="padding-top: 80px;">
         <div class="topbar-wrapper" style="z-index: 5;">
             <div class="topbar" data-dropdown="dropdown" >
                 <div class="topbar-inner">
-                    <div class="container">
+                    <div class="container-fluid">
                         <h3><a href="/">Ops Dashboard</a></h3>
-                        <ul class="nav">
-                          <li class="dropdown">
-                            <a href="#">Dashboards</a>
-                            <ul class="dropdown-menu">
-                              <% GDash::Dashboard.each do |dashboard| %>
-                                <li><a href="<%= dashboard_path(dashboard.name) %>"><%= dashboard.title %></a></li>
-                              <% end %>
-                            </ul>
-                          </li>
-                        </ul>
-                        <ul class="nav secondary-nav">
-                            <li><a href="/">Data Browser</a></li>
-                            <li><a href="/docs/">Docs</a></li>
-                        </ul>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="container">
+        <div class="container-fluid">
                 <% if @error %>
                 <div class="alert-message error">
                     <%= @error %>
                 </div>
                 <% end %>
+
+          <div class="row-fluid">
+              <% if @dashboard %>
+              <div class="span2">
+                <%= sidebar %>
+              </div>
+
+              <div class="span10">
                 <%= yield %>
+              </div>
+              <% else %>
+                <%=  yield %>
+              <% end %>
+          </div>
         </div>
-        <div class="container">
+
+        <div class="container-fluid">
             <h6>Updated <%= Time.now %></h6>
         </div>
     </body>
