@@ -6,19 +6,19 @@ GDash::Dashboard.new :boulder_kafka do |dashboard|
     section.graph :title => "Messages In" do |graph|
       graph.hosts = "bld-kafka-0[123]"
       graph.metrics = "kafka.server.BrokerTopicStat.kafka.BrokerAllTopicStat.MessagesIn"
-      graph.type = :stacked
+      graph.type = :stack
     end
 
     section.graph :title => "Bytes In" do |graph|
       graph.hosts = "bld-kafka-0[123]"
       graph.metrics = "kafka.server.BrokerTopicStat.kafka.BrokerAllTopicStat.BytesIn"
-      graph.type = :stacked
+      graph.type = :stack
     end
 
     section.graph :title => "Bytes Out" do |graph|
       graph.hosts = "bld-kafka-0[123]"
       graph.metrics = "kafka.server.BrokerTopicStat.kafka.BrokerAllTopicStat.BytesIn"
-      graph.type = :stacked
+      graph.type = :stack
     end
   end
 
@@ -27,19 +27,19 @@ GDash::Dashboard.new :boulder_kafka do |dashboard|
       section.graph :title => "Messages In" do |graph|
         graph.hosts = "bld-kafka-0[123]"
         graph.metrics = "kafka.server.BrokerTopicStat.kafka.BrokerTopicStat.#{topic}.MessagesIn"
-        graph.type = :stacked
+        graph.type = :stack
       end
 
       section.graph :title => "Bytes In" do |graph|
         graph.hosts = "bld-kafka-0[123]"
         graph.metrics = "kafka.server.BrokerTopicStat.kafka.BrokerTopicStat.#{topic}.BytesIn"
-        graph.type = :stacked
+        graph.type = :stack
       end
 
       section.graph :title => "Bytes Out" do |graph|
         graph.hosts = "bld-kafka-0[123]"
         graph.metrics = "kafka.server.BrokerTopicStat.kafka.BrokerTopicStat.#{topic}.BytesOut"
-        graph.type = :stacked
+        graph.type = :stack
       end
     end
   end
