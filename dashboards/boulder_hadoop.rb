@@ -2,7 +2,19 @@ GDash::Dashboard.new :boulder_hadoop do |dashboard|
   dashboard.title = "Boulder Hadoop"
   dashboard.description = "Development Hadoop cluster in Boulder (Mac Pros)"
 
-  dashboard.section :title => "Cluster Kafka Metrics", :width => 2 do |section|
+  dashboard.section :title => "System", :width => 2 do |section|
+    section.report :title => "CPU Usage" do |report|
+      report.report = "cpu_report"
+      report.cluster = "Boulder Hadoop"
+    end
+
+    section.report :title => "Network Usage" do |report|
+      report.report = "network_report"
+      report.cluster = "Boulder Hadoop"
+    end
+  end
+
+  dashboard.section :title => "Kafka", :width => 3 do |section|
     section.graph :title => "Messages In" do |graph|
       graph.hosts = "bld-hadoop-0[123]"
       graph.metrics = "kafka.server.BrokerTopicStat.kafka.BrokerAllTopicStat.MessagesIn"
@@ -23,7 +35,7 @@ GDash::Dashboard.new :boulder_hadoop do |dashboard|
   end
 
   ["prod-a2", "prod-beacon", "prod-server", "trial-server"].each do |topic|
-    dashboard.section :title => "Kafka Topic: #{topic}", :width => 3 do |section|
+    dashboard.section :title => "Topic: #{topic}", :width => 3 do |section|
       section.graph :title => "Messages In" do |graph|
         graph.hosts = "bld-hadoop-0[123]"
         graph.metrics = "kafka.server.BrokerTopicStat.kafka.BrokerTopicStat.#{topic}.MessagesIn"

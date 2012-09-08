@@ -126,29 +126,6 @@ module GDash
       end
     end
 
-    describe :group do
-      before do
-        @group = Group.new
-        Group.stub!(:new).and_return @group
-      end
-
-      it "should add a group child" do
-        subject.group
-        subject.children.last.should == @group
-      end
-
-      it "should yield the group" do
-        Group.stub!(:new).and_yield(@group).and_return @group
-
-        yielded = nil
-        subject.group do |g|
-          yielded = g
-        end
-
-        yielded.should == @group
-      end
-    end
-
     describe :window do
       before do
         @child = mock :child

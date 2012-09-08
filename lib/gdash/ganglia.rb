@@ -36,12 +36,11 @@ module GDash
 
     SIZES = ["small", "medium", "large", "xlarge", "xxlarge"]
 
-    attr_accessor :window, :size, :title, :vertical_label, :upper_limit, :lower_limit, :hosts, :metrics, :type, :legend, :aggregate, :embed
+    attr_accessor :window, :size, :title, :embed
 
     def initialize *args, &block
       @window = "hour"
       @size = "large"
-      @aggregate = true
       @embed = true
       super
     end
@@ -54,11 +53,6 @@ module GDash
     def size= s
       fails "#{s.inspect} is not a valid Ganglia size" unless SIZES.include? s
       @size = s
-    end
-
-    def limits= range
-      self.lower_limit = range.begin
-      self.upper_limit = range.end
     end
 
     def to_url
@@ -77,14 +71,6 @@ module GDash
       {:r         => window,
        :z         => size,
        :title     => title,
-       :vl        => vertical_label,
-       :x         => upper_limit,
-       :n         => lower_limit,
-       "hreg[]"   => hosts,
-       "mreg[]"   => metrics,
-       :gtype     => type,
-       :glegend   => legend,
-       :aggregate => aggregate ? 1 : 0,
        :embed     => embed ? 1 : 0 }
     end
   end

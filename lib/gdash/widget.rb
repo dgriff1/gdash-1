@@ -42,7 +42,7 @@ module GDash
         end
 
         groups.last << child
-        i = (i + 1) % 3
+        i = (i + 1) % width
       end
       groups
     end
