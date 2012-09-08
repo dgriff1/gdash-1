@@ -9,7 +9,6 @@ require 'gdash/graph'
 require 'gdash/report'
 require 'gdash/dashboard'
 require 'gdash/section'
-require 'gdash/group'
 require 'gdash/helper'
 require 'gdash/app'
 
