@@ -1,5 +1,5 @@
 module GDash
-  module UrlHelper
+  module Helper
     def dashboards_path
       "/"
     end
@@ -16,17 +16,9 @@ module GDash
       "/#{dashboard.name}#{options}"
     end
 
-    def sidebar
+    def build_sidebar current = nil
       html = Builder::XmlMarkup.new
 
-      html.ul :class => "nav nav-list" do
-        html.li "Dashboards", :class => "nav-header"
-        Dashboard.each do |dashboard|
-          html.li do
-            html.a dashboard.title, :href => dashboard_path(dashboard)
-          end
-        end
-      end
     end
   end
 end

@@ -3,7 +3,7 @@ module GDash
     set :views, File.join(File.expand_path(File.dirname(__FILE__)), "../..", "views")
     set :public_folder, File.join(File.expand_path(File.dirname(__FILE__)), "../..", "public")
 
-    helpers UrlHelper
+    helpers Helper
 
     get "/" do
       erb :index

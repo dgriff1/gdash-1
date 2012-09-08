@@ -35,11 +35,21 @@
 
           <div class="row-fluid">
               <% if @dashboard %>
-              <div class="span2">
-                <%= sidebar %>
+              <div class="span3">
+                <ul class="nav nav-list">
+                  <li class="nav-header">Dashboards</li>
+                    <% GDash::Dashboard.each do |dashboard| %>
+                    <li>
+                      <% if dashboard == @dashboard %>
+                        <a class="active" href="<%= dashboard_path dashboard %>"><%= dashboard.title %></a>
+                      <% else %>
+                        <a href="<%= dashboard_path dashboard %>"><%= dashboard.title %></a>
+                      <% end %>
+                    </li>
+                    <% end %>
+                 </ul>
               </div>
-
-              <div class="span10">
+              <div class="span9">
                 <%= yield %>
               </div>
               <% else %>

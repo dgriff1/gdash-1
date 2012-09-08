@@ -7,9 +7,9 @@ end
 GDash::Dashboard.new :baz
 
 module GDash
-  describe UrlHelper do
+  describe Helper do
     subject do
-      klass = Class.new.send :include, UrlHelper
+      klass = Class.new.send :include, Helper
       klass.new
     end
 
@@ -29,9 +29,9 @@ module GDash
       end
     end
 
-    describe :sidebar do
+    describe :build_sidebar do
       it "should create a navbar" do
-        subject.sidebar
+        subject.build_sidebar
       end
     end
   end
