@@ -10,7 +10,7 @@ module GDash
     def to_html html = nil
       html ||= Builder::XmlMarkup.new
       html.div :class => "row-fluid" do
-        html.h3 title
+        html.h2 title
         html.table :class => "table" do
           child_groups(width).each do |group|
             html.tr do

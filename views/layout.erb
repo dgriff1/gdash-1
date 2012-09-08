@@ -29,6 +29,13 @@
               <% if @dashboard %>
               <div class="span2">
                 <ul class="nav nav-list">
+                    <li class="nav-header">Time Range</li>
+                    <% GDash::Graph::WINDOW_NAMES.each do |title| %>
+                    <li><a href="<%= dashboard_path @dashboard, :window => GDash::Graph::WINDOWS[title] %>"><%= title %></a></li>
+                    <% end %>
+                </ul>
+
+                <ul class="nav nav-list">
                   <li class="nav-header">Dashboards</li>
                     <% GDash::Dashboard.each do |dashboard| %>
                     <li>
