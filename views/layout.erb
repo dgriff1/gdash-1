@@ -1,13 +1,9 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
     <head>
-        <link rel="stylesheet/less" type="text/css" href="/lib/bootstrap.less">
-        <script src="/js/less-1.1.3.min.js" type="text/javascript"></script>
-        <script src="/js/jquery-1.5.2.min.js"></script>
-        <script src="/js/jquery.tablesorter.min.js"></script>
-        <script src="/js/bootstrap-twipsy.js"></script>
-        <script src="/js/bootstrap-scrollspy.js"></script>
-        <script src="/js/bootstrap-dropdown.js"></script>
-        <script src="/js/bootstrap-popover.js"></script>
+        <link href="/css/bootstrap.min.css" rel="stylesheet">
+        <script src="/js/jquery-1.8.1.min.js"></script>
+        <script src="/js/bootstrap.min.js"></script>
         <% if @dashboard %>
           <title><%= @dashboard.title %></title>
           <meta http-equiv="refresh" content="<%= @dashboard.refresh %>">
@@ -15,14 +11,10 @@
           <title>Ops Dashboard</title>
         <% end %>
     </head>
-    <body style="padding-top: 80px;">
-        <div class="topbar-wrapper" style="z-index: 5;">
-            <div class="topbar" data-dropdown="dropdown" >
-                <div class="topbar-inner">
-                    <div class="container-fluid">
-                        <h3><a href="/">Ops Dashboard</a></h3>
-                    </div>
-                </div>
+    <body>
+        <div class="navbar navbar-static-top navbar-inverse">
+            <div class="navbar-inner">
+              <a class="brand" href="/">Ops Dashboard</a>
             </div>
         </div>
 
@@ -35,7 +27,7 @@
 
           <div class="row-fluid">
               <% if @dashboard %>
-              <div class="span3">
+              <div class="span2">
                 <ul class="nav nav-list">
                   <li class="nav-header">Dashboards</li>
                     <% GDash::Dashboard.each do |dashboard| %>
@@ -49,7 +41,7 @@
                     <% end %>
                  </ul>
               </div>
-              <div class="span9">
+              <div class="span10">
                 <%= yield %>
               </div>
               <% else %>
