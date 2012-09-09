@@ -28,13 +28,7 @@
           <div class="row-fluid">
               <% if @dashboard %>
               <div class="span2">
-                <ul class="nav nav-list">
-                    <li class="nav-header">Time Range</li>
-                    <% GDash::Graph::WINDOW_NAMES.each do |title| %>
-                    <li><a href="<%= dashboard_path @dashboard, :window => GDash::Graph::WINDOWS[title] %>"><%= title %></a></li>
-                    <% end %>
-                </ul>
-
+                <div class="well">
                 <ul class="nav nav-list">
                   <li class="nav-header">Dashboards</li>
                     <% GDash::Dashboard.each do |dashboard| %>
@@ -47,11 +41,22 @@
                     </li>
                     <% end %>
                  </ul>
+                 </div>
               </div>
-              <div class="span10">
+              <div class="span8">
                 <%= yield %>
               </div>
-              <% else %>
+                  <div class="span2">
+                      <div class="well">
+                          <ul class="nav nav-list">
+                              <li class="nav-header">Time Range</li>
+                              <% GDash::Graph::WINDOW_NAMES.each do |title| %>
+                                  <li><a href="<%= dashboard_path @dashboard, :window => GDash::Graph::WINDOWS[title] %>"><%= title %></a></li>
+                              <% end %>
+                          </ul>
+                      </div>
+                  </div>
+          <% else %>
                 <%=  yield %>
               <% end %>
           </div>
