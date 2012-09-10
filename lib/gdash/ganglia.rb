@@ -13,7 +13,6 @@ module GDash
     attr_accessor :size, :title, :embed
 
     def initialize *args, &block
-      @window = "hour"
       @size = "large"
       @embed = true
       super
@@ -37,10 +36,10 @@ module GDash
     private
 
     def url_params
-      {:r         => window,
+      window.ganglia_params.merge({
        :z         => size,
        :title     => title,
-       :embed     => embed ? 1 : 0 }
+       :embed     => embed ? 1 : 0 })
     end
   end
 end
