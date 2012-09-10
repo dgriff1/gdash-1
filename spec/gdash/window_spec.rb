@@ -76,6 +76,10 @@ module GDash
         subject.length = 42
         subject.length.should == 42
       end
+
+      it "should default to 0" do
+        subject.length.should == 0
+      end
     end
 
     describe :title do
@@ -91,8 +95,14 @@ module GDash
         subject.ganglia_params.should == { :foo => :bar }
       end
 
-      it "should default to an empty hash" do
-        subject.ganglia_params.should == {}
+      it "should have sane defaults" do
+        time = Time.now
+        Time.stub! :now => time
+        subject.ganglia_params.should == {
+          :r => "custom",
+          :cs => (time - subject.length).strftime("%m/%d/%Y %H:%M"),
+          :ce => time.strftime("%m/%d/%Y %H:%M")
+        }
       end
     end
 
@@ -113,8 +123,13 @@ module GDash
         subject.cacti_params.should == { :foo => :bar }
       end
 
-      it "should default to an empty hash" do
-        subject.cacti_params.should == {}
+      it "should have sane defaults" do
+        time = Time.now
+        Time.stub! :now => time
+        subject.cacti_params.should == {
+          :graph_start => (time.to_i - subject.length),
+          :graph_end => time.to_i
+        }
       end
     end
 

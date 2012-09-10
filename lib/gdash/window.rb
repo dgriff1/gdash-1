@@ -36,8 +36,12 @@ module GDash
       self.class.register self
     end
 
+    def length
+      @length ||= 0
+    end
+
     def <=> other
-      (length || 0) <=> ((other && other.length) || 0)
+      length <=> (other && other.length)
     end
 
     def default?
@@ -50,7 +54,12 @@ module GDash
     end
 
     def ganglia_params
-      @ganglia_params ||= {}
+      time = Time.now
+      @ganglia_params ||= {
+        :r => "custom",
+        :cs => (time - length).strftime("%m/%d/%Y %H:%M"),
+        :ce => time.strftime("%m/%d/%Y %H:%M")
+      }
     end
 
     def graphite_params
@@ -58,7 +67,11 @@ module GDash
     end
 
     def cacti_params
-      @cacti_params ||= {}
+      time = Time.now
+      @cacti_params ||= {
+        :graph_start => (time.to_i - length),
+        :graph_end => time.to_i
+      }
     end
   end
 end
