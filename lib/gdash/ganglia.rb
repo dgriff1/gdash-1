@@ -36,18 +36,13 @@ module GDash
 
     SIZES = ["small", "medium", "large", "xlarge", "xxlarge"]
 
-    attr_accessor :window, :size, :title, :embed
+    attr_accessor :size, :title, :embed
 
     def initialize *args, &block
       @window = "hour"
       @size = "large"
       @embed = true
       super
-    end
-
-    def window= w
-      fail "#{w.inspect} is not a valid Ganglia window" unless WINDOWS.values.include? w
-      @window = w
     end
 
     def size= s

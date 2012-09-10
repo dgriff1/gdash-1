@@ -8,6 +8,8 @@ module GDash
       end
     end
 
+    attr_accessor :parent
+
     def initialize options = {}
       options.each do |k, v|
         send :"#{k}=", v if respond_to? :"#{k}="
@@ -20,16 +22,20 @@ module GDash
       @children ||= []
     end
 
+    def window
+      @window || (parent && parent.window) || "hour"
+    end
+
     def window= w
-      children.each do |child|
-        child.window = w
-      end
+      fail "#{w.inspect} is not a valid Ganglia window" unless Ganglia::WINDOWS.values.include? w
+      @window = w
     end
 
     private
 
     def add_child obj
       children << obj
+      obj.parent = self
       obj
     end
 

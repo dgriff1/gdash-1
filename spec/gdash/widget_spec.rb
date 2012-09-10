@@ -55,6 +55,11 @@ module GDash
 
         yielded.should == @graph
       end
+
+      it "should set the parent" do
+        subject.graph
+        @graph.parent.should == subject
+      end
     end
 
     describe :report do
@@ -77,6 +82,11 @@ module GDash
         end
 
         yielded.should == @report
+      end
+
+      it "should set the parent" do
+        subject.report
+        @report.parent.should == subject
       end
     end
 
@@ -101,6 +111,11 @@ module GDash
 
         yielded.should == @dashboard
       end
+
+      it "should set the parent" do
+        subject.dashboard
+        @dashboard.parent.should == subject
+      end
     end
 
     describe :section do
@@ -124,17 +139,42 @@ module GDash
 
         yielded.should == @section
       end
+
+      it "should set the parent" do
+        subject.section
+        @section.parent.should == subject
+      end
+    end
+
+    describe :parent do
+      it "should have accessors" do
+        subject.parent = "Foo"
+        subject.parent.should == "Foo"
+      end
     end
 
     describe :window do
-      before do
-        @child = mock :child
-        subject.children << @child
+      it "should have an accessor" do
+        subject.window = "2hr"
+        subject.window.should == "2hr"
       end
 
-      it "should set the window on all of its children" do
-        @child.should_receive(:window=).with "hour"
-        subject.window = "hour"
+      it "should fallback to the parent's value" do
+        widget = Widget.new :window => "2hr"
+        subject.parent = widget
+        subject.window.should == "2hr"
+      end
+
+      it "should default to an hour" do
+        subject.window.should == "hour"
+      end
+
+      it "should validate that it is in Ganglia::WINDOWS" do
+        Ganglia::WINDOWS.values.each do |window|
+          lambda { subject.window = window }.should_not raise_error
+        end
+
+        lambda { subject.window = :foobar }.should raise_error
       end
     end
   end
