@@ -6,6 +6,33 @@ module GDash
       Dashboard.new :some_dashboard
     end
 
+    describe :define do
+      it "should require a name" do
+        lambda { Dashboard.define }.should raise_error ArgumentError
+
+        dashboard = Dashboard.define :some_dashboard
+        dashboard.name.should == :some_dashboard
+      end
+
+      it "should register itself" do
+        dashboard = Dashboard.define :some_dashboard
+        Dashboard[:some_dashboard].should == dashboard
+      end
+
+      it "should register itself as a top-level dashboard" do
+        dashboard = Dashboard.define :some_dashboard
+        Dashboard.toplevel.include?(dashboard).should be_true
+      end
+
+      it "should yield itself to the block" do
+        yielded = nil
+        dashboard = Dashboard.define :some_dashboard do |d|
+          yielded = d
+        end
+        dashboard.should == yielded
+      end
+    end
+
     describe :initialize do
       it "should require a name" do
         lambda { Dashboard.new }.should raise_error ArgumentError
@@ -13,6 +40,19 @@ module GDash
         dashboard = Dashboard.new :some_dashboard
         dashboard.name.should == :some_dashboard
         Dashboard[:some_dashboard].should == dashboard
+      end
+
+      it "should register itself" do
+        dashboard = Dashboard.new :some_dashboard
+        Dashboard[:some_dashboard].should == dashboard
+      end
+
+      it "should yield itself to the block" do
+        yielded = nil
+        dashboard = Dashboard.new :some_dashboard do |d|
+          yielded = d
+        end
+        dashboard.should == yielded
       end
     end
 
@@ -56,6 +96,14 @@ module GDash
 
       it "should default to 60s" do
         subject.refresh.should == 60
+      end
+    end
+
+    describe :<=> do
+      it "should sort on title" do
+        foo = Dashboard.new :a, :title => "foo"
+        bar = Dashboard.new :b, :title => "bar"
+        [foo, bar].sort.should == [bar, foo]
       end
     end
   end

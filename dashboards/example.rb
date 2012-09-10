@@ -1,4 +1,4 @@
-GDash::Dashboard.new :example do |dashboard|
+GDash::Dashboard.define :example do |dashboard|
   dashboard.title = "Cacti Example"
   dashboard.cacti_host = "https://qs-mon-01.rallydev.com/cacti"
 

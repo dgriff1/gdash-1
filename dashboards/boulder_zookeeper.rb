@@ -1,4 +1,4 @@
-GDash::Dashboard.new :boulder_zookeeper do |dashboard|
+GDash::Dashboard.define :boulder_zookeeper do |dashboard|
   dashboard.title = "Boulder ZooKeeper"
   dashboard.description = "Local ZooKeeper cluster in Boulder"
   dashboard.ganglia_host = "http://bld-mon-03/ganglia"

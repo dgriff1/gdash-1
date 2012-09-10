@@ -8,32 +8,6 @@ module GDash
       end
     end
 
-    WINDOWS = {
-      "Last Hour" => "hour",
-      "Last 2 Hours" => "2hr",
-      "Last 4 Hours" => "4hr",
-      "Last 12 Hours" => "12hr",
-      "Last Day" => "day",
-      "Last 2 Days" => "2days",
-      "Last Week" => "week",
-      "Last 2 Weeks" => "2weeks",
-      "Last Month" => "month",
-      "Last Year" => "year"
-    }
-
-    WINDOW_NAMES = [
-      "Last Hour",
-      "Last 2 Hours",
-      "Last 4 Hours",
-      "Last 12 Hours",
-      "Last Day",
-      "Last 2 Days",
-      "Last Week",
-      "Last 2 Weeks",
-      "Last Month",
-      "Last Year"
-    ]
-
     SIZES = ["small", "medium", "large", "xlarge", "xxlarge"]
 
     attr_accessor :size, :title, :embed

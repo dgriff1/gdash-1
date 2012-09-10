@@ -1,6 +1,12 @@
 module GDash
   class Dashboard < Widget
     class << self
+      def define *args, &block
+        dashboard = new *args, &block
+        toplevel << dashboard
+        dashboard
+      end
+
       def register dashboard
         dashboards[dashboard.name] = dashboard
       end
@@ -15,7 +21,9 @@ module GDash
         end
       end
 
-      private
+      def toplevel
+        @toplevel ||= []
+      end
 
       def dashboards
         @dashboards ||= {}
@@ -45,6 +53,10 @@ module GDash
       end
 
       dashboard
+    end
+
+    def <=> other
+      (title || "") <=> ((other && other.title) || "")
     end
   end
 end

@@ -8,7 +8,7 @@ module GDash
       end
     end
 
-    attr_accessor :parent, :ganglia_host, :graphite_host, :cacti_host
+    attr_accessor :parent, :window, :ganglia_host, :graphite_host, :cacti_host
 
     def initialize options = {}
       options.each do |k, v|
@@ -35,12 +35,7 @@ module GDash
     end
 
     def window
-      @window || (parent && parent.window) || "hour"
-    end
-
-    def window= w
-      fail "#{w.inspect} is not a valid Ganglia window" unless Ganglia::WINDOWS.values.include? w
-      @window = w
+      @window || (parent && parent.window) || Window.default
     end
 
     private

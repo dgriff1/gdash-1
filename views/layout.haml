@@ -14,45 +14,12 @@
     .navbar.navbar-fixed-top.navbar-inverse
       .navbar-inner
         %a.brand{ :href => "/" } Ops Dashboard
-        %ul.nav
-          -#%li.dropdown
-          -#  %a.dropdown-toggle{ "data-toggle" => "dropdown" } Datacenter
-          -#  %ul.dropdown-menu
-          -#    %li
-          -#      %a{ :href => "#" } Boulder
-          -#    %li
-          -#      %a{ :href => "#" } Denver
-          -#    %li
-          -#      %a{ :href => "#" } Seattle
-          %li.pull-right
-            %a{ :href => "http://bld-mon-03" } Ganglia
-
     .container-fluid
-      - if @error
-        .alert-message.error= @error
-
       .row-fluid
         - if @dashboard
-          .span2
-            .well
-              %ul.nav.nav-list
-                %li.nav-header Dashboards
-                - GDash::Dashboard.each do |dashboard|
-                  %li
-                    - if dashboard == @dashboard
-                      %a.active{ :href => dashboard_path(dashboard) }= dashboard.title
-                    - else
-                      %a{ :href => dashboard_path(dashboard) }= dashboard.title
-
+          .span2= dashboard_nav @dashboard
           .span8= yield
-
-          .span2
-            .well
-              .nav.nav-list
-                %li.nav-header Time Range
-                - GDash::GangliaGraph::WINDOW_NAMES.each do |title|
-                  %li
-                    %a{ :href => dashboard_path(@dashboard, :window => GDash::GangliaGraph::WINDOWS[title]) }= title
+          .span2= window_nav @dashboard
         - else
           = yield
     .container-fluid

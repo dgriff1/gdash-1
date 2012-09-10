@@ -3,6 +3,7 @@ require 'bundler'
 
 Bundler.require :default
 
+require 'gdash/window'
 require 'gdash/widget'
 require 'gdash/ganglia'
 require 'gdash/ganglia_graph'

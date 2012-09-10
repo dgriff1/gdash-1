@@ -4,7 +4,7 @@
       %th{ :width => "30%" } Name
       %th{ :width => "70%" } Description
     %tbody
-      - GDash::Dashboard.each do |dashboard|
+      - GDash::Dashboard.toplevel.sort.each do |dashboard|
         %tr
           %td
             %a{ :href => dashboard_path(dashboard) }= dashboard.title

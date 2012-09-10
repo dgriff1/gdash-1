@@ -50,6 +50,15 @@ module GDash
       it "should have the RRD id" do
         subject.to_url.should =~ /rrd_id=#{Rack::Utils.escape(subject.rrd_id)}/
       end
+
+      it "should have the window cacti_params" do
+        window = Window.new :foo do |w|
+          w.cacti_params = { :foo => :bar, :baz => :quux }
+        end
+        subject.window = window
+        subject.to_url.should =~ /foo=bar/
+        subject.to_url.should =~ /baz=quux/
+      end
     end
   end
 end

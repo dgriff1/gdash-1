@@ -3,7 +3,9 @@ module GDash
     attr_accessor :graph_id, :rrd_id
 
     def to_url
-      params = { :action => "view", :local_graph_id => graph_id, :rrd_id => rrd_id }.map { |k, v| "#{k}=#{Rack::Utils.escape(v)}" }.join("&")
+      params = window.cacti_params || {}
+      params = params.merge(:action => "view", :local_graph_id => graph_id, :rrd_id => rrd_id)
+      params = params.map { |k, v| "#{k}=#{Rack::Utils.escape(v)}" }.join "&"
       "#{cacti_host}/graph_image.php?#{params}"
     end
 

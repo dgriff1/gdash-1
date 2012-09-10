@@ -183,26 +183,20 @@ module GDash
 
     describe :window do
       it "should have an accessor" do
-        subject.window = "2hr"
-        subject.window.should == "2hr"
+        window = Window.new :foo
+        subject.window = window
+        subject.window.should == window
       end
 
       it "should fallback to the parent's value" do
-        widget = Widget.new :window => "2hr"
+        window = Window.new :foo
+        widget = Widget.new :window => window
         subject.parent = widget
-        subject.window.should == "2hr"
+        subject.window.should == window
       end
 
-      it "should default to an hour" do
-        subject.window.should == "hour"
-      end
-
-      it "should validate that it is in Ganglia::WINDOWS" do
-        Ganglia::WINDOWS.values.each do |window|
-          lambda { subject.window = window }.should_not raise_error
-        end
-
-        lambda { subject.window = :foobar }.should raise_error
+      it "should default to the default window" do
+        subject.window.should == Window.default
       end
     end
 

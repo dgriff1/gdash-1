@@ -10,25 +10,6 @@ module GDash
       subject.should be_a Widget
     end
 
-    describe :window do
-      it "should have an accessor" do
-        subject.window = "2hr"
-        subject.window.should == "2hr"
-      end
-
-      it "should default to an hour" do
-        subject.window.should == "hour"
-      end
-
-      it "should validate that it is in Ganglia::WINDOWS" do
-        Ganglia::WINDOWS.values.each do |window|
-          lambda { subject.window = window }.should_not raise_error
-        end
-
-        lambda { subject.window = :foobar }.should raise_error
-      end
-    end
-
     describe :size do
       it "should have an accessor" do
         subject.size = "xlarge"
@@ -80,7 +61,8 @@ module GDash
       end
 
       it "should include the window" do
-        subject.to_url.should =~ /r=#{Rack::Utils.escape(subject.window)}/
+        ganglia_params = subject.window.ganglia_params.map { |k, v| "#{k}=#{Rack::Utils.escape(v)}" }.join "&"
+        subject.to_url.should =~ /#{ganglia_params}/
       end
 
       it "should include the size" do
