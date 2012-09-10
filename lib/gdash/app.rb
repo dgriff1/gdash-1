@@ -10,6 +10,7 @@ module GDash
     end
 
     get "/:name" do
+      STDERR.puts "params #=> #{params.inspect}"
       @dashboard = Dashboard[params["name"].to_sym]
 
       if @dashboard

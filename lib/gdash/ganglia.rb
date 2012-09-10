@@ -52,7 +52,7 @@ module GDash
 
     def to_url
       params = url_params.map { |k, v| "#{k}=#{Rack::Utils.escape(v)}" }.join("&")
-      "http://bld-mon-03/ganglia/graph.php?#{params}"
+      "#{ganglia_host}/graph.php?#{params}"
     end
 
     def to_html html = nil

@@ -15,17 +15,17 @@
       .navbar-inner
         %a.brand{ :href => "/" } Ops Dashboard
         %ul.nav
-          %li.dropdown
-            %a.dropdown-toggle{ "data-toggle" => "dropdown" } Datacenter
-            %ul.dropdown-menu
-              %li
-                %a{ :href => "#" } Boulder
-              %li
-                %a{ :href => "#" } Denver
-              %li
-                %a{ :href => "#" } Seattle
-          %li
-            %a.pull-right{ :href => "http://bld-mon-03" } Ganglia
+          -#%li.dropdown
+          -#  %a.dropdown-toggle{ "data-toggle" => "dropdown" } Datacenter
+          -#  %ul.dropdown-menu
+          -#    %li
+          -#      %a{ :href => "#" } Boulder
+          -#    %li
+          -#      %a{ :href => "#" } Denver
+          -#    %li
+          -#      %a{ :href => "#" } Seattle
+          %li.pull-right
+            %a{ :href => "http://bld-mon-03" } Ganglia
 
     .container-fluid
       - if @error

@@ -177,5 +177,18 @@ module GDash
         lambda { subject.window = :foobar }.should raise_error
       end
     end
+
+    describe :ganglia_host do
+      it "should have an accessor" do
+        subject.ganglia_host = "Foo"
+        subject.ganglia_host.should == "Foo"
+      end
+
+      it "should fallback to the parent's value" do
+        widget = Widget.new :ganglia_host => "Foo"
+        subject.parent = widget
+        subject.ganglia_host.should == "Foo"
+      end
+    end
   end
 end

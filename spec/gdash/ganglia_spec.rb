@@ -68,10 +68,15 @@ module GDash
 
     describe :to_url do
       subject do
-        Ganglia.new :window => "hour",
+        Ganglia.new :ganglia_host => "http://ganglia-host:1234/path/to/ganglia",
+                    :window => "hour",
                     :size => "xlarge",
                     :title => "The Graph Title",
                     :embed => true
+      end
+
+      it "should include the host" do
+        subject.to_url.should =~ /http:\/\/ganglia-host:1234\/path\/to/
       end
 
       it "should include the window" do

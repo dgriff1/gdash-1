@@ -1,6 +1,7 @@
 GDash::Dashboard.new :boulder_zookeeper do |dashboard|
   dashboard.title = "Boulder ZooKeeper"
   dashboard.description = "Local ZooKeeper cluster in Boulder"
+  dashboard.ganglia_host = "http://bld-mon-03/ganglia"
 
   dashboard.section :title => "System", :width => 2 do |section|
     section.report :title => "CPU Usage" do |report|

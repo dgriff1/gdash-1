@@ -1,6 +1,7 @@
 GDash::Dashboard.new :boulder_kafka do |dashboard|
   dashboard.title = "Boulder Kafka"
   dashboard.description = "Local Kafka cluster in Boulder"
+  dashboard.ganglia_host = "http://bld-mon-03/ganglia"
 
   dashboard.section :title => "System", :width => 2 do |section|
     section.report :title => "CPU Usage" do |report|

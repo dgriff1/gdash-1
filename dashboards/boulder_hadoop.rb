@@ -1,6 +1,7 @@
 GDash::Dashboard.new :boulder_hadoop do |dashboard|
   dashboard.title = "Boulder Hadoop"
   dashboard.description = "Development Hadoop cluster in Boulder (Mac Pros)"
+  dashboard.ganglia_host = "http://bld-mon-03/ganglia"
 
   dashboard.section :title => "System", :width => 2 do |section|
     section.report :title => "CPU Usage" do |report|
