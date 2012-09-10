@@ -18,10 +18,10 @@ module GDash
         html.ul :class => "nav nav-list" do
           html.li "Dashboards", :class => "nav-header"
           Dashboard.toplevel.sort.each do |dashboard|
-            html.li do
-              options = { :href => dashboard_path(dashboard) }
-              options[:class] = "active" if dashboard == current
-              html.a dashboard.title, options
+            options = {}
+            options[:class] = "active" if dashboard == current
+            html.li options do
+              html.a dashboard.title, { :href => dashboard_path(dashboard) }
             end
           end
         end
@@ -31,15 +31,12 @@ module GDash
     def window_nav dashboard, current = nil
       html = Builder::XmlMarkup.new
 
-      html.div :class => "well" do
-        html.ul :class => "nav nav-list" do
-          html.li "Time Window", :class => "nav-header"
-          Window.each do |window|
-            html.li do
-              options = { :href => dashboard_path(dashboard, :window => window) }
-              options[:class] = "active" if window == current
-              html.a window.title, options
-            end
+      html.ul :class => "nav nav-pills" do
+        Window.each do |window|
+          options = {}
+          options[:class] = "active" if window == current
+          html.li options do
+            html.a window.title, { :href => dashboard_path(dashboard, :window => window) }
           end
         end
       end

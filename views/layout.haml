@@ -18,8 +18,10 @@
       .row-fluid
         - if @dashboard
           .span2= dashboard_nav @dashboard
-          .span8= yield
-          .span2= window_nav @dashboard
+          .span10
+            = window_nav @dashboard, @dashboard.window
+            = yield
+          -#.span2
         - else
           = yield
     .container-fluid
