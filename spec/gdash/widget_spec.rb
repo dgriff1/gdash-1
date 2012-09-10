@@ -34,59 +34,87 @@ module GDash
       end
     end
 
-    describe :graph do
+    describe :ganglia_graph do
       before do
-        @graph = Graph.new
-        Graph.stub!(:new).and_return @graph
+        @ganglia_graph = GangliaGraph.new
+        GangliaGraph.stub!(:new).and_return @ganglia_graph
       end
 
-      it "should add a graph child" do
-        subject.graph
-        subject.children.last.should == @graph
+      it "should add a ganglia graph child" do
+        subject.ganglia_graph
+        subject.children.last.should == @ganglia_graph
       end
 
-      it "should yield the graph" do
-        Graph.stub!(:new).and_yield(@graph).and_return @graph
+      it "should yield the ganglia graph" do
+        GangliaGraph.stub!(:new).and_yield(@ganglia_graph).and_return @ganglia_graph
 
         yielded = nil
-        subject.graph do |g|
+        subject.ganglia_graph do |g|
           yielded = g
         end
 
-        yielded.should == @graph
+        yielded.should == @ganglia_graph
       end
 
       it "should set the parent" do
-        subject.graph
-        @graph.parent.should == subject
+        subject.ganglia_graph
+        @ganglia_graph.parent.should == subject
       end
     end
 
-    describe :report do
+    describe :ganglia_report do
       before do
-        @report = Report.new
-        Report.stub!(:new).and_return @report
+        @ganglia_report = GangliaReport.new
+        GangliaReport.stub!(:new).and_return @ganglia_report
       end
 
-      it "should add a graph child" do
-        subject.report
-        subject.children.last.should == @report
+      it "should add a ganglia report child" do
+        subject.ganglia_report
+        subject.children.last.should == @ganglia_report
       end
 
-      it "should yield the report" do
-        Report.stub!(:new).and_yield(@report).and_return @report
+      it "should yield the ganglia report" do
+        GangliaReport.stub!(:new).and_yield(@ganglia_report).and_return @ganglia_report
 
         yielded = nil
-        subject.report do |r|
+        subject.ganglia_report do |r|
           yielded = r
         end
 
-        yielded.should == @report
+        yielded.should == @ganglia_report
       end
 
       it "should set the parent" do
-        subject.report
-        @report.parent.should == subject
+        subject.ganglia_report
+        @ganglia_report.parent.should == subject
+      end
+    end
+
+    describe :cacti_graph do
+      before do
+        @cacti_graph = CactiGraph.new
+        CactiGraph.stub!(:new).and_return @cacti_graph
+      end
+
+      it "should add a cacti graph child" do
+        subject.cacti_graph
+        subject.children.last.should == @cacti_graph
+      end
+
+      it "should yield the ganglia graph" do
+        CactiGraph.stub!(:new).and_yield(@cacti_graph).and_return @cacti_graph
+
+        yielded = nil
+        subject.cacti_graph do |g|
+          yielded = g
+        end
+
+        yielded.should == @cacti_graph
+      end
+
+      it "should set the parent" do
+        subject.cacti_graph
+        @cacti_graph.parent.should == subject
       end
     end
 
@@ -188,6 +216,32 @@ module GDash
         widget = Widget.new :ganglia_host => "Foo"
         subject.parent = widget
         subject.ganglia_host.should == "Foo"
+      end
+    end
+
+    describe :graphite_host do
+      it "should have an accessor" do
+        subject.graphite_host = "Foo"
+        subject.graphite_host.should == "Foo"
+      end
+
+      it "should fallback to the parent's value" do
+        widget = Widget.new :graphite_host => "Foo"
+        subject.parent = widget
+        subject.graphite_host.should == "Foo"
+      end
+    end
+
+    describe :cacti_host do
+      it "should have an accessor" do
+        subject.cacti_host = "Foo"
+        subject.cacti_host.should == "Foo"
+      end
+
+      it "should fallback to the parent's value" do
+        widget = Widget.new :cacti_host => "Foo"
+        subject.parent = widget
+        subject.cacti_host.should == "Foo"
       end
     end
   end

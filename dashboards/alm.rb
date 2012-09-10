@@ -6,32 +6,32 @@
 
     ["#{site}-app-01.rally.prod", "#{site}-app-02.rally.prod", "#{site}-app-03.rally.prod", "#{site}-app-04.rally.prod", "#{site}-app-05.rally.prod"].each do |host|
       dashboard.section :title => "#{host}", :width => 2 do |section|
-        section.report :title => "Request Rate" do |report|
-          report.report = "slm_request_rate_report"
-          report.cluster = "ALM"
-          report.host = host
-          report.size = "xlarge"
+        section.ganglia_report :title => "Request Rate" do |ganglia_report|
+          ganglia_report.report = "slm_request_rate_report"
+          ganglia_report.cluster = "ALM"
+          ganglia_report.host = host
+          ganglia_report.size = "xlarge"
         end
 
-        section.report :title => "Response Time" do |report|
-          report.report = "slm_response_time_report"
-          report.cluster = "ALM"
-          report.host = host
-          report.size = "xlarge"
+        section.ganglia_report :title => "Response Time" do |ganglia_report|
+          ganglia_report.report = "slm_response_time_report"
+          ganglia_report.cluster = "ALM"
+          ganglia_report.host = host
+          ganglia_report.size = "xlarge"
         end
 
-        section.report :title => "Network Usage" do |report|
-          report.report = "network_report"
-          report.cluster = "ALM"
-          report.host = host
-          report.size = "xlarge"
+        section.ganglia_report :title => "Network Usage" do |ganglia_report|
+          ganglia_report.report = "network_report"
+          ganglia_report.cluster = "ALM"
+          ganglia_report.host = host
+          ganglia_report.size = "xlarge"
         end
 
-        section.report :title => "Load" do |report|
-          report.report = "load_report"
-          report.cluster = "ALM"
-          report.host = host
-          report.size = "xlarge"
+        section.ganglia_report :title => "Load" do |ganglia_report|
+          ganglia_report.report = "load_report"
+          ganglia_report.cluster = "ALM"
+          ganglia_report.host = host
+          ganglia_report.size = "xlarge"
         end
       end
     end

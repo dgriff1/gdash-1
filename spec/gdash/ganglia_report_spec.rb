@@ -1,9 +1,9 @@
 require "spec_helper"
 
 module GDash
-  describe Report do
+  describe GangliaReport do
     subject do
-      Report.new
+      GangliaReport.new
     end
 
     it "should be a Ganglia widget" do
@@ -33,12 +33,12 @@ module GDash
 
     describe :to_url do
       subject do
-        Report.new :window => "hour",
-                   :size => "xlarge",
-                   :title => "The Graph Title",
-                   :report => "the_report",
-                   :cluster => "The Cluster",
-                   :host => "bld-host-01"
+        GangliaReport.new :window => "hour",
+                          :size => "xlarge",
+                          :title => "The Graph Title",
+                          :report => "the_report",
+                          :cluster => "The Cluster",
+                          :host => "bld-host-01"
       end
 
       it "should include the window" do

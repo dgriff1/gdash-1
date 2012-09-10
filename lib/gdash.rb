@@ -5,8 +5,9 @@ Bundler.require :default
 
 require 'gdash/widget'
 require 'gdash/ganglia'
-require 'gdash/graph'
-require 'gdash/report'
+require 'gdash/ganglia_graph'
+require 'gdash/ganglia_report'
+require 'gdash/cacti_graph'
 require 'gdash/dashboard'
 require 'gdash/section'
 require 'gdash/helper'

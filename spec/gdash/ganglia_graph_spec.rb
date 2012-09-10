@@ -1,9 +1,9 @@
 require "spec_helper"
 
 module GDash
-  describe Graph do
+  describe GangliaGraph do
     subject do
-      Graph.new
+      GangliaGraph.new
     end
 
     it "should be a Ganglia widget" do
@@ -80,16 +80,16 @@ module GDash
 
     describe :to_url do
       subject do
-        Graph.new :window => "hour",
-                  :size => "xlarge",
-                  :title => "The Graph Title",
-                  :vertical_label => "A Label",
-                  :limits => (1..10),
-                  :hosts => "bld-host-0[123]",
-                  :metrics => "metric.name.[\\d]",
-                  :type => "stacked",
-                  :legend => true,
-                  :aggregate => true
+        GangliaGraph.new :window => "hour",
+                         :size => "xlarge",
+                         :title => "The Graph Title",
+                         :vertical_label => "A Label",
+                         :limits => (1..10),
+                         :hosts => "bld-host-0[123]",
+                         :metrics => "metric.name.[\\d]",
+                         :type => "stacked",
+                         :legend => true,
+                         :aggregate => true
       end
 
       it "should include the window" do

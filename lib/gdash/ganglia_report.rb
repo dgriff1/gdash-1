@@ -1,5 +1,5 @@
 module GDash
-  class Report < Ganglia
+  class GangliaReport < Ganglia
     attr_accessor :report, :cluster, :host
 
     private

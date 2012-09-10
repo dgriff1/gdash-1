@@ -1,5 +1,5 @@
 module GDash
-  class Graph < Ganglia
+  class GangliaGraph < Ganglia
     attr_accessor :hosts, :metrics, :vertical_label, :upper_limit, :lower_limit, :type, :legend, :aggregate
 
     def initialize *args, &block

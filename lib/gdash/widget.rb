@@ -8,7 +8,7 @@ module GDash
       end
     end
 
-    attr_accessor :parent, :ganglia_host
+    attr_accessor :parent, :ganglia_host, :graphite_host, :cacti_host
 
     def initialize options = {}
       options.each do |k, v|
@@ -26,8 +26,15 @@ module GDash
       @ganglia_host || (parent && parent.ganglia_host)
     end
 
+    def graphite_host
+      @graphite_host || (parent && parent.graphite_host)
+    end
+
+    def cacti_host
+      @cacti_host || (parent && parent.cacti_host)
+    end
+
     def window
-      STDERR.puts "#{self.class}.window #=> #{@window.inspect} || (#{parent.class.inspect} && #{(parent && parent.window).inspect}) || \"hour\""
       @window || (parent && parent.window) || "hour"
     end
 

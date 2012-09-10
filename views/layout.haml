@@ -50,9 +50,9 @@
             .well
               .nav.nav-list
                 %li.nav-header Time Range
-                - GDash::Graph::WINDOW_NAMES.each do |title|
+                - GDash::GangliaGraph::WINDOW_NAMES.each do |title|
                   %li
-                    %a{ :href => dashboard_path(@dashboard, :window => GDash::Graph::WINDOWS[title]) }= title
+                    %a{ :href => dashboard_path(@dashboard, :window => GDash::GangliaGraph::WINDOWS[title]) }= title
         - else
           = yield
     .container-fluid
