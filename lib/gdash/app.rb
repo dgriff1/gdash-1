@@ -13,7 +13,7 @@ module GDash
       @dashboard = Dashboard[params["name"].to_sym]
 
       if @dashboard
-        @dashboard.window = params["window"] if params.has_key? "window"
+        @dashboard.window = Window[params["window"]] if params.has_key? "window"
         haml @dashboard.to_html
       end
     end

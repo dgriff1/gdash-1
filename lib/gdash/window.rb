@@ -4,12 +4,16 @@ module GDash
       attr_accessor :default
 
       def register window
-        windows << window
+        windows[window.name] = window
         self.default = window unless default
       end
 
       def all
-        windows.sort
+        windows.values.sort
+      end
+
+      def [] name
+        windows[name]
       end
 
       def each
@@ -21,7 +25,7 @@ module GDash
       private
 
       def windows
-        @windows ||= []
+        @windows ||= {}
       end
     end
 
