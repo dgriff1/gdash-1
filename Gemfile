@@ -4,6 +4,7 @@ gem "i18n"
 gem "activesupport", :require => "active_support/core_ext"
 gem 'redcarpet'
 gem "builder"
+gem "haml"
 
 group :test do
   gem "rspec"

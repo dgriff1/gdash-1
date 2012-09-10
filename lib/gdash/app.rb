@@ -6,7 +6,7 @@ module GDash
     helpers Helper
 
     get "/" do
-      erb :index
+      haml :index
     end
 
     get "/:name" do
@@ -14,7 +14,7 @@ module GDash
 
       if @dashboard
         @dashboard.window = params["window"] if params.has_key? "window"
-        erb @dashboard.to_html
+        haml @dashboard.to_html
       end
     end
   end

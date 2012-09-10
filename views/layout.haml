@@ -1,0 +1,61 @@
+!!! 5
+
+%html{ :lang => "en" }
+  %head
+    %link{ :href => "/css/bootstrap.min.css", :rel => "stylesheet" }
+      %script{ :src => "/js/jquery-1.8.1.min.js" }
+      %script{ :src => "/js/bootstrap.min.js" }
+      - if @dashboard
+        %title= @dashboard.title
+        %meta{ "http-equiv" => "refresh", :content => @dashboard.refresh }
+      - else
+        %title Ops Dashboard
+  %body{ :style => "padding-top: 50px;" }
+    .navbar.navbar-fixed-top.navbar-inverse
+      .navbar-inner
+        %a.brand{ :href => "/" } Ops Dashboard
+        %ul.nav
+          %li.dropdown
+            %a.dropdown-toggle{ "data-toggle" => "dropdown" } Datacenter
+            %ul.dropdown-menu
+              %li
+                %a{ :href => "#" } Boulder
+              %li
+                %a{ :href => "#" } Denver
+              %li
+                %a{ :href => "#" } Seattle
+          %li
+            %a.pull-right{ :href => "http://bld-mon-03" } Ganglia
+
+    .container-fluid
+      - if @error
+        .alert-message.error= @error
+
+      .row-fluid
+        - if @dashboard
+          .span2
+            .well
+              %ul.nav.nav-list
+                %li.nav-header Dashboards
+                - GDash::Dashboard.each do |dashboard|
+                  %li
+                    - if dashboard == @dashboard
+                      %a.active{ :href => dashboard_path(dashboard) }= dashboard.title
+                    - else
+                      %a{ :href => dashboard_path(dashboard) }= dashboard.title
+
+          .span8= yield
+
+          .span2
+            .well
+              .nav.nav-list
+                %li.nav-header Time Range
+                - GDash::Graph::WINDOW_NAMES.each do |title|
+                  %li
+                    %a{ :href => dashboard_path(@dashboard, :window => GDash::Graph::WINDOWS[title]) }= title
+        - else
+          = yield
+    .container-fluid
+      %h6
+        Updated
+        = Time.now
