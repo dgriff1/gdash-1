@@ -8,7 +8,7 @@ INSTANCES.times do |instance|
   God.watch do |watch|
     watch.name = "GDash #{instance}"
     watch.group = "gdash"
-    watch.start = "bundle exec thin --rackup #{RACKUP} --port #{BASE_PORT + instance} --log #{log_file} start"
+    watch.start = "bundle exec thin --socket /tmp/gdash.#{instance}.sock --rackup #{RACKUP} --log #{log_file} start"
     watch.behavior :clean_pid_file
     watch.keepalive
     watch.log = log_file

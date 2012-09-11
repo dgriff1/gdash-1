@@ -27,7 +27,7 @@ namespace :rvm do
 end
 
 task :install_bundle do
-  run "cd #{release_path} && rvm use --create --install 1.8.7-p358@gdash && bundle install"
+  #run "cd #{release_path} && bundle install"
 end
 
 after "deploy:update", "rvm:trust_rvmrc"
