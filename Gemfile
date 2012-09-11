@@ -14,5 +14,7 @@ end
 
 group :production do
   gem "thin"
+  gem "capistrano"
+  gem "god"
 end
 
