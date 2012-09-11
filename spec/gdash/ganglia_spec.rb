@@ -50,7 +50,7 @@ module GDash
     describe :to_url do
       subject do
         Ganglia.new :ganglia_host => "http://ganglia-host:1234/path/to/ganglia",
-                    :window => "hour",
+                    :window => Window.new(:hour, :length => 1.hour),
                     :size => "xlarge",
                     :title => "The Graph Title",
                     :embed => true

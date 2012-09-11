@@ -33,7 +33,7 @@ module GDash
 
     describe :to_url do
       subject do
-        GangliaReport.new :window => "hour",
+        GangliaReport.new :window => Window.new(:hour, :length => 1.hour),
                           :size => "xlarge",
                           :title => "The Graph Title",
                           :report => "the_report",

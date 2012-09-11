@@ -1,7 +1,8 @@
 { "devner" => "qd",
   "seattle"  => "qs"}.each do |datacenter, site|
     GDash::Dashboard.define :"alm_#{datacenter}" do |dashboard|
-      dashboard.title = "#{datacenter.camelize} ALM"
+      dashboard.title = "#{datacenter.titleize} ALM"
+      dashboard.description = "ALM Application Servers in #{datacenter.titleize}"
       dashboard.ganglia_host = "http://bld-mon-03/ganglia-#{site}"
 
     ["#{site}-app-01.rally.prod", "#{site}-app-02.rally.prod", "#{site}-app-03.rally.prod", "#{site}-app-04.rally.prod", "#{site}-app-05.rally.prod"].each do |host|

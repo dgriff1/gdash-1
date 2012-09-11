@@ -11,6 +11,14 @@ module GDash
       "/#{dashboard.name}#{params}"
     end
 
+    def docs_path
+      "/doc"
+    end
+
+    def doc_path doc
+      "/doc/#{Rack::Utils.escape(doc.name)}"
+    end
+
     def dashboard_nav current = nil
       html = Builder::XmlMarkup.new
 
@@ -37,6 +45,23 @@ module GDash
           options[:class] = "active" if window == current
           html.li options do
             html.a window.title, { :href => dashboard_path(dashboard, :window => window) }
+          end
+        end
+      end
+    end
+
+    def doc_nav current = nil
+      html = Builder::XmlMarkup.new
+
+      html.div :class => "well" do
+        html.ul :class => "nav nav-list" do
+          html.li "Pages", :class => "nav-header"
+          Doc.each do |doc|
+            options = {}
+            options[:class] = "active" if doc == current
+            html.li options do
+              html.a doc.title, { :href => doc_path(doc) }
+            end
           end
         end
       end

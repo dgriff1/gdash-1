@@ -1,11 +1,31 @@
-- unless @error
-  %table.table.table-hover
-    %thead
-      %th{ :width => "30%" } Name
-      %th{ :width => "70%" } Description
-    %tbody
-      - GDash::Dashboard.toplevel.sort.each do |dashboard|
-        %tr
-          %td
-            %a{ :href => dashboard_path(dashboard) }= dashboard.title
-          %td= dashboard.description
+!!! 5
+
+%html{ :lang => "en" }
+  %head
+    %link{ :href => "/css/bootstrap.min.css", :rel => "stylesheet" }
+      %script{ :src => "/js/jquery-1.8.1.min.js" }
+      %script{ :src => "/js/bootstrap.min.js" }
+      %title Ops Dashboard
+  %body{ :style => "padding-top: 50px;" }
+    .navbar.navbar-fixed-top.navbar-inverse
+      .navbar-inner
+        %a.brand{ :href => dashboards_path } Ops Dashboard
+        %ul.nav
+          %li
+            %a{ :href => docs_path } Documentation
+    .container-fluid
+      .row-fluid
+        %table.table.table-hover
+          %thead
+            %th{ :width => "30%" } Name
+            %th{ :width => "70%" } Description
+          %tbody
+            - GDash::Dashboard.toplevel.sort.each do |dashboard|
+              %tr
+                %td
+                  %a{ :href => dashboard_path(dashboard) }= dashboard.title
+                %td= dashboard.description
+    .container-fluid
+      %h6
+        Updated
+        = Time.now

@@ -80,7 +80,7 @@ module GDash
 
     describe :to_url do
       subject do
-        GangliaGraph.new :window => "hour",
+        GangliaGraph.new :window => Window.new(:hour, :length => 1.hour),
                          :size => "xlarge",
                          :title => "The Graph Title",
                          :vertical_label => "A Label",
