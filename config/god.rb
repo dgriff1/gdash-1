@@ -1,5 +1,4 @@
 INSTANCES = 3
-BASE_PORT = 3000
 RACKUP = File.expand_path(File.join(File.dirname(__FILE__), "..", "config.ru"))
 
 INSTANCES.times do |instance|

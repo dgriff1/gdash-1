@@ -11,9 +11,9 @@ set :rvm_lib_path, "#{rvm_path}/lib"
 
 set :scm, :git
 
-role :web, "bld-rust-02"
-role :app, "bld-rust-02"
-role :db,  "bld-rust-02", :primary => true
+role :web, "bld-mon-03"
+role :app, "bld-mon-03"
+role :db,  "bld-mon-03", :primary => true
 
 #########
 # Hooks #
@@ -25,13 +25,6 @@ namespace :rvm do
     run "rvm rvmrc trust #{release_path}"
   end
 end
-
-task :install_bundle do
-  #run "cd #{release_path} && bundle install"
-end
-
-after "deploy:update", "rvm:trust_rvmrc"
-after "deploy:update", "deploy:cleanup"
 
 namespace :god do
   task :status do
@@ -55,5 +48,6 @@ namespace :god do
 end
 
 before "deploy:update", "god:stop"
-after "deploy:update", "install_bundle"
-after "deploy:update", "god:start"
+after  "deploy:update", "god:start"
+after  "deploy:update", "rvm:trust_rvmrc"
+after  "deploy:update", "deploy:cleanup"
