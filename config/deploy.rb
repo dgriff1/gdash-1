@@ -1,12 +1,19 @@
 set :application, "GDash"
-set :repository,  "ssh://git/export/git/gdash.git"
+set :repository,  "ssh://almbuild@git.f4tech.com/export/git/gdash.git"
+set :deploy_to, "/home/gdash"
+set :use_sudo, false
+set :branch, "master"
+set :user, "gdash"
 
-set :scm, :gid
+set :rvm_path, "/home/$USER/.rvm"
+set :rvm_bin_path, "#{rvm_path}/bin"
+set :rvm_lib_path, "#{rvm_path}/lib"
 
-role :web, "bld-mon-03"
-role :app, "bld-mon-03"
-role :db,  "bld-mon-03", :primary => true
+set :scm, :git
 
+role :web, "bld-rust-02"
+role :app, "bld-rust-02"
+role :db,  "bld-rust-02", :primary => true
 
 #########
 # Hooks #
@@ -20,7 +27,7 @@ namespace :rvm do
 end
 
 task :install_bundle do
-  run "cd #{release_path} && bundle install"
+  run "cd #{release_path} && rvm use --create --install 1.8.7-p358@gdash && bundle install"
 end
 
 after "deploy:update", "rvm:trust_rvmrc"
