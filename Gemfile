@@ -1,4 +1,6 @@
 source 'http://rubygems.org'
+
+gem "rake"
 gem 'sinatra'
 gem "i18n"
 gem "activesupport", :require => "active_support/core_ext"
