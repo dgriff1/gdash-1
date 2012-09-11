@@ -1,4 +1,4 @@
-{ "devner" => "qd",
+{ "denver" => "qd",
   "seattle"  => "qs"}.each do |datacenter, site|
     GDash::Dashboard.define :"alm_#{datacenter}" do |dashboard|
       dashboard.title = "#{datacenter.titleize} ALM"

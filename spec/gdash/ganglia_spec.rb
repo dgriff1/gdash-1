@@ -61,8 +61,9 @@ module GDash
       end
 
       it "should include the window" do
-        ganglia_params = subject.window.ganglia_params.map { |k, v| "#{k}=#{Rack::Utils.escape(v)}" }.join "&"
-        subject.to_url.should =~ /#{ganglia_params}/
+        subject.window.ganglia_params.each do |k, v|
+          subject.to_url.should =~ /#{Regexp.escape "#{k}=#{Rack::Utils.escape(v)}"}/
+        end
       end
 
       it "should include the size" do
@@ -70,7 +71,7 @@ module GDash
       end
 
       it "should include the title" do
-        subject.to_url.should =~ /title=#{Rack::Utils.escape(subject.title)}/
+        subject.to_url.should =~ /#{Regexp.escape("title=#{Rack::Utils.escape(subject.title)}")}/
       end
 
       it "should include the embed" do

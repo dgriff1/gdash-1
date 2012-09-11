@@ -26,7 +26,7 @@ module GDash
 
     describe :to_html do
       it "should be an image" do
-        subject.to_html.should =~ /<img src="#{subject.to_html}"\/>/
+        subject.to_html.should =~ /<img src="#{Regexp.escape subject.to_url}"\/>/
       end
     end
 

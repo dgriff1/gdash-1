@@ -28,7 +28,6 @@ module GDash
         Doc.each do |doc|
           docs << doc
         end
-        STDERR.puts "docs #=> #{docs.map(&:name).inspect}"
         docs.map(&:name).include?("test_doc").should be_true
       end
     end

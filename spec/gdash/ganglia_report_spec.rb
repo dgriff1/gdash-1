@@ -42,7 +42,9 @@ module GDash
       end
 
       it "should include the window" do
-        subject.to_url.should =~ /r=#{Rack::Utils.escape(subject.window)}/
+        subject.window.ganglia_params.each do |k, v|
+          subject.to_url.should =~ /#{Regexp.escape "#{k}=#{Rack::Utils.escape(v)}"}/
+        end
       end
 
       it "should include the size" do
@@ -50,7 +52,7 @@ module GDash
       end
 
       it "should include the title" do
-        subject.to_url.should =~ /title=#{Rack::Utils.escape(subject.title)}/
+        subject.to_url.should =~ /#{Regexp.escape "title=#{Rack::Utils.escape(subject.title)}"}/
       end
 
       it "should include the report" do
@@ -65,7 +67,7 @@ module GDash
       end
 
       it "should set the cluster" do
-        subject.to_url.should =~ /c=#{Rack::Utils.escape(subject.cluster)}/
+        subject.to_url.should =~ /#{Regexp.escape "c=#{Rack::Utils.escape(subject.cluster)}"}/
       end
     end
   end

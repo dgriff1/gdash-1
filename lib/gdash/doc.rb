@@ -44,7 +44,7 @@ module GDash
     end
 
     def == other
-      name == (other && other.name)
+      name.to_s == (other && other.name.to_s)
     end
 
     private
