@@ -13,5 +13,5 @@ end
 
 desc "Deploy to production with Capistrano"
 task :deploy => [:spec] do
-  run "bundle exec cap deploy"
+  sh "bundle exec cap deploy"
 end
