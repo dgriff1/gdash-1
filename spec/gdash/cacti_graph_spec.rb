@@ -19,8 +19,8 @@ module GDash
 
     describe :rrd_id do
       it "should have accessors" do
-        subject.rrd_id = "Foo"
-        subject.rrd_id.should == "Foo"
+        subject.rra_id = "Foo"
+        subject.rra_id.should == "Foo"
       end
     end
 
@@ -47,8 +47,8 @@ module GDash
         subject.to_url.should =~ /local_graph_id=#{Rack::Utils.escape(subject.graph_id)}/
       end
 
-      it "should have the RRD id" do
-        subject.to_url.should =~ /rrd_id=#{Rack::Utils.escape(subject.rrd_id)}/
+      it "should have the RRA id" do
+        subject.to_url.should =~ /rra_id=#{Rack::Utils.escape(subject.rra_id)}/
       end
 
       it "should have the window cacti_params" do

@@ -11,7 +11,7 @@ module GDash
 
     get "/doc/:filename" do
       @doc = Doc.new(params["filename"])
-      haml @doc.to_html, :layout => :doc
+      erb @doc.to_html, :layout => :doc, :layout_engine => :haml
     end
 
     get "/doc" do
