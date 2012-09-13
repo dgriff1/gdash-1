@@ -128,7 +128,11 @@ module GDash
       end
 
       it "should set the legend" do
-        subject.to_url.should =~ /glegend=#{Rack::Utils.escape(subject.legend)}/
+        subject.legend = true
+        subject.to_url.should =~ /glegend=#{Rack::Utils.escape("show")}/
+
+        subject.legend = false
+        subject.to_url.should =~ /glegend=#{Rack::Utils.escape("hide")}/
       end
 
       it "should set the aggregate" do

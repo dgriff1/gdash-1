@@ -22,7 +22,7 @@ module GDash
         :x         => upper_limit,
         :n         => lower_limit,
         :gtype     => type,
-        :glegend   => legend,
+        :glegend   => legend ? "show" : "hide",
         :aggregate => aggregate ? 1 : 0,
         "hreg[]"   => hosts,
         "mreg[]"   => metrics
