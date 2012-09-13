@@ -98,8 +98,9 @@ module GDash
       it "should have sane defaults" do
         time = Time.now
         Time.stub! :now => time
+        subject.title = "Custom Range"
         subject.ganglia_params.should == {
-          :r => "custom",
+          :r => "Custom Range",
           :cs => (time - subject.length).strftime("%m/%d/%Y %H:%M"),
           :ce => time.strftime("%m/%d/%Y %H:%M")
         }
