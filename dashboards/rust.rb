@@ -1,11 +1,11 @@
 { :rust => {
     :title => "Rust",
     :host => "bld-rust-01.f4tech.com",
-    :topics => ["prod-server-end", "prod-beacon", "trial-server-end", "trial-beacon"]
+    :topics => ["prod-server-start", "prod-server-end", "trial-server-start", "trial-server-end", "prod-beacon", "trial-beacon"]
 }, :trust => {
     :title => "Trust",
     :host => "bld-rust-02.f4tech.com",
-    :topics => ["dev-server-end", "test-server-end", "test-beacon"]
+    :topics => ["test-server-start", "test-server-end", "dev-server-start", "dev-server-end", "test-beacon"]
 } }.each do |name, instance|
   GDash::Dashboard.define name do |dashboard|
     dashboard.title = instance[:title]
