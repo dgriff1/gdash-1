@@ -22,18 +22,21 @@ GDash::Dashboard.define :boulder_hadoop do |dashboard|
       graph.hosts = "bld-hadoop-0[123]"
       graph.metrics = "kafka.server.BrokerTopicStat.kafka.BrokerAllTopicStat.MessagesIn"
       graph.type = :stack
+      graph.size = "xlarge"
     end
 
     section.ganglia_graph :title => "Bytes In" do |graph|
       graph.hosts = "bld-hadoop-0[123]"
       graph.metrics = "kafka.server.BrokerTopicStat.kafka.BrokerAllTopicStat.BytesIn"
       graph.type = :stack
+      graph.size = "xlarge"
     end
 
     section.ganglia_graph :title => "Bytes Out" do |ganglia_graph|
       ganglia_graph.hosts = "bld-hadoop-0[123]"
       ganglia_graph.metrics = "kafka.server.BrokerTopicStat.kafka.BrokerAllTopicStat.BytesIn"
       ganglia_graph.type = :stack
+      ganglia_graph.size = "xlarge"
     end
   end
 
@@ -43,18 +46,21 @@ GDash::Dashboard.define :boulder_hadoop do |dashboard|
         ganglia_graph.hosts = "bld-hadoop-0[123]"
         ganglia_graph.metrics = "kafka.server.BrokerTopicStat.kafka.BrokerTopicStat.#{topic}.MessagesIn"
         ganglia_graph.type = :stack
+        ganglia_graph.size = "xlarge"
       end
 
       section.ganglia_graph :title => "Bytes In" do |graph|
         graph.hosts = "bld-hadoop-0[123]"
         graph.metrics = "kafka.server.BrokerTopicStat.kafka.BrokerTopicStat.#{topic}.BytesIn"
         graph.type = :stack
+        ganglia_graph.size = "xlarge"
       end
 
       section.ganglia_graph :title => "Bytes Out" do |ganglia_graph|
         ganglia_graph.hosts = "bld-hadoop-0[123]"
         ganglia_graph.metrics = "kafka.server.BrokerTopicStat.kafka.BrokerTopicStat.#{topic}.BytesOut"
         ganglia_graph.type = :stack
+        ganglia_graph.size = "xlarge"
       end
     end
   end

@@ -34,6 +34,7 @@
           ganglia_graph.metrics = "kafka_ingestor_bld-kafka-\\d+.f4tech.com_#{topic}_\\d+_lag_bytes_gauge"
           ganglia_graph.vertical_label = "Bytes"
           ganglia_graph.type = :stack
+          ganglia_graph.size = "xlarge"
           ganglia_graph.legend = false
         end
       end

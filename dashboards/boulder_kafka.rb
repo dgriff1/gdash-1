@@ -24,24 +24,26 @@ GDash::Dashboard.define :boulder_kafka do |dashboard|
     end
   end
 
-  dashboard.section :title => "Kafka", :width => 3 do |section|
+  dashboard.section :title => "Kafka", :width => 4 do |section|
     section.ganglia_graph :title => "Messages In" do |ganglia_graph|
       ganglia_graph.hosts = "bld-kafka-0[123]"
       ganglia_graph.metrics = "kafka.server.BrokerTopicStat.kafka.BrokerAllTopicStat.MessagesIn"
       ganglia_graph.type = :stack
-      ganglia_graph.size = "xlarge"
-    end
-
-    section.ganglia_graph :title => "Disk Writes" do |ganglia_graph|
-      ganglia_graph.hosts = "bld-kafka-0[123]"
-      ganglia_graph.metrics = "diskstat_sda_write_bytes_per_sec"
-      ganglia_graph.size = "xlarge"
     end
 
     section.ganglia_graph :title => "Heap Used" do |ganglia_graph|
       ganglia_graph.hosts = "bld-kafka-0[123]"
       ganglia_graph.metrics = "sun.management.MemoryImpl.Memory.HeapMemoryUsage.used"
-      ganglia_graph.size = "xlarge"
+    end
+
+    section.ganglia_graph :title => "Disk Writes" do |ganglia_graph|
+      ganglia_graph.hosts = "bld-kafka-0[123]"
+      ganglia_graph.metrics = "diskstat_sda_write_bytes_per_sec"
+    end
+
+    section.ganglia_graph :title => "Disk Reads" do |ganglia_graph|
+      ganglia_graph.hosts = "bld-kafka-0[123]"
+      ganglia_graph.metrics = "diskstat_sda_read_bytes_per_sec"
     end
   end
 
