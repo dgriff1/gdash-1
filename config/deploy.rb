@@ -4,6 +4,8 @@ set :deploy_to, "/home/gdash"
 set :use_sudo, false
 set :branch, "master"
 set :user, "gdash"
+set :ssh_options, { :forward_agent => true }
+default_run_options[:shell] = false
 
 set :rvm_path, "/home/$USER/.rvm"
 set :rvm_bin_path, "#{rvm_path}/bin"
