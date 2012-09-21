@@ -5,6 +5,7 @@ set :use_sudo, false
 set :branch, "master"
 set :user, "gdash"
 set :ssh_options, { :forward_agent => true }
+set :rake, "bundle exec rake"
 default_run_options[:shell] = false
 
 set :rvm_path, "/home/$USER/.rvm"
@@ -49,7 +50,12 @@ namespace :god do
   end
 end
 
+task :restart_thin do
+  run "cd #{fetch(:deploy_to)}/current && bundle exec god restart gdash"
+end
+
 before "deploy:update", "god:stop"
 after  "deploy:update", "god:start"
+after  "deploy:update", "restart_thin"
 after  "deploy:update", "rvm:trust_rvmrc"
 after  "deploy:update", "deploy:cleanup"
