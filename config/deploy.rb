@@ -42,7 +42,7 @@ namespace :god do
 
   task :start do
     run "cd #{fetch(:deploy_to)}/current && bundle exec god -c config/god.rb --log #{fetch(:deploy_to)}/shared/log/god.log" rescue nil
-    sleep 60
+    sleep 30
     god.status
   end
 end

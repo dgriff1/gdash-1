@@ -53,7 +53,7 @@ GDash::Dashboard.define :boulder_hadoop do |dashboard|
         graph.hosts = "bld-hadoop-0[123]"
         graph.metrics = "kafka.server.BrokerTopicStat.kafka.BrokerTopicStat.#{topic}.BytesIn"
         graph.type = :stack
-        ganglia_graph.size = "xlarge"
+        graph.size = "xlarge"
       end
 
       section.ganglia_graph :title => "Bytes Out" do |ganglia_graph|
