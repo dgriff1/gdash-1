@@ -12,7 +12,7 @@
     dashboard.description = "Rally Usage and Statistics Toolkit"
     dashboard.ganglia_host = "http://bld-mon-03/ganglia"
 
-    dashboard.section :title => "System", :width => 3 do |section|
+    dashboard.section :title => "System", :width => 2 do |section|
       section.ganglia_report :title => "CPU Usage" do |ganglia_report|
         ganglia_report.report = "cpu_report"
         ganglia_report.cluster = "RUST"
@@ -31,8 +31,15 @@
         ganglia_graph.hosts = instance[:host]
         ganglia_graph.metrics = ".*dimension_total_time.duration.mean"
         ganglia_graph.type = :stack
-        ganglia_graph.legend = false
         ganglia_graph.vertical_label = "Time in ms"
+        ganglia_graph.size = "xlarge"
+      end
+
+      section.ganglia_graph :title => "RabbitMQ Queues" do |ganglia_graph|
+        ganglia_graph.hosts = instance[:host]
+        ganglia_graph.metrics = "rust.*messages$"
+        ganglia_graph.type = :stack
+        ganglia_graph.vertical_label = "Queued Messages"
         ganglia_graph.size = "xlarge"
       end
     end
@@ -62,7 +69,6 @@
           ganglia_graph.hosts = instance[:host]
           ganglia_graph.metrics = "^#{dimension}_dimension_.*_time.duration.mean"
           ganglia_graph.type = :stack
-          ganglia_graph.legend = true
           ganglia_graph.vertical_label = "Time in ms"
           ganglia_graph.size = "xlarge"
         end
