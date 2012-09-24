@@ -9,6 +9,7 @@
 } }.each do |name, instance|
   GDash::Dashboard.define name do |dashboard|
     dashboard.title = instance[:title]
+    dashboard.description = "Rally Usage and Statistics Toolkit"
     dashboard.ganglia_host = "http://bld-mon-03/ganglia"
 
     dashboard.section :title => "System", :width => 2 do |section|
