@@ -9,9 +9,10 @@
       dashboard.section :title => "#{host}", :width => 2 do |section|
 
         section.ganglia_graph :title => "Request Rate" do |graph|
-          graph.hosts = "#{host}"
-          graph.metrics = "analytics.org.mortbay.jetty.handler.StatisticsHandler.statisticshandler.0.requests"
+          graph.hosts = host
+          graph.metrics = "analytics.org.mortbay.jetty.handler.StatisticsHandler.statisticshandler.0.requests$"
           graph.type = :stack
+          graph.size = "xlarge"
         end
 
         section.ganglia_report :title => "Response Time" do |ganglia_report|
