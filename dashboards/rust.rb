@@ -37,6 +37,25 @@
       end
     end
 
+    dashboard.section :title => "Dimensions", :width => 3 do |section|
+      [:build_version_run, :component,    :date,
+       :event,             :gesture,      :host,
+       :integration,       :page,         :project,
+       :proxy_remote_host, :remote_host,  :session,
+       :subscriber,        :subscription, :time,
+       :tps_view,          :trace,        :unhandled_exception,
+       :user_agent,        :wsapi].each do |dimension|
+        section.ganglia_graph :title => "#{dimension.to_s.titleize} Dimension" do |ganglia_graph|
+          ganglia_graph.hosts = instance[:host]
+          ganglia_graph.metrics = "^#{dimension}_dimension_.*_time.duration.mean"
+          ganglia_graph.type = :stack
+          ganglia_graph.legend = false
+          ganglia_graph.vertical_label = "Time (ms)"
+          ganglia_graph.size = "xlarge"
+        end
+      end
+    end
+
     dashboard.section :title => "Kafka Ingestors", :width => 2 do |section|
       instance[:topics].each do |topic|
         section.ganglia_graph :title => topic do |ganglia_graph|
