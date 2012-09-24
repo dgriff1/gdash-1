@@ -37,6 +37,19 @@
       end
     end
 
+    dashboard.section :title => "Kafka Ingestors", :width => 2 do |section|
+      instance[:topics].each do |topic|
+        section.ganglia_graph :title => topic do |ganglia_graph|
+          ganglia_graph.hosts = instance[:host]
+          ganglia_graph.metrics = "kafka_ingestor_bld-kafka-\\d+.f4tech.com_#{topic}_\\d+_lag_bytes"
+          ganglia_graph.vertical_label = "Bytes"
+          ganglia_graph.type = :stack
+          ganglia_graph.size = "xlarge"
+          ganglia_graph.legend = false
+        end
+      end
+    end
+
     dashboard.section :title => "Dimensions", :width => 3 do |section|
       [:build_version_run, :component,    :date,
        :event,             :gesture,      :host,
@@ -52,19 +65,6 @@
           ganglia_graph.legend = true
           ganglia_graph.vertical_label = "Time in ms"
           ganglia_graph.size = "xlarge"
-        end
-      end
-    end
-
-    dashboard.section :title => "Kafka Ingestors", :width => 2 do |section|
-      instance[:topics].each do |topic|
-        section.ganglia_graph :title => topic do |ganglia_graph|
-          ganglia_graph.hosts = instance[:host]
-          ganglia_graph.metrics = "kafka_ingestor_bld-kafka-\\d+.f4tech.com_#{topic}_\\d+_lag_bytes"
-          ganglia_graph.vertical_label = "Bytes"
-          ganglia_graph.type = :stack
-          ganglia_graph.size = "xlarge"
-          ganglia_graph.legend = false
         end
       end
     end
