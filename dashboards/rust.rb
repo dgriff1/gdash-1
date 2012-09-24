@@ -32,7 +32,7 @@
         ganglia_graph.metrics = ".*dimension_total_time.duration.mean"
         ganglia_graph.type = :stack
         ganglia_graph.legend = false
-        ganglia_graph.vertical_label = "Time (ms)"
+        ganglia_graph.vertical_label = "Time in ms"
         ganglia_graph.size = "xlarge"
       end
     end
@@ -49,8 +49,8 @@
           ganglia_graph.hosts = instance[:host]
           ganglia_graph.metrics = "^#{dimension}_dimension_.*_time.duration.mean"
           ganglia_graph.type = :stack
-          ganglia_graph.legend = false
-          ganglia_graph.vertical_label = "Time (ms)"
+          ganglia_graph.legend = true
+          ganglia_graph.vertical_label = "Time in ms"
           ganglia_graph.size = "xlarge"
         end
       end
