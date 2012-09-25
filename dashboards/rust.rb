@@ -5,7 +5,7 @@
 }, :trust => {
     :title => "Trust",
     :host => "bld-rust-02.f4tech.com",
-    :topics => ["test-server-start", "test-server-end", "dev-server-start", "dev-server-end", "test-beacon"]
+    :topics => ["test-server-start", "test-server-end", "loadtest-server-start", "loadtest-server-end", "dev-server-start", "dev-server-end", "test-beacon"]
 } }.each do |name, instance|
   GDash::Dashboard.define name do |dashboard|
     dashboard.title = instance[:title]
@@ -33,6 +33,7 @@
         ganglia_graph.type = :stack
         ganglia_graph.vertical_label = "Time in ms"
         ganglia_graph.size = "xlarge"
+        ganglia_graph.legend = true
       end
 
       section.ganglia_graph :title => "RabbitMQ Queues" do |ganglia_graph|
@@ -41,6 +42,7 @@
         ganglia_graph.type = :stack
         ganglia_graph.vertical_label = "Queued Messages"
         ganglia_graph.size = "xlarge"
+        ganglia_graph.legend = true
       end
     end
 
@@ -64,20 +66,37 @@
     dashboard.dashboard :"#{name}_dimensions" do |dimensions|
       dimensions.title = "Dimension Breakdown"
 
-      dimensions.section :title => "Dimensions", :width => 3 do |section|
-        [:build_version_run, :component,    :date,
-         :event,             :gesture,      :host,
-         :integration,       :page,         :project,
-         :proxy_remote_host, :remote_host,  :session,
-         :subscriber,        :subscription, :time,
-         :tps_view,          :trace,        :unhandled_exception,
-         :user_agent,        :wsapi].each do |dimension|
-          section.ganglia_graph :title => "#{dimension.to_s.titleize} Dimension" do |ganglia_graph|
+      [:build_version_run, :component,    :date,
+       :event,             :gesture,      :host,
+       :integration,       :page,         :project,
+       :proxy_remote_host, :remote_host,  :session,
+       :subscriber,        :subscription, :time,
+       :tps_view,          :trace,        :unhandled_exception,
+       :user_agent,        :wsapi].each do |dimension|
+        dimensions.section :title => "#{dimension.to_s.titleize} Dimension", :width => 3 do |section|
+          section.ganglia_graph :title => "#{dimension.to_s.titleize} Times" do |ganglia_graph|
             ganglia_graph.hosts = instance[:host]
             ganglia_graph.metrics = "^#{dimension}_dimension_.*_time.duration.mean"
-            ganglia_graph.type = :stack
+            ganglia_graph.type = :line
             ganglia_graph.vertical_label = "Time in ms"
             ganglia_graph.size = "xlarge"
+            ganglia_graph.legend = true
+          end
+
+          section.ganglia_graph :title => "#{dimension.to_s.titleize} Cache Hits and Misses" do |ganglia_graph|
+            ganglia_graph.hosts = instance[:host]
+            ganglia_graph.metrics = "^#{dimension}_dimension_cache_.*_count"
+            ganglia_graph.type = :line
+            ganglia_graph.size = "xlarge"
+            ganglia_graph.legend = true
+          end
+
+          section.ganglia_graph :title => "#{dimension.to_s.titleize} Creation Rate" do |ganglia_graph|
+            ganglia_graph.hosts = instance[:host]
+            ganglia_graph.metrics = "#{dimension}_dimension_create_time.rate.mean"
+            ganglia_graph.type = :line
+            ganglia_graph.size = "xlarge"
+            ganglia_graph.legend = true
           end
         end
       end

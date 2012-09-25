@@ -47,7 +47,7 @@ GDash::Dashboard.define :boulder_kafka do |dashboard|
     end
   end
 
-  ["prod-a2", "prod-beacon", "prod-server-start", "prod-server-end", "trial-server-start", "trial_server-end", "dev-server-start", "dev-server-end", "test-server-start", "test-server-end"].each do |topic|
+  ["prod-a2", "prod-beacon", "prod-server-start", "prod-server-end", "trial-server-start", "trial_server-end", "dev-server-start", "dev-server-end", "test-server-start", "test-server-end", "loadtest-server-start", "loadtest-server-end"].each do |topic|
     dashboard.section :title => "Topic: #{topic}", :width => 3 do |section|
       section.ganglia_graph :title => "Messages In" do |ganglia_graph|
         ganglia_graph.hosts = "bld-kafka-0[123]"
