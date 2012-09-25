@@ -21,9 +21,11 @@ module GDash
 
     def dashboard_nav current = nil, dashboards = nil, html = nil
       html ||= Builder::XmlMarkup.new
-      dashboards ||= Dashboard.toplevel.sort
 
       html.ul :class => "nav nav-list" do
+        html.li "Dashboards", :class => "nav-header" if dashboards.nil?
+
+        dashboards ||= Dashboard.toplevel.sort
         dashboards.each do |dashboard|
           options = {}
           options[:class] = "active" if dashboard == current
