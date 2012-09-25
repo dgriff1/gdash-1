@@ -34,6 +34,41 @@ module GDash
       end
     end
 
+    describe :renderable_children do
+      it "should return non-dashboard children" do
+        section_one = subject.section
+        dashboard = subject.dashboard :bar
+        section_two = subject.section
+
+        subject.renderable_children.should be_include section_one
+        subject.renderable_children.should be_include section_two
+        subject.renderable_children.should_not be_include dashboard
+      end
+    end
+
+    describe :nested_dashboards do
+      it "should return only dashboard children" do
+        section_one = subject.section
+        dashboard = subject.dashboard :bar
+        section_two = subject.section
+
+        subject.nested_dashboards.should_not be_include section_one
+        subject.nested_dashboards.should_not be_include section_two
+        subject.nested_dashboards.should be_include dashboard
+      end
+    end
+
+    describe :nested_dashboards? do
+      it "should return true if there are nested dashboards" do
+        subject.dashboard :bar
+        subject.should be_nested_dashboards
+      end
+
+      it "should return false if there are no nested dashboards" do
+        subject.should_not be_nested_dashboards
+      end
+    end
+
     describe :ganglia_graph do
       before do
         @ganglia_graph = GangliaGraph.new

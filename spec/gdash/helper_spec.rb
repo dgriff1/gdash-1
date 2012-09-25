@@ -50,17 +50,17 @@ module GDash
         @html = subject.dashboard_nav
       end
 
-      it "should be in a well" do
-        @html.should =~ /<div class="well">.*<\/div>/m
-      end
+      #it "should be in a well" do
+      #  @html.should =~ /<div class="well">.*<\/div>/m
+      #end
 
       it "should have a nav list" do
         @html.should =~ /<ul class="nav nav-list">.*<\/ul>/m
       end
 
-      it "should have a header" do
-        @html.should =~ /<li class="nav-header">Dashboards<\/li>/
-      end
+      #it "should have a header" do
+      #  @html.should =~ /<li class="nav-header">Dashboards<\/li>/
+      #end
 
       it "should have links for each toplevel dashboard" do
         Dashboard.toplevel.each do |dashboard|
@@ -68,7 +68,7 @@ module GDash
         end
       end
 
-      pending "should have links for each dashboard" do
+      it "should have links for each dashboard" do
         Dashboard.each do |dashboard|
           @html.should =~ /<li><a href="#{Regexp.escape subject.dashboard_path(dashboard)}">#{Regexp.escape(dashboard.title || "")}<\/a><\/li>/
         end

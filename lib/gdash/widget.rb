@@ -22,6 +22,22 @@ module GDash
       @children ||= []
     end
 
+    def renderable_children
+      children.reject do |child|
+        child.is_a? Dashboard
+      end
+    end
+
+    def nested_dashboards
+      children.select do |child|
+        child.is_a? Dashboard
+      end.sort
+    end
+
+    def nested_dashboards?
+      nested_dashboards.present?
+    end
+
     def ganglia_host
       @ganglia_host || (parent && parent.ganglia_host)
     end

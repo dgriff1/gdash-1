@@ -19,17 +19,21 @@ module GDash
       "/doc/#{Rack::Utils.escape(doc.name)}"
     end
 
-    def dashboard_nav current = nil
-      html = Builder::XmlMarkup.new
+    def dashboard_nav current = nil, dashboards = nil, html = nil
+      html ||= Builder::XmlMarkup.new
+      dashboards ||= Dashboard.toplevel.sort
 
-      html.div :class => "well" do
-        html.ul :class => "nav nav-list" do
-          html.li "Dashboards", :class => "nav-header"
-          Dashboard.toplevel.sort.each do |dashboard|
-            options = {}
-            options[:class] = "active" if dashboard == current
-            html.li options do
-              html.a dashboard.title, { :href => dashboard_path(dashboard) }
+      html.ul :class => "nav nav-list" do
+        dashboards.each do |dashboard|
+          options = {}
+          options[:class] = "active" if dashboard == current
+          html.li options do
+            html.a dashboard.title, { :href => dashboard_path(dashboard) }
+          end
+
+          if dashboard.nested_dashboards?
+            html.li do
+              dashboard_nav current, dashboard.nested_dashboards, html
             end
           end
         end
