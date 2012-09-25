@@ -65,7 +65,7 @@ module GDash
     def child_groups n
       groups = []
       i = 0
-      children.each do |child|
+      renderable_children.each do |child|
         if i == 0
           groups << []
         end

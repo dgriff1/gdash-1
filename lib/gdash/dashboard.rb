@@ -48,7 +48,7 @@ module GDash
         html.small description
       end
 
-      children.each do |child|
+      renderable_children.each do |child|
         child.to_html html
       end
 
