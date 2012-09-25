@@ -1,11 +1,11 @@
 GDash::Dashboard.define :boulder do |boulder|
   boulder.title = "Boulder"
   boulder.description = "Servers in Boulder"
+  boulder.ganglia_host = "http://bld-mon-03/ganglia"
 
   boulder.dashboard :dev_hadoop do |dashboard|
     dashboard.title = "Development Hadoop"
     dashboard.description = "Development Hadoop cluster (Mac Pros)"
-    dashboard.ganglia_host = "http://bld-mon-03/ganglia"
 
     dashboard.section :title => "System", :width => 2 do |section|
       section.ganglia_report :title => "CPU Usage" do |ganglia_report|
@@ -73,7 +73,6 @@ GDash::Dashboard.define :boulder do |boulder|
   boulder.dashboard :boulder_hadoop do |dashboard|
     dashboard.title = "Hadoop"
     dashboard.description = "Hadoop Cluster"
-    dashboard.ganglia_host = "http://bld-mon-03/ganglia"
 
     dashboard.section :title => "System", :width => 2 do |section|
       section.ganglia_report :title => "CPU Usage" do |ganglia_report|
@@ -93,7 +92,6 @@ GDash::Dashboard.define :boulder do |boulder|
   boulder.dashboard :boulder_kafka do |dashboard|
     dashboard.title = "Kafka"
     dashboard.description = "Kafka cluster"
-    dashboard.ganglia_host = "http://bld-mon-03/ganglia"
 
     dashboard.section :title => "System", :width => 3 do |section|
       section.ganglia_report :title => "CPU Usage" do |ganglia_report|
@@ -168,7 +166,6 @@ GDash::Dashboard.define :boulder do |boulder|
   boulder.dashboard :boulder_zookeeper do |dashboard|
     dashboard.title = "ZooKeeper"
     dashboard.description = "ZooKeeper cluster"
-    dashboard.ganglia_host = "http://bld-mon-03/ganglia"
 
     dashboard.section :title => "System", :width => 2 do |section|
       section.ganglia_report :title => "CPU Usage" do |ganglia_report|
@@ -236,7 +233,6 @@ GDash::Dashboard.define :boulder do |boulder|
     end
   end
 
-
   { :rust => {
       :title => "Rust",
       :host => "bld-rust-01.f4tech.com",
@@ -249,7 +245,6 @@ GDash::Dashboard.define :boulder do |boulder|
     boulder.dashboard name do |dashboard|
       dashboard.title = instance[:title]
       dashboard.description = "Rally Usage and Statistics Toolkit"
-      dashboard.ganglia_host = "http://bld-mon-03/ganglia"
 
       dashboard.section :title => "System", :width => 2 do |section|
         section.ganglia_report :title => "CPU Usage" do |ganglia_report|
