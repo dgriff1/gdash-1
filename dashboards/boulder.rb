@@ -304,6 +304,7 @@ GDash::Dashboard.define :boulder do |boulder|
 
       dashboard.dashboard :"#{name}_dimensions" do |dimensions|
         dimensions.title = "Dimension Breakdown"
+        dimensions.custom_window :fourty_two, :length => 420.minutes, :title => "420 Minutes"
 
         [:build_version_run, :component,    :date,
          :event,             :gesture,      :host,

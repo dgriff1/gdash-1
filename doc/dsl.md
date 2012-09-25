@@ -73,6 +73,15 @@ Ruby symbol.
 Dashboards can also have descriptive data.  They can give a `title` and a `description` which are used in the interface
 when displaying the dashboard and in navigation boxes.
 
+Dashboards can also be defined nested under other dashboards.  The nested dashboards will not be displayed in-line with
+the parent dashboard, but will appear as links nested under the parent dashboard in the left-hand navigation bar.
+
+    GDash::Dashboard.define :foo do |parent|
+      parent.dashboard :nested_dashboard do |child|
+        # ...
+      end
+    end
+
 ## Sections
 
 Sections divide a dashbaord into logical groupings.  Each section is a grid of child widgets, usually graphs.  The width

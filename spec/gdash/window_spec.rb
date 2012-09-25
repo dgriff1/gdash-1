@@ -24,23 +24,43 @@ module GDash
         end
         window.should == yielded
       end
+    end
+
+    describe :define do
+      it "should take a name" do
+        Window.define(:foo).name.should == :foo
+      end
+
+      it "should take options" do
+        window = Window.define(:foo, :title => "Foo", :length => 42)
+        window.title.should == "Foo"
+        window.length.should == 42
+      end
+
+      it "should yield itself to the block" do
+        yielded = nil
+        window = Window.define :foo do |w|
+          yielded = w
+        end
+        window.should == yielded
+      end
 
       it "should register itself" do
-        window = Window.new :foo
+        window = Window.define :foo
         Window.all.include?(window).should be_true
       end
 
       it "should set itself as default if there is none" do
         Window.default = nil
-        window = Window.new :foo
+        window = Window.define :foo
         Window.default.should == window
       end
     end
 
     describe :each do
       it "should yield each window" do
-        window_one = Window.new :foo
-        window_two = Window.new :bar
+        window_one = Window.define :foo
+        window_two = Window.define :bar
 
         windows = []
         Window.each do |window|
@@ -59,7 +79,7 @@ module GDash
       end
 
       it "should set the class level default" do
-        window = Window.new :foo, :default => true
+        window = Window.define :foo, :default => true
         Window.default.should == window
       end
     end
@@ -136,8 +156,8 @@ module GDash
 
     describe :<=> do
       it "should compare on length" do
-        minute = Window.new :foo, :length => 1.minute
-        hour = Window.new :bar, :length => 1.hour
+        minute = Window.define :foo, :length => 1.minute
+        hour = Window.define :bar, :length => 1.hour
         [hour, minute].sort.should == [minute, hour]
       end
     end

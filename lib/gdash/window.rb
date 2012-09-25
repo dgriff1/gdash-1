@@ -22,6 +22,12 @@ module GDash
         end
       end
 
+      def define *args, &block
+        w = new *args, &block
+        register w
+        w
+      end
+
       private
 
       def windows
@@ -37,7 +43,6 @@ module GDash
         send :"#{k}=", v if respond_to? :"#{k}="
       end
       yield self if block_given?
-      self.class.register self
     end
 
     def length

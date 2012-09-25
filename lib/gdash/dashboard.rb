@@ -55,6 +55,18 @@ module GDash
       dashboard
     end
 
+    def windows
+      @windows ||= []
+      (Window.all + @windows).sort
+    end
+
+    def custom_window *args, &block
+      @windows ||= []
+      w = Window.new(*args, &block)
+      @windows << w
+      w
+    end
+
     def <=> other
       (title || "") <=> ((other && other.title) || "")
     end

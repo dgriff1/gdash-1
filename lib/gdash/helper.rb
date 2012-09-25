@@ -46,7 +46,7 @@ module GDash
       html = Builder::XmlMarkup.new
 
       html.ul :class => "nav nav-pills" do
-        Window.each do |window|
+        dashboard.windows.each do |window|
           options = {}
           options[:class] = "active" if window == current
           html.li options do

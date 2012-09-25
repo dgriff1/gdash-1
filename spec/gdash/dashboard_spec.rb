@@ -99,6 +99,34 @@ module GDash
       end
     end
 
+    describe :windows do
+      it "should default to the global windows" do
+        subject.windows.should == Window.all
+      end
+
+      it "should be sorted" do
+        subject.custom_window :foo, :length => 420.minutes
+        subject.custom_window :foo, :length => 42.minutes
+        subject.windows.should == subject.windows.sort
+      end
+    end
+
+    describe :custom_window do
+      it "should add a window to the windows" do
+        window = subject.custom_window :foo
+        subject.windows.should be_include window
+        Window.all.should_not be_include window
+      end
+
+      it "should yield the window to the block" do
+        yielded = nil
+        returned = subject.custom_window :foo do |w|
+          yielded = w
+        end
+        yielded.should == returned
+      end
+    end
+
     describe :<=> do
       it "should sort on title" do
         foo = Dashboard.new :a, :title => "foo"

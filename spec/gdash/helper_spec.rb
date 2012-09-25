@@ -100,6 +100,15 @@ module GDash
         window = Window.all.first
         subject.window_nav(@dashboard, window).should =~ /<li class="active"><a href="#{Regexp.escape subject.dashboard_path(@dashboard, :window => window)}">#{Regexp.escape(window.title || "")}<\/a><\/li>/
       end
+
+      it "should include links for custom dashboard-specific windows" do
+        window = nil
+        dashboard = Dashboard.define :window_test do |dashboard|
+          window = dashboard.custom_window :custom_window, :length => 42.minutes, :title => "Custom Time Window"
+        end
+
+        subject.window_nav(dashboard).should =~ /<li><a href="#{Regexp.escape subject.dashboard_path(dashboard, :window => window)}">#{Regexp.escape(window.title || "")}<\/a><\/li>/
+      end
     end
 
     describe :doc_nav do
