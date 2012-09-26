@@ -11,17 +11,29 @@ GDash::Dashboard.define :boulder do |boulder|
       dashboard.title = "Development"
       dashboard.description = "Development Hadoop cluster (Mac Pros)"
 
-      dashboard.section :title => "System", :width => 2 do |section|
+      dashboard.section :title => "System", :width => 4 do |section|
+        section.ganglia_report :title => "Load Average" do |ganglia_report|
+          ganglia_report.report = "load_report"
+          ganglia_report.cluster = "Boulder Hadoop"
+          ganglia_report.size = "large"
+        end
+
         section.ganglia_report :title => "CPU Usage" do |ganglia_report|
           ganglia_report.report = "cpu_report"
           ganglia_report.cluster = "Boulder Hadoop"
-          ganglia_report.size = "xlarge"
+          ganglia_report.size = "large"
         end
 
         section.ganglia_report :title => "Network Usage" do |ganglia_report|
           ganglia_report.report = "network_report"
           ganglia_report.cluster = "Boulder Hadoop"
-          ganglia_report.size = "xlarge"
+          ganglia_report.size = "large"
+        end
+
+        section.ganglia_report :title => "Memory Usage" do |ganglia_report|
+          ganglia_report.report = "mem_report"
+          ganglia_report.cluster = "Boulder Hadoop"
+          ganglia_report.size = "large"
         end
       end
 
@@ -78,17 +90,29 @@ GDash::Dashboard.define :boulder do |boulder|
       dashboard.title = "Hadoop"
       dashboard.description = "Hadoop Cluster"
 
-      dashboard.section :title => "System", :width => 2 do |section|
+      dashboard.section :title => "System", :width => 4 do |section|
+        section.ganglia_report :title => "Load Average" do |ganglia_report|
+          ganglia_report.report = "load_report"
+          ganglia_report.cluster = "Boulder Hadoop Revisited"
+          ganglia_report.size = "large"
+        end
+
         section.ganglia_report :title => "CPU Usage" do |ganglia_report|
           ganglia_report.report = "cpu_report"
           ganglia_report.cluster = "Boulder Hadoop Revisited"
-          ganglia_report.size = "xlarge"
+          ganglia_report.size = "large"
         end
 
         section.ganglia_report :title => "Network Usage" do |ganglia_report|
           ganglia_report.report = "network_report"
           ganglia_report.cluster = "Boulder Hadoop Revisited"
-          ganglia_report.size = "xlarge"
+          ganglia_report.size = "large"
+        end
+
+        section.ganglia_report :title => "Memory Usage" do |ganglia_report|
+          ganglia_report.report = "mem_report"
+          ganglia_report.cluster = "Boulder Hadoop Revisited"
+          ganglia_report.size = "large"
         end
       end
     end
@@ -97,25 +121,37 @@ GDash::Dashboard.define :boulder do |boulder|
       dashboard.title = "Kafka"
       dashboard.description = "Kafka cluster"
 
-      dashboard.section :title => "System", :width => 3 do |section|
+      dashboard.section :title => "System", :width => 4 do |section|
+        section.ganglia_report :title => "Load Average" do |ganglia_report|
+          ganglia_report.report = "load_report"
+          ganglia_report.cluster = "Boulder Kafka"
+          ganglia_report.size = "large"
+        end
+
         section.ganglia_report :title => "CPU Usage" do |ganglia_report|
           ganglia_report.report = "cpu_report"
           ganglia_report.cluster = "Boulder Kafka"
-          ganglia_report.size = "xlarge"
+          ganglia_report.size = "large"
         end
 
         section.ganglia_report :title => "Network Usage" do |ganglia_report|
           ganglia_report.report = "network_report"
           ganglia_report.cluster = "Boulder Kafka"
-          ganglia_report.size = "xlarge"
+          ganglia_report.size = "large"
         end
 
-        section.ganglia_graph :title => "Disk Free" do |ganglia_graph|
-          ganglia_graph.hosts = "bld-kafka-0[123]"
-          ganglia_graph.metrics = "disk_free$"
-          ganglia_graph.vertical_label = "GB Free"
-          ganglia_graph.size = "xlarge"
+        section.ganglia_report :title => "Memory Usage" do |ganglia_report|
+          ganglia_report.report = "mem_report"
+          ganglia_report.cluster = "Boulder Kafka"
+          ganglia_report.size = "large"
         end
+        #
+        #section.ganglia_graph :title => "Disk Free" do |ganglia_graph|
+        #  ganglia_graph.hosts = "bld-kafka-0[123]"
+        #  ganglia_graph.metrics = "disk_free$"
+        #  ganglia_graph.vertical_label = "GB Free"
+        #  ganglia_graph.size = "xlarge"
+        #end
       end
 
       dashboard.section :title => "Kafka", :width => 4 do |section|
@@ -171,17 +207,29 @@ GDash::Dashboard.define :boulder do |boulder|
       dashboard.title = "ZooKeeper"
       dashboard.description = "ZooKeeper cluster"
 
-      dashboard.section :title => "System", :width => 2 do |section|
+      dashboard.section :title => "System", :width => 4 do |section|
+        section.ganglia_report :title => "Load Average" do |ganglia_report|
+          ganglia_report.report = "load_report"
+          ganglia_report.cluster = "Boulder Zookeeper"
+          ganglia_report.size = "large"
+        end
+
         section.ganglia_report :title => "CPU Usage" do |ganglia_report|
           ganglia_report.report = "cpu_report"
           ganglia_report.cluster = "Boulder Zookeeper"
-          ganglia_report.size = "xlarge"
+          ganglia_report.size = "large"
         end
 
         section.ganglia_report :title => "Network Usage" do |ganglia_report|
           ganglia_report.report = "network_report"
           ganglia_report.cluster = "Boulder Zookeeper"
-          ganglia_report.size = "xlarge"
+          ganglia_report.size = "large"
+        end
+
+        section.ganglia_report :title => "Memory Usage" do |ganglia_report|
+          ganglia_report.report = "mem_report"
+          ganglia_report.cluster = "Boulder Zookeeper"
+          ganglia_report.size = "large"
         end
       end
 
@@ -251,21 +299,37 @@ GDash::Dashboard.define :boulder do |boulder|
       dashboard.title = instance[:title]
       dashboard.description = "Rally Usage and Statistics Toolkit"
 
-      dashboard.section :title => "System", :width => 2 do |section|
+      dashboard.section :title => "System", :width => 4 do |section|
+        section.ganglia_report :title => "Load Average" do |ganglia_report|
+          ganglia_report.report = "load_report"
+          ganglia_report.cluster = "RUST"
+          ganglia_report.host = instance[:host]
+          ganglia_report.size = "large"
+        end
+
         section.ganglia_report :title => "CPU Usage" do |ganglia_report|
           ganglia_report.report = "cpu_report"
           ganglia_report.cluster = "RUST"
           ganglia_report.host = instance[:host]
-          ganglia_report.size = "xlarge"
+          ganglia_report.size = "large"
         end
 
         section.ganglia_report :title => "Network Usage" do |ganglia_report|
           ganglia_report.report = "network_report"
           ganglia_report.cluster = "RUST"
           ganglia_report.host = instance[:host]
-          ganglia_report.size = "xlarge"
+          ganglia_report.size = "large"
         end
 
+        section.ganglia_report :title => "Memory Usage" do |ganglia_report|
+          ganglia_report.report = "mem_report"
+          ganglia_report.cluster = "RUST"
+          ganglia_report.host = instance[:host]
+          ganglia_report.size = "large"
+        end
+      end
+
+      dashboard.section :title => "Rust", :width => 2 do |section|
         section.ganglia_graph :title => "Dimension Times" do |ganglia_graph|
           ganglia_graph.hosts = instance[:host]
           ganglia_graph.metrics = ".*dimension_total_time.duration.mean"
