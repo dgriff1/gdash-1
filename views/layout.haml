@@ -21,7 +21,7 @@
       .row-fluid
         - if @dashboard
           .span2
-            .well= dashboard_nav @dashboard
+            .well{ "data-spy" => "affix" }= dashboard_nav @dashboard
           .span10
             = window_nav @dashboard, @dashboard.window
             = yield
