@@ -305,12 +305,12 @@ GDash::Dashboard.define :boulder do |boulder|
       dashboard.dashboard :"#{name}_dimensions" do |dimensions|
         dimensions.title = "Dimension Breakdown"
 
-        [:build_version_run, :component,    :date,
-         :event,             :gesture,      :host,
-         :integration,       :page,         :project,
-         :proxy_remote_host, :remote_host,  :session,
-         :subscriber,        :subscription, :time,
-         :tps_view,          :trace,        :unhandled_exception,
+        [:build_version_run, :component,       :date,
+         :event,             :gesture_request, :host,
+         :integration,       :page,            :project,
+         :proxy_remote_host, :remote_host,     :session,
+         :subscriber,        :subscription,    :time,
+         :tps_view,          :trace,           :unhandled_exception,
          :user_agent,        :wsapi].each do |dimension|
           dimensions.section :title => dimension.to_s.titleize, :width => 3 do |section|
             section.ganglia_graph :title => "#{dimension.to_s.titleize} Times" do |ganglia_graph|
