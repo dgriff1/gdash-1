@@ -8,6 +8,8 @@ INSTANCES.times do |instance|
     watch.name = "GDash #{instance}"
     watch.group = "gdash"
     watch.start = "bundle exec thin --address 127.0.0.1 --port #{3000 + instance} --rackup #{RACKUP} --log #{log_file} --environment production start"
+    watch.restart = "bundle exec thin --address 127.0.0.1 --port #{3000 + instance} --rackup #{rackup} --log #{log_file} --environment production --onebyone restart"
+    watch.stop = "bundle exec thin --address 127.0.0.1 --port #{3000 + instance} --rackup #{rackup} --log #{log_file} --environment production stop"
     watch.behavior :clean_pid_file
     watch.keepalive
     watch.log = log_file
