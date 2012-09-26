@@ -2,10 +2,26 @@
   :qd => {
     :title => "Denver",
     :prefix => "qd",
+    :cacti_bandwidth_fw01 => {
+      :graph_id => 542,
+      :rra_id => 0
+    },
+    :cacti_bandwidth_fw02 => {
+      :graph_id => 575,
+      :rra_id => 0
+    }
   }, 
   :qs => {
     :title => "Seattle",
-    :prefix => "qs"
+    :prefix => "qs",
+    :cacti_bandwidth_fw01 => {
+      :graph_id => 542,
+      :rra_id => 0
+    },
+    :cacti_bandwidth_fw02 => {
+      :graph_id => 575,
+      :rra_id => 0
+    }
   } 
 
 }.each do |name, site|
@@ -13,6 +29,17 @@
     dashboard.title = site[:title]
     dashboard.description = "#{site[:title]} Hosts & Services"
     dashboard.ganglia_host = "http://bld-mon-03.f4tech.com/ganglia-#{site[:prefix]}"
+    dashboard.cacti_host = "https://bld-mon-03.f4tech.com/cacti-#{site[:prefix]}"
+
+    dashboard.cacti_graph :title => "#{site[:title]} Throughput fw01" do |cacti_graph|
+      cacti_graph.graph_id = site[:cacti_bandwidth_fw01][:graph_id]
+      cacti_graph.rra_id = site[:cacti_bandwidth_fw01][:rra_id]
+    end
+
+    dashboard.cacti_graph :title => "#{site[:title]} Throughput fw02" do |cacti_graph|
+      cacti_graph.graph_id = site[:cacti_bandwidth_fw02][:graph_id]
+      cacti_graph.rra_id = site[:cacti_bandwidth_fw02][:rra_id]
+    end
 
     dashboard.ganglia_report :title => "ALM Request Rate" do |ganglia_report|
       ganglia_report.report = "slm_request_rate_report"
