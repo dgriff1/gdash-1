@@ -67,8 +67,10 @@
       end
     end
 
-    dashboard.dashboard :"#{site[:prefix]}_alm" do |alm_dash|
-      alm_dash.title = "ALM App Servers"
+    dashboard.dashboard :"#{site[:prefix]}_alm_compare" do |alm_compare|
+      alm_compare.title = "ALM Host Comparison"
+      
+      alm_compare.section :title => "Key Metric Comparison", :width => 5 do |compare| 
         [
           "#{site[:prefix]}-app-01.rally.prod", 
           "#{site[:prefix]}-app-02.rally.prod", 
@@ -76,99 +78,55 @@
           "#{site[:prefix]}-app-04.rally.prod", 
           "#{site[:prefix]}-app-05.rally.prod"
         ].each do |host|
-        alm_dash.section :title => "#{host} - ALM", :width => 2 do |alm_top|
-          alm_top.ganglia_report :title => "Request Rate" do |ganglia_report|
+
+          compare.ganglia_report :title => "Load" do |ganglia_report|
+            ganglia_report.report = "load_report"
+            ganglia_report.cluster = "ALM"
+            ganglia_report.host = host
+            ganglia_report.size = "medium"
+          end
+
+          compare.ganglia_report :title => "Request Rate" do |ganglia_report|
             ganglia_report.report = "slm_request_rate_report"
             ganglia_report.cluster = "ALM"
             ganglia_report.host = host
             ganglia_report.size = "large"
           end
 
-          alm_top.ganglia_report :title => "Response Time" do |ganglia_report|
+          compare.ganglia_report :title => "Response Time" do |ganglia_report|
             ganglia_report.report = "slm_response_time_report"
             ganglia_report.cluster = "ALM"
             ganglia_report.host = host
             ganglia_report.size = "large"
           end
 
-          alm_top.ganglia_report :title => "ALM Sessions" do |ganglia_report|
-            ganglia_report.report = "slm_sessions_report"
-            ganglia_report.cluster = "ALM"
-            ganglia_report.host = host
-            ganglia_report.size = "large"
-          end
-
-          alm_top.ganglia_report :title => "Jetty Threads" do |ganglia_report|
-            ganglia_report.report = "slm_jetty_threads_report"
-            ganglia_report.cluster = "ALM"
-            ganglia_report.host = host
-            ganglia_report.size = "large"
-          end
-
-          alm_top.ganglia_report :title => "Full GC" do |ganglia_report|
+          compare.ganglia_report :title => "Full GC" do |ganglia_report|
             ganglia_report.report = "slm_full_gc_report"
             ganglia_report.cluster = "ALM"
             ganglia_report.host = host
             ganglia_report.size = "large"
           end
 
-          alm_top.ganglia_report :title => "NewGen GC" do |ganglia_report|
+          compare.ganglia_report :title => "NewGen GC" do |ganglia_report|
             ganglia_report.report = "slm_new_gen_gc_report"
             ganglia_report.cluster = "ALM"
             ganglia_report.host = host
             ganglia_report.size = "large"
           end
 
-          alm_top.ganglia_report :title => "Cache Hit/Miss" do |ganglia_report|
-            ganglia_report.report = "slm_cache_hit_miss_report"
-            ganglia_report.cluster = "ALM"
-            ganglia_report.host = host
-            ganglia_report.size = "large"
-          end
+        end # End of host block
+      end # End of compare section
+    end # End of compare dashboard
 
-          alm_top.ganglia_report :title => "Message Queue Sizes" do |ganglia_report|
-            ganglia_report.report = "slm_message_queue_sizes_report"
-            ganglia_report.cluster = "ALM"
-            ganglia_report.host = host
-            ganglia_report.size = "large"
-          end
-
-          alm_top.ganglia_report :title => "Message Process Rates" do |ganglia_report|
-            ganglia_report.report = "slm_message_process_rates_report"
-            ganglia_report.cluster = "ALM"
-            ganglia_report.host = host
-            ganglia_report.size = "large"
-          end
-
-          alm_top.ganglia_report :title => "Notification Processing Performance" do |ganglia_report|
-            ganglia_report.report = "slm_notifications_processed_report"
-            ganglia_report.cluster = "ALM"
-            ganglia_report.host = host
-            ganglia_report.size = "large"
-          end
-
-          alm_top.ganglia_report :title => "Atifact Change %" do |ganglia_report|
-            ganglia_report.report = "slm_artifacts_changed_per_request_report"
-            ganglia_report.cluster = "ALM"
-            ganglia_report.host = host
-            ganglia_report.size = "large"
-          end
-
-          alm_top.ganglia_report :title => "Atifact Indexing Performance" do |ganglia_report|
-            ganglia_report.report = "slm_artifact_indexing_performance_report"
-            ganglia_report.cluster = "ALM"
-            ganglia_report.host = host
-            ganglia_report.size = "large"
-          end
-
-          alm_top.ganglia_report :title => "Quartz Connections" do |ganglia_report|
-            ganglia_report.report = "slm_quartz_connections_report"
-            ganglia_report.cluster = "ALM"
-            ganglia_report.host = host
-            ganglia_report.size = "large"
-          end
-
-        end
+    dashboard.dashboard :"#{site[:prefix]}_alm" do |alm_dash|
+      alm_dash.title = "ALM App Server Detail"
+        [
+          "#{site[:prefix]}-app-01.rally.prod", 
+          "#{site[:prefix]}-app-02.rally.prod", 
+          "#{site[:prefix]}-app-03.rally.prod", 
+          "#{site[:prefix]}-app-04.rally.prod", 
+          "#{site[:prefix]}-app-05.rally.prod"
+        ].each do |host|
 
         alm_dash.section :title => "#{host} System Stats", :width => 4 do |system|
 
@@ -201,7 +159,127 @@
           end
         end # End of system stats
 
-      end
-    end
-  end
-end
+        alm_dash.section :title => "#{host} - ALM", :width => 2 do |alm|
+          alm.ganglia_report :title => "Request Rate" do |ganglia_report|
+            ganglia_report.report = "slm_request_rate_report"
+            ganglia_report.cluster = "ALM"
+            ganglia_report.host = host
+            ganglia_report.size = "large"
+          end
+
+          alm.ganglia_report :title => "Response Time" do |ganglia_report|
+            ganglia_report.report = "slm_response_time_report"
+            ganglia_report.cluster = "ALM"
+            ganglia_report.host = host
+            ganglia_report.size = "large"
+          end
+
+          alm.ganglia_report :title => "ALM Sessions" do |ganglia_report|
+            ganglia_report.report = "slm_sessions_report"
+            ganglia_report.cluster = "ALM"
+            ganglia_report.host = host
+            ganglia_report.size = "large"
+          end
+
+          alm.ganglia_report :title => "Jetty Threads" do |ganglia_report|
+            ganglia_report.report = "slm_jetty_threads_report"
+            ganglia_report.cluster = "ALM"
+            ganglia_report.host = host
+            ganglia_report.size = "large"
+          end
+
+          alm.ganglia_report :title => "Full GC" do |ganglia_report|
+            ganglia_report.report = "slm_full_gc_report"
+            ganglia_report.cluster = "ALM"
+            ganglia_report.host = host
+            ganglia_report.size = "large"
+          end
+
+          alm.ganglia_report :title => "NewGen GC" do |ganglia_report|
+            ganglia_report.report = "slm_new_gen_gc_report"
+            ganglia_report.cluster = "ALM"
+            ganglia_report.host = host
+            ganglia_report.size = "large"
+          end
+
+          alm.ganglia_report :title => "Cache Hit/Miss" do |ganglia_report|
+            ganglia_report.report = "slm_cache_hit_miss_report"
+            ganglia_report.cluster = "ALM"
+            ganglia_report.host = host
+            ganglia_report.size = "large"
+          end
+
+          alm.ganglia_report :title => "Message Queue Sizes" do |ganglia_report|
+            ganglia_report.report = "slm_message_queue_sizes_report"
+            ganglia_report.cluster = "ALM"
+            ganglia_report.host = host
+            ganglia_report.size = "large"
+          end
+
+          alm.ganglia_report :title => "Message Process Rates" do |ganglia_report|
+            ganglia_report.report = "slm_message_process_rates_report"
+            ganglia_report.cluster = "ALM"
+            ganglia_report.host = host
+            ganglia_report.size = "large"
+          end
+
+          alm.ganglia_report :title => "Notification Processing Performance" do |ganglia_report|
+            ganglia_report.report = "slm_notifications_processed_report"
+            ganglia_report.cluster = "ALM"
+            ganglia_report.host = host
+            ganglia_report.size = "large"
+          end
+
+          alm.ganglia_report :title => "Atifact Change %" do |ganglia_report|
+            ganglia_report.report = "slm_artifacts_changed_per_request_report"
+            ganglia_report.cluster = "ALM"
+            ganglia_report.host = host
+            ganglia_report.size = "large"
+          end
+
+          alm.ganglia_report :title => "Atifact Indexing Performance" do |ganglia_report|
+            ganglia_report.report = "slm_artifact_indexing_performance_report"
+            ganglia_report.cluster = "ALM"
+            ganglia_report.host = host
+            ganglia_report.size = "large"
+          end
+
+          alm.ganglia_report :title => "Quartz Connections" do |ganglia_report|
+            ganglia_report.report = "slm_quartz_connections_report"
+            ganglia_report.cluster = "ALM"
+            ganglia_report.host = host
+            ganglia_report.size = "large"
+          end
+
+        end # End of ALM Metrics
+
+        alm_dash.section :title => "#{host} - Analytics", :width => 2 do |analytics|
+          analytics.ganglia_report :title => "Request Rate" do |ganglia_report|
+            ganglia_report.report = "analytics_request_rate_report"
+            ganglia_report.cluster = "ALM"
+            ganglia_report.host = host
+            ganglia_report.size = "large"
+          end
+
+          analytics.ganglia_report :title => "Response Time" do |ganglia_report|
+            ganglia_report.report = "analytics_response_time_report"
+            ganglia_report.cluster = "ALM"
+            ganglia_report.host = host
+            ganglia_report.size = "large"
+          end
+
+          analytics.ganglia_report :title => "ALM Sessions" do |ganglia_report|
+            ganglia_report.report = "slm_sessions_report"
+            ganglia_report.cluster = "ALM"
+            ganglia_report.host = host
+            ganglia_report.size = "large"
+          end
+        end # End of Analytics Metrics
+
+      end # End of host each block
+
+    end # End of ALM Dashboard
+
+  end # End of site Dashboard
+
+end # End of site each block
