@@ -62,7 +62,7 @@
           "#{site[:prefix]}-app-04.rally.prod", 
           "#{site[:prefix]}-app-05.rally.prod"
         ].each do |host|
-        alm_dash.section :title => "#{host}", :width => 2 do |section|
+        alm_dash.section :title => "#{host}", :width => 3 do |section|
           section.ganglia_report :title => "Request Rate" do |ganglia_report|
             ganglia_report.report = "slm_request_rate_report"
             ganglia_report.cluster = "ALM"
@@ -90,6 +90,21 @@
             ganglia_report.host = host
             ganglia_report.size = "xlarge"
           end
+
+          section.ganglia_report :title => "CPU" do |ganglia_report|
+            ganglia_report.report = "cpu_report"
+            ganglia_report.cluster = "ALM"
+            ganglia_report.host = host
+            ganglia_report.size = "xlarge"
+          end
+
+          section.ganglia_report :title => "Memory" do |ganglia_report|
+            ganglia_report.report = "mem_report"
+            ganglia_report.cluster = "ALM"
+            ganglia_report.host = host
+            ganglia_report.size = "xlarge"
+          end
+
         end
       end
     end
