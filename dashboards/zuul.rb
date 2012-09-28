@@ -10,7 +10,7 @@
 }.each do |name, site|
   GDash::Dashboard.define :"#{name}_zuul_top" do |dashboard|
     #dashboard.parent = :"#{name}"
-    dashboard.title = "Zuul #{site[:title]}"
+    dashboard.title = "Zuul (Beta) #{site[:title]}"
     dashboard.description = "#{site[:title]} Zuul metrics"
     dashboard.ganglia_host = "http://bld-mon-03.f4tech.com/ganglia-#{site[:prefix]}"
     dashboard.cacti_host = "https://bld-mon-03.f4tech.com/cacti-#{site[:prefix]}"
@@ -28,12 +28,14 @@
         ganglia_report.cluster = "Zuul"
         ganglia_report.size = "xlarge"
       end
+
+
     end
 
     dashboard.dashboard :"#{site[:prefix]}_zuul_compare" do |zuul_compare|
       zuul_compare.title = "Zuul Host Comparison"
       
-      zuul_compare.section :title => "Key Metric Comparison", :width => 3 do |compare| 
+      zuul_compare.section :title => "Key Metric Comparison", :width => 5 do |compare| 
         [
           "#{site[:prefix]}-zuul-01.rally.prod", 
           "#{site[:prefix]}-zuul-02.rally.prod", 
@@ -54,12 +56,45 @@
             ganglia_report.size = "large"
           end
 
-          compare.ganglia_report :title => "Response Time" do |ganglia_report|
-            ganglia_report.report = "zuul_request_time_report"
-            ganglia_report.cluster = "Zuul"
-            ganglia_report.host = host
-            ganglia_report.size = "large"
+    #      compare.ganglia_report :title => "Response Time" do |ganglia_report|
+    #        ganglia_report.report = "zuul_request_time_report"
+    #        ganglia_report.cluster = "Zuul"
+    #        ganglia_report.host = host
+    #        ganglia_report.size = "large"
+    #      end
+
+          compare.ganglia_graph :title => "Request Rate Total 99 Percentile" do |graph|    # Request Rate 99%
+            graph.hosts = host
+            graph.metrics = "zuul.requests.total.99percentile"
+            graph.type = :line
+            graph.size = "large"
+            graph.vertical_label = "Milliseconds"
+            graph.upper_limit = 30
+            graph.lower_limit = 0
+            graph.legend = TRUE
           end
+
+          compare.ganglia_graph :title => "JVM Memory Heap Usage" do |graph|                    #JVM Memory Heap Memory Usage
+            graph.hosts = host
+            graph.metrics = "jvm.memory.heap_usage"         
+            graph.type = :line
+            graph.size = "large"
+            # graph.vertical_label = "Milliseconds"
+            # graph.upper_limit = 30
+            # graph.lower_limit = 0
+            graph.legend = TRUE
+          end
+
+          compare.ganglia_graph :title => "CPU Idle Percentile" do |graph|
+            graph.hosts = host
+            graph.metrics = "cpu_idle"
+            graph.type = :line
+            graph.size = "large"
+            # graph.vertical_label = "Milliseconds"
+            # graph.upper_limit = 30
+            # graph.lower_limit = 0
+            graph.legend = TRUE
+           end
 
         end # End of host block
       end # End of compare section
