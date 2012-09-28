@@ -139,6 +139,44 @@
           end
         end # End of system stats
 
+         zuul_dash.section :title => "#{host} Cassandra Stats", :width => 3 do |system| 
+
+
+          system.ganglia_graph :title => "Operating System System Load Average -for Cassandra" do |graph|    # cassandra
+            graph.hosts = host
+            graph.metrics = "com.sun.management.UnixOperatingSystem.OperatingSystem.SystemLoadAverage"
+            graph.type = :line
+            graph.size = "large"
+            # graph.vertical_label = "Milliseconds"
+            # graph.upper_limit = 30
+            # graph.lower_limit = 0
+            graph.legend = TRUE
+          end
+
+          system.ganglia_graph :title => "Recent Read Latency Micros" do |graph|                                  #cassandra
+            graph.hosts = host
+            graph.metrics = "org.apache.cassandra.service.StorageProxy.StorageProxy.RecentReadLatencyMicros"         
+            graph.type = :line
+            graph.size = "large"
+            # graph.vertical_label = "Milliseconds"
+            # graph.upper_limit = 30
+            # graph.lower_limit = 0
+            graph.legend = TRUE
+          end
+
+          system.ganglia_graph :title => "Recent Write Latency Micros" do |graph|                                  # Cassandra
+            graph.hosts = host
+            graph.metrics = "org.apache.cassandra.service.StorageProxy.StorageProxy.RecentWriteLatencyMicros"
+            graph.type = :line
+            graph.size = "large"
+            # graph.vertical_label = "Milliseconds"
+            # graph.upper_limit = 30
+            # graph.lower_limit = 0
+            graph.legend = TRUE
+           end
+
+         end # END of System Stats (Cassandra Stats)
+
         zuul_dash.section :title => "#{host} Zuul", :width => 2 do |zuul|
           zuul.ganglia_report :title => "Request Rate" do |ganglia_report|
             ganglia_report.report = "zuul_request_rate_report"
@@ -153,6 +191,10 @@
             ganglia_report.host = host
             ganglia_report.size = "large"
           end
+
+
+
+
 
         end # End o "Zuul Metrics
 
