@@ -24,6 +24,23 @@ module GDash
           last_response.body.should =~ /#{Dashboard[:foo].to_html}/
         end
       end
+      
+      describe :window do
+        before do
+          Window.define :foo
+          Window.define :bar
+        end
+        
+        pending "should look up the window" do
+          get "/foo?window=foo"
+          assigns[:dashboard].window.should == Window[:foo]
+        end
+        
+        pending "should use the default window if not specified" do
+          get "/foo"
+          assigns[:dashboard].window.should == Window.default
+        end
+      end
     end
 
     describe "/doc" do
