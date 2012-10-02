@@ -21,7 +21,7 @@
       .row-fluid
         - if @dashboard
           .span2
-            .well= dashboard_nav @dashboard
+            .well= dashboard_nav @dashboard, @dashboard.window
           .span10
             = window_nav @dashboard, @dashboard.window
             = yield
