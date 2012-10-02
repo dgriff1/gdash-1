@@ -64,19 +64,19 @@ module GDash
 
       it "should have links for each toplevel dashboard" do
         Dashboard.toplevel.each do |dashboard|
-          @html.should =~ /<li><a href="#{Regexp.escape subject.dashboard_path(dashboard)}">#{Regexp.escape(dashboard.title || "")}<\/a><\/li>/
+          @html.should =~ /<li><a href="#{Regexp.escape subject.dashboard_path(dashboard, :window => (dashboard.window || Window.default))}">#{Regexp.escape(dashboard.title || "")}<\/a><\/li>/
         end
       end
 
       it "should have links for each dashboard" do
         Dashboard.each do |dashboard|
-          @html.should =~ /<li><a href="#{Regexp.escape subject.dashboard_path(dashboard)}">#{Regexp.escape(dashboard.title || "")}<\/a><\/li>/
+          @html.should =~ /<li><a href="#{Regexp.escape subject.dashboard_path(dashboard, :window => (dashboard.window || Window.default))}">#{Regexp.escape(dashboard.title || "")}<\/a><\/li>/
         end
       end
 
       it "should have an active for the current dashboard" do
         dashboard = Dashboard[:foo]
-        subject.dashboard_nav(dashboard).should =~ /<li class="active"><a href="#{Regexp.escape subject.dashboard_path(dashboard)}">#{Regexp.escape(dashboard.title || "")}<\/a><\/li>/
+        subject.dashboard_nav(dashboard).should =~ /<li class="active"><a href="#{Regexp.escape subject.dashboard_path(dashboard, :window => (dashboard.window || Window.default))}">#{Regexp.escape(dashboard.title || "")}<\/a><\/li>/
       end
     end
 

@@ -30,7 +30,7 @@ module GDash
           options = {}
           options[:class] = "active" if dashboard == current
           html.li options do
-            html.a dashboard.title, { :href => dashboard_path(dashboard) }
+            html.a dashboard.title, { :href => dashboard_path(dashboard, :window => (dashboard.window || Window.default)) }
           end
 
           if dashboard.nested_dashboards?
