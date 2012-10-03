@@ -29,7 +29,7 @@
     dashboard.title = site[:title]
     dashboard.description = "#{site[:title]} Hosts & Services"
     dashboard.ganglia_host = "http://bld-mon-03.f4tech.com/ganglia-#{site[:prefix]}"
-    dashboard.cacti_host = "https://bld-mon-03.f4tech.com/cacti-#{site[:prefix]}"
+    dashboard.cacti_host = "http://gdash.f4tech.com/cacti-#{site[:prefix]}"
 
     dashboard.section :title => "Key Metrics", :width => 2 do |key_metrics|
       key_metrics.cacti_graph :title => "#{site[:title]} Throughput fw01" do |cacti_graph|
