@@ -1,4 +1,5 @@
 require 'rubygems'
+require 'open-uri'
 require 'bundler'
 
 Bundler.require :default
@@ -10,6 +11,7 @@ require 'gdash/ganglia'
 require 'gdash/ganglia_graph'
 require 'gdash/ganglia_report'
 require 'gdash/cacti_graph'
+require 'gdash/nagios'
 require 'gdash/dashboard'
 require 'gdash/section'
 require 'gdash/helper'

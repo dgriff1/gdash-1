@@ -30,7 +30,7 @@ module GDash
       end
     end
 
-    attr_accessor :name, :title, :description, :refresh
+    attr_accessor :name, :title, :description, :refresh, :nagios_host_group
 
     def initialize name, *args, &block
       @refresh = 60
@@ -42,10 +42,19 @@ module GDash
     def to_html html = nil
       html ||= Builder::XmlMarkup.new
 
-      dashboard = html.h1 do
-        html.text!(title || "")
-        html.br
-        html.small description
+      dashboard = html.div :class => "row-fluid" do
+        html.div :class => ".span12" do
+          html.h1 :class => ".span6" do
+            html.text!(title || "")
+            html.br
+            html.small description
+          end
+      
+          if nagios_host and nagios_host_group
+            nagios = open("#{nagios_host}/cgi-bin/status.cgi?hostgroup=#{nagios_host_group}&style=summary&noheader", :http_basic_authentication => [nagios_user, nagios_password]).read
+            html.div nagios.to_sym
+          end
+        end
       end
 
       renderable_children.each do |child|

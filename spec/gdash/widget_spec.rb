@@ -273,5 +273,44 @@ module GDash
         subject.cacti_host.should == "Foo"
       end
     end
+
+    describe :nagios_host do
+      it "should have an accessor" do
+        subject.nagios_host = "Foo"
+        subject.nagios_host.should == "Foo"
+      end
+
+      it "should fallback to the parent's value" do
+        widget = Widget.new :nagios_host => "Foo"
+        subject.parent = widget
+        subject.nagios_host.should == "Foo"
+      end
+    end
+
+    describe :nagios_user do
+      it "should have an accessor" do
+        subject.nagios_user = "Foo"
+        subject.nagios_user.should == "Foo"
+      end
+
+      it "should fallback to the parent's value" do
+        widget = Widget.new :nagios_user => "Foo"
+        subject.parent = widget
+        subject.nagios_user.should == "Foo"
+      end
+    end
+
+    describe :nagios_password do
+      it "should have an accessor" do
+        subject.nagios_password = "Foo"
+        subject.nagios_password.should == "Foo"
+      end
+
+      it "should fallback to the parent's value" do
+        widget = Widget.new :nagios_password => "Foo"
+        subject.parent = widget
+        subject.nagios_password.should == "Foo"
+      end
+    end
   end
 end

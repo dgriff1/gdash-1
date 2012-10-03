@@ -98,6 +98,13 @@ module GDash
         subject.refresh.should == 60
       end
     end
+    
+    describe :nagios_host_group do
+      it "should have an accessor" do
+        subject.nagios_host_group = :foo
+        subject.nagios_host_group.should == :foo
+      end
+    end
 
     describe :windows do
       it "should default to the global windows" do

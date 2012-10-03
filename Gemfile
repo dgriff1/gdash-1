@@ -7,6 +7,7 @@ gem "activesupport", :require => "active_support/core_ext"
 gem 'redcarpet'
 gem "builder"
 gem "haml"
+gem "nokogiri"
 
 group :test do
   gem "rspec"

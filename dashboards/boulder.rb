@@ -2,6 +2,9 @@ GDash::Dashboard.define :boulder do |boulder|
   boulder.title = "Boulder"
   boulder.description = "Servers in Boulder"
   boulder.ganglia_host = "http://bld-mon-03/ganglia"
+  boulder.nagios_host = "http://bld-nagios-01/nagios"
+  boulder.nagios_user = "bcotton"
+  boulder.nagios_password = "just4nagios"
 
   boulder.dashboard :hadoop do |hadoop|
     hadoop.title = "Hadoop Clusters"
@@ -120,6 +123,7 @@ GDash::Dashboard.define :boulder do |boulder|
     hadoop.dashboard :boulder_kafka do |dashboard|
       dashboard.title = "Kafka"
       dashboard.description = "Kafka cluster"
+      dashboard.nagios_host_group = "kafka-servers"
 
       dashboard.section :title => "System", :width => 4 do |section|
         section.ganglia_report :title => "Load Average" do |ganglia_report|
@@ -210,6 +214,7 @@ GDash::Dashboard.define :boulder do |boulder|
     hadoop.dashboard :boulder_zookeeper do |dashboard|
       dashboard.title = "ZooKeeper"
       dashboard.description = "ZooKeeper cluster"
+      dashboard.nagios_host_group = "zookeeper-servers"
 
       dashboard.section :title => "System", :width => 4 do |section|
         section.ganglia_report :title => "Load Average" do |ganglia_report|
@@ -302,6 +307,7 @@ GDash::Dashboard.define :boulder do |boulder|
     boulder.dashboard name do |dashboard|
       dashboard.title = instance[:title]
       dashboard.description = "Rally Usage and Statistics Toolkit"
+      dashboard.nagios_host_group = "rust-servers"
 
       dashboard.section :title => "System", :width => 4 do |section|
         section.ganglia_report :title => "Load Average" do |ganglia_report|
