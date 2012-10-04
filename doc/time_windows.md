@@ -27,7 +27,7 @@ Custom, dashboard-specific time windows can be added to a dashboard using the `c
 ## Custom Attributes
 
 Windows have generally sane defaults for generating URL parameters.  In special cases, they can be overridden by passing
-a hash to the `backend_params` methods.  This hash will replace the default one and be added to the URL as GET
+a hash to the `<backend-name>_params` methods.  This hash will replace the default one and be added to the URL as GET
 parameters.
 
     GDash::Window.new :my_window do |window|
