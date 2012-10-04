@@ -107,8 +107,8 @@
             ganglia_report.size = "large"
           end
 
-          compare.ganglia_report :title => "NewGen GC" do |ganglia_report|
-            ganglia_report.report = "slm_new_gen_gc_report"
+          compare.ganglia_report :title => "JVM Memory" do |ganglia_report|
+            ganglia_report.report = "slm_all_jvm_memory_report"
             ganglia_report.cluster = "ALM"
             ganglia_report.host = host
             ganglia_report.size = "large"
