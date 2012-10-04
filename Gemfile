@@ -9,10 +9,17 @@ gem "builder"
 gem "haml"
 gem "json"
 
+group :development do
+  gem "guard-rspec"
+  gem 'rb-fsevent', '~> 0.9.1'
+  gem "fuubar"
+end
+
 group :test do
   gem "rspec"
   gem "rack-test", :require => "rack/test"
-  gem "ZenTest"
+  gem "turnip"
+  gem "capybara"
 end
 
 group :production do
