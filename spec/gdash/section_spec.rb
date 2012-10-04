@@ -27,5 +27,11 @@ module GDash
         subject.width.should == 3
       end
     end
+
+    describe :to_html do
+      subject do
+        Section.new.to_html
+      end
+    end
   end
 end

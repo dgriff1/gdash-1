@@ -154,6 +154,14 @@ module GDash
       end
     end
 
+    describe :to_html do
+      subject do
+        Window.new(:foo).to_html
+      end
+
+
+    end
+
     describe :<=> do
       it "should compare on length" do
         minute = Window.define :foo, :length => 1.minute

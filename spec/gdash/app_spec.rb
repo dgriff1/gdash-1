@@ -29,16 +29,19 @@ module GDash
         before do
           Window.define :foo
           Window.define :bar
+
+          @dashboard = Dashboard.new :foo
+          Dashboard.stub! :new => @dashboard
         end
         
-        pending "should look up the window" do
+        it "should look up the window" do
           get "/foo?window=foo"
-          assigns[:dashboard].window.should == Window[:foo]
+          @dashboard.window.should == Window[:foo]
         end
         
-        pending "should use the default window if not specified" do
+        it "should use the default window if not specified" do
           get "/foo"
-          assigns[:dashboard].window.should == Window.default
+          @dashboard.window.should == Window.default
         end
       end
     end
