@@ -28,7 +28,13 @@ widget's underscore name on the parent.
     end
 
 A plain widget by itself is not interesting except that it has a set of properties telling GDash where to point for its
-graphs.  Those properties are `ganglia_host` and `cacti_host`.
+graphs.  Those properties are:
+
+- `ganglia_host`
+- `cacti_host`
+- `nagios_host`
+- `nagios_username`
+- `nagios_password`
 
 These properties are inherited by nested blocks and can be overridden locally within a block:
 
@@ -37,7 +43,7 @@ These properties are inherited by nested blocks and can be overridden locally wi
 
       dashboard.section do |section|
         section.ganglia_graph do |graph|
-          # ...
+          # Pulls the graph from http://some-host/graph.php?...
         end
       end
 
@@ -45,13 +51,13 @@ These properties are inherited by nested blocks and can be overridden locally wi
         section.ganglia_host = "http://some-other-host"
 
         section.ganglia_graph do |graph|
-          # ...
+          # Pulls the graph from http://some-other-host/graph.php?...
         end
       end
 
       dashboard.section do |section|
         section.ganglia_graph do |graph|
-          # ...
+          # Pulls the graph from http://some-host/graph.php?...
         end
       end
     end

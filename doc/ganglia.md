@@ -18,6 +18,8 @@ There are two ways of rendering graphs from Ganglia: Graphs and Reports.
 
 ## Common
 
+There is a top-level option available on each widget to set the Ganglia host, named `ganglia_host`.
+
 There are two options common to both Graphs and Reports:
 
 - `title`: The title displayed at the top of the graph
