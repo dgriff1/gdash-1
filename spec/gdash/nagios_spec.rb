@@ -51,7 +51,7 @@ EOF
         nagios.nagios_username = "user"
         nagios.nagios_password = "passowrd"
 
-        nagios.stub! :open => TEXT
+        nagios.stub! :open => StringIO.new(TEXT)
       end
     end
     
@@ -98,7 +98,7 @@ EOF
           nagios.nagios_username = "user"
           nagios.nagios_password = "passowrd"
 
-          nagios.stub! :open => TEXT
+          nagios.stub! :open => StringIO.new(TEXT)
         end.hosts
       end
 
@@ -123,7 +123,7 @@ EOF
           nagios.nagios_username = "user"
           nagios.nagios_password = "passowrd"
 
-          nagios.stub! :open => TEXT
+          nagios.stub! :open => StringIO.new(TEXT)
         end.services
       end
 

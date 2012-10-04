@@ -9,8 +9,65 @@ module GDash
     
     def to_html html = nil
       html ||= Builder::XmlMarkup.new
-      
-      
+
+      nagios = html.table :class => "table" do
+        html.thead do
+          html.th "Hosts"
+          html.th "Services"
+        end
+
+        html.tbody do
+          html.tr do
+            html.td do
+              html.span hosts.hosts_up, :class => "badge badge-success"
+              html.text! "Up"
+            end
+
+            html.td do
+              html.span services.services_ok, :class => "badge badge-success"
+              html.text! "OK"
+            end
+          end
+
+          html.tr do
+            html.td do
+              html.span hosts.hosts_down, :class => "badge badge-important"
+              html.text! "Down"
+            end
+
+            html.td do
+              html.span services.services_critical, :class => "badge badge-important"
+              html.text! "Critical"
+            end
+          end
+
+          html.tr do
+            html.td do
+              html.span hosts.hosts_unreachable, :class => "badge badge-warning"
+              html.text! "Unreachable"
+            end
+
+            html.td do
+              html.span services.services_unknown, :class => "badge badge-warning"
+              html.text! "Unknown"
+            end
+          end
+
+          html.tr do
+            html.td do
+              html.span hosts.hosts_pending, :class => "badge badge-info"
+              html.text! "Pending"
+            end
+
+            html.td do
+              html.span services.services_pending, :class => "badge badge-info"
+              html.text! "Pending"
+            end
+          end
+        end
+      end
+
+      nagios
     end
     
     def name
@@ -33,7 +90,7 @@ module GDash
 
     class HashStruct
       def initialize hash
-        @hash = hash
+        @hash = hash || {}
       end
 
       def method_missing name, *args, &block
@@ -43,7 +100,7 @@ module GDash
 
     def json
       unless @json
-        @json = open("#{nagios_host}/cgi-bin/status-json.cgi?hostgroup=#{host_group}&style=summary&noheader", :http_basic_authentication => [nagios_username, nagios_password])
+        @json = open("#{nagios_host}/cgi-bin/status-json.cgi?hostgroup=#{host_group}&style=summary&noheader", :http_basic_authentication => [nagios_username, nagios_password]).string
         @json = JSON.parse @json
         @json = @json["hostgroups"].select do |hostgroup|
           hostgroup["hostgroup_name"] == host_group
