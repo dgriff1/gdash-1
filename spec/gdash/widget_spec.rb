@@ -287,16 +287,16 @@ module GDash
       end
     end
 
-    describe :nagios_user do
+    describe :nagios_username do
       it "should have an accessor" do
-        subject.nagios_user = "Foo"
-        subject.nagios_user.should == "Foo"
+        subject.nagios_username = "Foo"
+        subject.nagios_username.should == "Foo"
       end
 
       it "should fallback to the parent's value" do
-        widget = Widget.new :nagios_user => "Foo"
+        widget = Widget.new :nagios_username => "Foo"
         subject.parent = widget
-        subject.nagios_user.should == "Foo"
+        subject.nagios_username.should == "Foo"
       end
     end
 

@@ -8,7 +8,7 @@ module GDash
       end
     end
 
-    attr_accessor :parent, :window, :ganglia_host, :graphite_host, :cacti_host, :nagios_host, :nagios_user, :nagios_password
+    attr_accessor :parent, :window, :ganglia_host, :graphite_host, :cacti_host, :nagios_host, :nagios_username, :nagios_password
 
     def initialize options = {}
       options.each do |k, v|
@@ -54,8 +54,8 @@ module GDash
       @nagios_host || (parent && parent.nagios_host)
     end
 
-    def nagios_user
-      @nagios_user || (parent && parent.nagios_user)
+    def nagios_username
+      @nagios_username || (parent && parent.nagios_username)
     end
 
     def nagios_password

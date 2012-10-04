@@ -3,7 +3,7 @@ GDash::Dashboard.define :boulder do |boulder|
   boulder.description = "Servers in Boulder"
   boulder.ganglia_host = "http://bld-mon-03/ganglia"
   boulder.nagios_host = "http://bld-nagios-01/nagios"
-  boulder.nagios_user = "bcotton"
+  boulder.nagios_username = "bcotton"
   boulder.nagios_password = "just4nagios"
 
   boulder.dashboard :hadoop do |hadoop|
