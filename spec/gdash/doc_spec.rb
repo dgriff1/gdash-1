@@ -8,7 +8,7 @@ module GDash
       end
     end
 
-    after { File.unlink Doc.new(:test_doc).path }
+    after { FileUtils.rm_f Doc.new(:test_doc).path }
     subject { described_class.new :test_doc }
 
     its(:name) { should == :test_doc }

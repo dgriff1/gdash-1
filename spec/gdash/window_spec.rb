@@ -26,11 +26,28 @@ module GDash
       let!(:foo) { described_class.define :foo }
       subject { described_class }
 
-      its(:all) { should be_include foo }
+      context "should register the class" do
+        its(:all) { should be_include foo }
+      end
       
       context "when there is no default" do
         before { described_class.default = nil }
-        its(:default) { should == foo }
+        let!(:bar) { described_class.define :bar }
+        its(:default) { should == bar }
+      end
+      
+      context "when there is a default" do
+        before { described_class.default = foo }
+
+        context "and the default option is not set" do
+          let!(:bar) { described_class.define :bar }
+          its(:default) { should == foo }
+        end
+        
+        context "and the default options is set" do
+          let!(:bar) { described_class.define :bar, :default => true }
+          its(:default) { should == bar }
+        end
       end
     end
 
@@ -50,9 +67,11 @@ module GDash
     end
 
     describe "#default" do
-      let(:foo) { described_class.define :foo, :default => true }
+      let!(:foo) { described_class.define :foo }
+      let!(:bar) { described_class.define :bar, :default => true }
       subject { described_class }
-      its(:default) { should == foo }
+      
+      its(:default) { should == bar }
     end
 
     describe "#length" do
@@ -64,15 +83,28 @@ module GDash
     
     let!(:time) { Time.now }
     before { Time.stub! :now => time }
-    let(:default_window) { described_class.define(:foo, :length => 10) }
+    let(:default_window) { described_class.define(:foo, :length => 10.minutes) }
 
     describe "#ganglia_params" do
-      subject { default_window.ganglia_params }
-      
       context "default" do
-        its([:r]) { should == window.title }
+        subject { default_window.ganglia_params }
+        
         its([:cs]) { should == (time - window.length).strftime("%m/%d/%Y %H:%M") }
         its([:ce]) { should == time.strftime("%m/%d/%Y %H:%M") }
+        
+        describe "r" do
+          subject { default_window.ganglia_params[:r] }
+          
+          context "when the title is set" do
+            before { default_window.title = "Foo" }
+            it { should == "Foo" }
+          end
+        
+          context "when the title is not set" do
+            before { default_window.title = nil }
+            it { should == "" }
+          end
+        end
       end
     end
 

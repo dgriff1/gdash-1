@@ -5,7 +5,7 @@ module GDash
 
       def register window
         windows[window.name] = window
-        self.default = window unless default and not window.default?
+        self.default = window if default.nil? or window.default?
       end
 
       def all
