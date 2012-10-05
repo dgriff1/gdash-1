@@ -325,6 +325,13 @@
           ganglia_graph.size = "xlarge"
         end
 
+        section.ganglia_graph :title => "Bytes Out" do |ganglia_graph|
+          ganglia_graph.hosts = "#{site[:prefix]}-kafka-0[123]"
+          ganglia_graph.metrics = "kafka.server.BrokerTopicStat.kafka.BrokerAllTopicStat.BytesOut"
+          ganglia_graph.type = :stack
+          ganglia_graph.size = "xlarge"
+        end
+
         section.ganglia_graph :title => "Heap Used" do |ganglia_graph|
           ganglia_graph.hosts = "#{site[:prefix]}-kafka-0[123]"
           ganglia_graph.metrics = "sun.management.MemoryImpl.Memory.HeapMemoryUsage.used"

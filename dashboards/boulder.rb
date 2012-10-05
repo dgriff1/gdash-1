@@ -57,7 +57,7 @@ GDash::Dashboard.define :boulder do |boulder|
 
         section.ganglia_graph :title => "Bytes Out" do |ganglia_graph|
           ganglia_graph.hosts = "bld-hadoop-0[123]"
-          ganglia_graph.metrics = "kafka.server.BrokerTopicStat.kafka.BrokerAllTopicStat.BytesIn"
+          ganglia_graph.metrics = "kafka.server.BrokerTopicStat.kafka.BrokerAllTopicStat.BytesOut"
           ganglia_graph.type = :stack
           ganglia_graph.size = "xlarge"
         end
@@ -158,6 +158,13 @@ GDash::Dashboard.define :boulder do |boulder|
         section.ganglia_graph :title => "Messages In" do |ganglia_graph|
           ganglia_graph.hosts = "bld-kafka-0[123]"
           ganglia_graph.metrics = "kafka.server.BrokerTopicStat.kafka.BrokerAllTopicStat.MessagesIn"
+          ganglia_graph.type = :stack
+          ganglia_graph.size = "xlarge"
+        end
+
+        section.ganglia_graph :title => "Bytes Out" do |ganglia_graph|
+          ganglia_graph.hosts = "bld-kafka-0[123]"
+          ganglia_graph.metrics = "kafka.server.BrokerTopicStat.kafka.BrokerAllTopicStat.BytesOut"
           ganglia_graph.type = :stack
           ganglia_graph.size = "xlarge"
         end
