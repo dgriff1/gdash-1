@@ -8,64 +8,57 @@ module GDash
       end
     end
 
-    subject do
-      Doc.new :test_doc
+    after { File.unlink Doc.new(:test_doc).path }
+    subject { described_class.new :test_doc }
+
+    its(:name) { should == :test_doc }
+    its(:path) { should == "#{described_class::DIR}/test_doc.md" }
+    its(:title) { should == "Test Doc" }
+    its(:to_html) { should =~ /<h1>Test Doc<\/h1>/ }
+
+    describe "::DIR" do
+      subject { described_class }
+      it { should be_const_defined "DIR" }
     end
 
-    after do
-      File.unlink Doc.new(:test_doc).path
-    end
-
-    describe :[] do
-      it "should return a doc of that name" do
-        Doc[:test_doc].should == Doc.new(:test_doc)
+    describe ".[]" do
+      it "returns a doc of that name" do
+        described_class[:test_doc].should == described_class.new(:test_doc)
       end
     end
 
-    describe :each do
-      it "should yield each doc to the block" do
+    describe ".each" do
+      it "yields each doc to the block" do
         docs = []
-        Doc.each do |doc|
+        described_class.each do |doc|
           docs << doc
         end
-        docs.map(&:name).include?("test_doc").should be_true
+        docs.map(&:name).should be_include "test_doc"
       end
     end
 
-    describe :initialize do
-      it "should take a name" do
-        Doc.new(:foo).name.should == :foo
+    describe "#initialize" do
+      it "takes a name" do
+        expect { described_class.new }.to raise_error ArgumentError
       end
     end
-
-    describe :DIR do
-      it "should exist" do
-        Doc::DIR.should_not be_empty
-      end
+    
+    describe "#==" do
+      let(:foo_one) { described_class.new :foo }
+      let(:foo_two) { described_class.new :foo }
+      let(:bar) { described_class.new :bar }
+      
+      subject { foo_one }
+      
+      it { should == foo_two }
+      it { should_not == bar }
     end
 
-    describe :path do
-      it "should be DIR/<name>.md" do
-        subject.path.should == "#{Doc::DIR}/#{subject.name}.md"
-      end
-    end
+    describe "#<=>" do
+      let(:foo) { described_class.new :foo }
+      let(:bar) { described_class.new :bar }
 
-    describe :title do
-      it "should be the titleized name" do
-        subject.title.should == subject.name.to_s.titleize
-      end
-    end
-
-    describe :to_html do
-      it "should render markdown" do
-        subject.to_html.should =~ /<h1>Test Doc<\/h1>/
-      end
-    end
-
-    describe :<=> do
-      it "should compare on title" do
-        foo = Doc.new :foo
-        bar = Doc.new :bar
+      it "compares on title" do
         [foo, bar].sort.should == [bar, foo]
       end
     end

@@ -2,170 +2,105 @@ require "spec_helper"
 
 module GDash
   describe Window do
-    subject do
-      Window.new :foo
-    end
-
-    describe :initialize do
-      it "should take a name" do
-        Window.new(:foo).name.should == :foo
-      end
-
-      it "should take options" do
-        window = Window.new(:foo, :title => "Foo", :length => 42)
-        window.title.should == "Foo"
-        window.length.should == 42
-      end
-
-      it "should yield itself to the block" do
-        yielded = nil
-        window = Window.new :foo do |w|
-          yielded = w
-        end
-        window.should == yielded
+    let :window do
+      described_class.define :foo, :title => "Foo" do |window|
+        window.length = 42
+        window.default = true
+        window.ganglia_params = { :foo => :bar }
+        window.graphite_params = { :baz => :quux }
+        window.cacti_params = { :oof => :rab }
       end
     end
+    
+    subject { window }
+    
+    its(:name) { should == :foo }
+    its(:title) { should == "Foo" }
+    its(:length) { should == 42 }
+    its(:default) { should be_true }
+    its(:ganglia_params) { should == { :foo => :bar } }
+    its(:graphite_params) { should == { :baz => :quux } }
+    its(:cacti_params) { should == { :oof => :rab } }
 
-    describe :define do
-      it "should take a name" do
-        Window.define(:foo).name.should == :foo
-      end
+    describe ".define" do
+      let!(:foo) { described_class.define :foo }
+      subject { described_class }
 
-      it "should take options" do
-        window = Window.define(:foo, :title => "Foo", :length => 42)
-        window.title.should == "Foo"
-        window.length.should == 42
-      end
-
-      it "should yield itself to the block" do
-        yielded = nil
-        window = Window.define :foo do |w|
-          yielded = w
-        end
-        window.should == yielded
-      end
-
-      it "should register itself" do
-        window = Window.define :foo
-        Window.all.include?(window).should be_true
-      end
-
-      it "should set itself as default if there is none" do
-        Window.default = nil
-        window = Window.define :foo
-        Window.default.should == window
+      its(:all) { should be_include foo }
+      
+      context "when there is no default" do
+        before { described_class.default = nil }
+        its(:default) { should == foo }
       end
     end
 
-    describe :each do
-      it "should yield each window" do
-        window_one = Window.define :foo
-        window_two = Window.define :bar
+    describe ".each" do
+      let!(:foo) { described_class.define :foo }
+      let!(:bar) { described_class.define :bar }
 
+      it "yields each window" do
         windows = []
-        Window.each do |window|
+        described_class.each do |window|
           windows << window
         end
 
-        windows.include?(window_one).should be_true
-        windows.include?(window_two).should be_true
+        windows.should be_include foo
+        windows.should be_include bar
       end
     end
 
-    describe :default do
-      it "should have accessors" do
-        subject.default = true
-        subject.should be_default
-      end
+    describe "#default" do
+      let(:foo) { described_class.define :foo, :default => true }
+      subject { described_class }
+      its(:default) { should == foo }
+    end
 
-      it "should set the class level default" do
-        window = Window.define :foo, :default => true
-        Window.default.should == window
+    describe "#length" do
+      context "default" do
+        subject { described_class.define(:foo).length }
+        it { should == 0 }
+      end
+    end
+    
+    let!(:time) { Time.now }
+    before { Time.stub! :now => time }
+    let(:default_window) { described_class.define(:foo, :length => 10) }
+
+    describe "#ganglia_params" do
+      subject { default_window.ganglia_params }
+      
+      context "default" do
+        its([:r]) { should == window.title }
+        its([:cs]) { should == (time - window.length).strftime("%m/%d/%Y %H:%M") }
+        its([:ce]) { should == time.strftime("%m/%d/%Y %H:%M") }
       end
     end
 
-    describe :name do
-      it "should have accessors" do
-        subject.name = "Foo"
-        subject.name.should == "Foo"
+    describe "#graphite_params" do
+      context "default" do
+        subject { default_window.graphite_params }
+        it { should == {} }
       end
     end
 
-    describe :length do
-      it "should have accessors" do
-        subject.length = 42
-        subject.length.should == 42
-      end
-
-      it "should default to 0" do
-        subject.length.should == 0
+    describe "#cacti_params" do
+      context "default" do
+        subject { default_window.cacti_params }
+        
+        its([:graph_start]) { should == (time.to_i - window.length) }
+        its([:graph_end]) { should == time.to_i }
       end
     end
 
-    describe :title do
-      it "should have a title" do
-        subject.title = "The Length"
-        subject.title.should == "The Length"
-      end
+    describe "#to_html" do
+      subject { window.to_html }
     end
 
-    describe :ganglia_params do
-      it "should have accessors" do
-        subject.ganglia_params = { :foo => :bar }
-        subject.ganglia_params.should == { :foo => :bar }
-      end
-
-      it "should have sane defaults" do
-        time = Time.now
-        Time.stub! :now => time
-        subject.title = "Custom Range"
-        subject.ganglia_params.should == {
-          :r => "Custom Range",
-          :cs => (time - subject.length).strftime("%m/%d/%Y %H:%M"),
-          :ce => time.strftime("%m/%d/%Y %H:%M")
-        }
-      end
-    end
-
-    describe :graphite_params do
-      it "should have accessors" do
-        subject.graphite_params = { :foo => :bar }
-        subject.graphite_params.should == { :foo => :bar }
-      end
-
-      it "should default to an empty hash" do
-        subject.graphite_params.should == {}
-      end
-    end
-
-    describe :cacti_params do
-      it "should have accessors" do
-        subject.cacti_params = { :foo => :bar }
-        subject.cacti_params.should == { :foo => :bar }
-      end
-
-      it "should have sane defaults" do
-        time = Time.now
-        Time.stub! :now => time
-        subject.cacti_params.should == {
-          :graph_start => (time.to_i - subject.length),
-          :graph_end => time.to_i
-        }
-      end
-    end
-
-    describe :to_html do
-      subject do
-        Window.new(:foo).to_html
-      end
-
-
-    end
-
-    describe :<=> do
-      it "should compare on length" do
-        minute = Window.define :foo, :length => 1.minute
-        hour = Window.define :bar, :length => 1.hour
+    describe "#<=>" do
+      let(:minute) { described_class.define :foo, :length => 1.minute }
+      let(:hour) { described_class.define :bar, :length => 1.hour }
+      
+      it "compares on length" do
         [hour, minute].sort.should == [minute, hour]
       end
     end

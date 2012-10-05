@@ -1,6 +1,6 @@
 module GDash
-  describe Nagios do
-    TEXT = <<EOF
+  describe Nagios, :type => :request do
+    let(:text) { <<EOF }
 {"hostgroups": [{
    "hostgroup_name":"some_host_group",
 	 "hostgroup_alias":"Description of the Host Group",
@@ -45,63 +45,30 @@ module GDash
 }
 EOF
 
-    subject do
-      Nagios.new :some_host_group do |nagios|
+    let :nagios do
+      described_class.new :some_host_group do |nagios|
         nagios.nagios_host = "http://nagios-server/nagios"
         nagios.nagios_username = "user"
         nagios.nagios_password = "passowrd"
 
-        nagios.stub! :open => StringIO.new(TEXT)
+        nagios.stub! :open => StringIO.new(text)
       end
     end
+
+    subject { nagios }
     
-    it "should be a Widget" do
-      subject.should be_a Widget
-    end
+    it { should be_a Widget }
     
-    describe :initialize do
-      it "should take a host group" do
-        Nagios.new(:some_host_group).host_group.should == "some_host_group"
-      end
-
-      it "should yield itself to the block" do
-        yielded = nil
-        dashboard = Nagios.new :some_host_group do |n|
-          yielded = n
-        end
-        dashboard.should == yielded
-      end
-    end
+    its(:host_group) { should == "some_host_group" }
+    its(:description) { should == "Description of the Host Group" }
     
-    describe :host_group do
-      it "should have accessors" do
-        subject.host_group = :foo
-        subject.host_group.should == :foo
-      end
-    end
+    its(:nagios_host) { should == "http://nagios-server/nagios" }
+    its(:nagios_username) { should == "user" }
+    its(:nagios_password) { should == "passowrd" }
 
-    describe :description do
-      it "should extract the name from the document" do
-        subject.description.should == "Description of the Host Group"
-      end
-
-      it "should have accessors" do
-        subject.description = :foo
-        subject.description.should == :foo
-      end
-    end
-
-    context :hosts do
-      subject do
-        Nagios.new(:some_host_group) do |nagios|
-          nagios.nagios_host = "http://nagios-server/nagios"
-          nagios.nagios_username = "user"
-          nagios.nagios_password = "passowrd"
-
-          nagios.stub! :open => StringIO.new(TEXT)
-        end.hosts
-      end
-
+    describe "#hosts" do
+      subject { nagios.hosts }
+      
       its(:hosts_up) { should == 2 }
       its(:hosts_down) { should == 0 }
       its(:hosts_pending) { should == 0 }
@@ -116,17 +83,9 @@ EOF
       its(:hosts_down_unacknowledged) { should == 0 }
     end
 
-    context :services do
-      subject do
-        Nagios.new(:some_host_group) do |nagios|
-          nagios.nagios_host = "http://nagios-server/nagios"
-          nagios.nagios_username = "user"
-          nagios.nagios_password = "passowrd"
-
-          nagios.stub! :open => StringIO.new(TEXT)
-        end.services
-      end
-
+    describe "#services" do
+      subject { nagios.services }
+      
       its(:services_ok) { should == 20 }
       its(:services_warning) { should == 0 }
       its(:services_unknown) { should == 0 }
@@ -147,6 +106,36 @@ EOF
       its(:services_critical_acknowledged) { should == 0 }
       its(:services_critical_disabled) { should == 0 }
       its(:services_critical_unacknowledged) { should == 1 }
+    end
+
+    describe "#to_html" do
+      subject { nagios.to_html }
+
+      it { should have_selector "table.table" }
+      
+      it { should have_selector "span.badge.badge-success", :content => nagios.hosts.hosts_up }
+      it { should have_content "Up" }
+
+      it { should have_selector "span.badge.badge-success", :content => nagios.services.services_ok }
+      it { should have_content "OK" }      
+      
+      it { should have_selector "span.badge.badge-important", :content => nagios.hosts.hosts_down }
+      it { should have_content "Down" }
+      
+      it { should have_selector "span.badge.badge-important", :content => nagios.services.services_critical }
+      it { should have_content "Critical" }
+      
+      it { should have_selector "span.badge.badge-warning", :content => nagios.hosts.hosts_unreachable }
+      it { should have_content "Unreachable" }
+      
+      it { should have_selector "span.badge.badge-warning", :content => nagios.services.services_unknown }
+      it { should have_content "Unknown" }
+      
+      it { should have_selector "span.badge.badge-info", :content => nagios.hosts.hosts_pending }
+      it { should have_content "Pending" }
+      
+      it { should have_selector "span.badge.badge-info", :content => nagios.services.services_pending }
+      it { should have_content "Pending" }
     end
   end
 end

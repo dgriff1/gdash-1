@@ -19,7 +19,7 @@ module GDash
     end
 
     def size= s
-      fails "#{s.inspect} is not a valid Ganglia size" unless SIZES.include? s
+      raise ArgumentError.new("#{s.inspect} is not a valid Ganglia size") unless SIZES.include? s
       @size = s
     end
 

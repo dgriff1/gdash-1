@@ -2,72 +2,45 @@ require "spec_helper"
 
 module GDash
   describe GangliaReport do
-    subject do
-      GangliaReport.new
-    end
-
-    it "should be a Ganglia widget" do
-      subject.should be_a Ganglia
-    end
-
-    describe :report do
-      it "should have accessors" do
-        subject.report = "Foo"
-        subject.report.should == "Foo"
+    let :report do
+      described_class.new do |report|
+        report.window = Window.new(:hour, :length => 1.hour)
+        report.size = "xlarge"
+        report.title = "The Graph Title"
+        report.report = "the_report"
+        report.cluster = "The Cluster"
+        report.host = "the-host-01"
       end
     end
+    
+    subject { report }
 
-    describe :cluster do
-      it "should have accessors" do
-        subject.cluster = "Foo"
-        subject.cluster.should == "Foo"
-      end
-    end
+    it { should be_a Ganglia }
+    
+    its(:size) { should == "xlarge" }
+    its(:title) { should == "The Graph Title" }
+    its(:report) { should == "the_report" }
+    its(:cluster) { should == "The Cluster" }
+    its(:host) { should == "the-host-01" }
 
-    describe :host do
-      it "should have accessors" do
-        subject.host = "Foo"
-        subject.host.should == "Foo"
-      end
-    end
+    describe "#to_url" do
+      subject { report.to_url }
 
-    describe :to_url do
-      subject do
-        GangliaReport.new :window => Window.new(:hour, :length => 1.hour),
-                          :size => "xlarge",
-                          :title => "The Graph Title",
-                          :report => "the_report",
-                          :cluster => "The Cluster",
-                          :host => "bld-host-01"
-      end
+      it { should =~ /z=xlarge/ }
+      it { should =~ /title=The\+Graph\+Title/ }
+      it { should =~ /g=the_report/ }
+      it { should =~ /h=the-host-01/ }
+      it { should =~ /c=The\+Cluster/ }
 
-      it "should include the window" do
-        subject.window.ganglia_params.each do |k, v|
-          subject.to_url.should =~ /#{Regexp.escape "#{k}=#{Rack::Utils.escape(v)}"}/
+      it "includes the window" do
+        report.window.ganglia_params.each do |k, v|
+          subject.should =~ /#{Regexp.escape "#{k}=#{Rack::Utils.escape(v)}"}/
         end
       end
-
-      it "should include the size" do
-        subject.to_url.should =~ /z=#{Rack::Utils.escape(subject.size)}/
-      end
-
-      it "should include the title" do
-        subject.to_url.should =~ /#{Regexp.escape "title=#{Rack::Utils.escape(subject.title)}"}/
-      end
-
-      it "should include the report" do
-        subject.to_url.should =~ /g=#{Rack::Utils.escape(subject.report)}/
-      end
-
-      it "should include the host if present" do
-        subject.to_url.should =~ /h=#{Rack::Utils.escape(subject.host)}/
-
-        subject.host = nil
-        subject.to_url.should_not =~ /h=/
-      end
-
-      it "should set the cluster" do
-        subject.to_url.should =~ /#{Regexp.escape "c=#{Rack::Utils.escape(subject.cluster)}"}/
+      
+      context "without host" do
+        before { report.host = nil }
+        it { should_not =~ /h=/ }
       end
     end
   end

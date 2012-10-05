@@ -1,6 +1,5 @@
 source 'http://rubygems.org'
 
-gem "rake"
 gem 'sinatra'
 gem "i18n"
 gem "activesupport", :require => "active_support/core_ext"
@@ -10,6 +9,7 @@ gem "haml"
 gem "json"
 
 group :development do
+  gem "rake"
   gem "guard-rspec"
   gem 'rb-fsevent', '~> 0.9.1'
   gem "fuubar"
