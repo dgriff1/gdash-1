@@ -4,6 +4,8 @@ require 'bundler'
 
 Bundler.require :default
 
+require "gdash/version"
+
 require 'gdash/doc'
 require 'gdash/window'
 require 'gdash/widget'

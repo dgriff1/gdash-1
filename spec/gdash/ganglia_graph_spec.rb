@@ -2,141 +2,60 @@ require "spec_helper"
 
 module GDash
   describe GangliaGraph do
-    subject do
-      GangliaGraph.new
-    end
-
-    it "should be a Ganglia widget" do
-      subject.should be_a Ganglia
-    end
-
-    describe :hosts do
-      it "should have an accessor" do
-        subject.hosts = "Foo"
-        subject.hosts.should == "Foo"
+    let :graph do
+      described_class.new do |graph|
+        graph.window = Window.new(:hour, :length => 1.hour)
+        graph.size = "xlarge"
+        graph.title = "The Graph Title"
+        graph.vertical_label = "A Label"
+        graph.limits = (1..10)
+        graph.hosts = "the-host-0[123]"
+        graph.metrics = "metric.name.[\\d]"
+        graph.type = "stack"
+        graph.legend = true
       end
     end
+    
+    subject { graph }
 
-    describe :metrics do
-      it "should have an accessor" do
-        subject.metrics = "Foo"
-        subject.metrics.should == "Foo"
+    it { should be_a Ganglia }
+    
+    its(:hosts) { should == "the-host-0[123]" }
+    its(:metrics) { should == "metric.name.[\\d]" }
+    its(:vertical_label) { should == "A Label" }
+    its(:upper_limit) { should == 10 }
+    its(:lower_limit) { should == 1 }
+    its(:type) { should == "stack" }
+    its(:legend) { should be_true }
+    its(:aggregate) { should be_true }
+
+    describe "#to_url" do
+      subject { graph.to_url }
+      
+      it { should =~ /z=xlarge/ }
+      it { should =~ /title=The\+Graph\+Title/ }
+      it { should =~ /vl=A\+Label/ }
+      it { should =~ /x=10/ }
+      it { should =~ /n=1/ }
+      it { should =~ /hreg\[\]=#{Rack::Utils.escape("the-host-0[123]")}/ }
+      it { should =~ /mreg\[\]=#{Rack::Utils.escape("metric.name.[\\d]")}/ }
+      it { should =~ /gtype=stack/ }
+      it { should =~ /aggregate=1/ }
+      
+      context "with legend" do
+        before { graph.legend = true }
+        it { should =~ /glegend=show/ }
       end
-    end
-
-    describe :vertical_label do
-      it "should have an accessor" do
-        subject.vertical_label = "Foo"
-        subject.vertical_label.should == "Foo"
-      end
-    end
-
-    describe :upper_limit do
-      it "should have an accessor" do
-        subject.upper_limit = 42
-        subject.upper_limit.should == 42
-      end
-    end
-
-    describe :lower_limit do
-      it "should have an accessor" do
-        subject.lower_limit = 42
-        subject.lower_limit.should == 42
-      end
-    end
-
-    describe :limits= do
-      it "should set the upper and lower limit" do
-        subject.limits = (1..10)
-        subject.lower_limit.should == 1
-        subject.upper_limit.should == 10
-      end
-    end
-
-    describe :type do
-      it "should have an accessor" do
-        subject.type = "Foo"
-        subject.type.should == "Foo"
-      end
-    end
-
-    describe :legend do
-      it "should have an accessor" do
-        subject.legend = true
-        subject.legend.should be_true
-      end
-    end
-
-    describe :aggregate do
-      it "should have an accessor" do
-        subject.aggregate = false
-        subject.aggregate.should be_false
+      
+      context "without legend" do
+        before { graph.legend = false }
+        it { should =~ /glegend=hide/ }
       end
 
-      it "should default to true" do
-        subject.aggregate.should == true
-      end
-    end
-
-    describe :to_url do
-      subject do
-        GangliaGraph.new :window => Window.new(:hour, :length => 1.hour),
-                         :size => "xlarge",
-                         :title => "The Graph Title",
-                         :vertical_label => "A Label",
-                         :limits => (1..10),
-                         :hosts => "bld-host-0[123]",
-                         :metrics => "metric.name.[\\d]",
-                         :type => "stacked",
-                         :legend => true,
-                         :aggregate => true
-      end
-
-      it "should include the window" do
-        subject.window.ganglia_params.each do |k, v|
-          subject.to_url.should =~ /#{Regexp.escape "#{k}=#{Rack::Utils.escape(v)}"}/
+      it "includes the window" do
+        graph.window.ganglia_params.each do |k, v|
+          subject.should =~ /#{Regexp.escape "#{k}=#{Rack::Utils.escape(v)}"}/
         end
-      end
-
-      it "should include the size" do
-        subject.to_url.should =~ /z=#{Rack::Utils.escape(subject.size)}/
-      end
-
-      it "should include the title" do
-        subject.to_url.should =~ /#{Regexp.escape "title=#{Rack::Utils.escape(subject.title)}"}/
-      end
-
-      it "should include the vertical label" do
-        subject.to_url.should =~ /#{Regexp.escape "vl=#{Rack::Utils.escape(subject.vertical_label)}"}/
-      end
-
-      it "should set the limits" do
-        subject.to_url.should =~ /x=#{Rack::Utils.escape(subject.upper_limit)}/
-        subject.to_url.should =~ /n=#{Rack::Utils.escape(subject.lower_limit)}/
-      end
-
-      it "should set the host regular expression" do
-        subject.to_url.should =~ /hreg\[\]=#{Rack::Utils.escape(subject.hosts)}/
-      end
-
-      it "should set the metrics regular expression" do
-        subject.to_url.should =~ /mreg\[\]=#{Rack::Utils.escape(subject.metrics)}/
-      end
-
-      it "should set the graph type" do
-        subject.to_url.should =~ /gtype=#{Rack::Utils.escape(subject.type)}/
-      end
-
-      it "should set the legend" do
-        subject.legend = true
-        subject.to_url.should =~ /glegend=#{Rack::Utils.escape("show")}/
-
-        subject.legend = false
-        subject.to_url.should =~ /glegend=#{Rack::Utils.escape("hide")}/
-      end
-
-      it "should set the aggregate" do
-        subject.to_url.should =~ /aggregate=1/
       end
     end
   end

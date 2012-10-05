@@ -2,87 +2,63 @@ require "spec_helper"
 
 module GDash
   describe Ganglia do
-    subject do
-      Ganglia.new
+    let :ganglia do
+      described_class.new do |ganglia|
+        ganglia.ganglia_host = "http://ganglia-host:1234/path/to/ganglia"
+        ganglia.window = Window.new(:hour, :length => 1.hour)
+        ganglia.size = "xlarge"
+        ganglia.title = "The Graph Title"
+        ganglia.embed = true
+      end
     end
+    
+    subject { ganglia }
 
-    it "should be a widget" do
-      subject.should be_a Widget
-    end
+    it { should be_a Widget }
+    
+    its(:size) { should == "xlarge" }
+    its(:title) { should == "The Graph Title" }
+    its(:embed) { should be_true }
 
-    describe :size do
-      it "should have an accessor" do
-        subject.size = "xlarge"
-        subject.size.should == "xlarge"
+    describe "#size" do
+      context "default" do
+        subject { described_class.new.size }
+        it { should == "large" }
       end
 
-      it "should default to medium" do
-        subject.size.should == "large"
-      end
-
-      it "should validate that it is in Ganglia::SIZES" do
-        Ganglia::SIZES.each do |size|
-          lambda { subject.size = size }.should_not raise_error
+      it "validates that it is in Ganglia::SIZES" do
+        described_class::SIZES.each do |size|
+          expect { subject.size = size }.to_not raise_error ArgumentError
         end
-
-        lambda { subject.size = :foobar }.should raise_error
+        expect { subject.size = :foobar }.to raise_error ArgumentError
       end
     end
 
-    describe :title do
-      it "should have an accessor" do
-        subject.title = "Foo"
-        subject.title.should == "Foo"
+    describe "#embed" do
+      context "default" do
+        subject { described_class.new.embed }
+        it { should be_true }
       end
     end
 
-    describe :embed do
-      it "should have an accessor" do
-        subject.embed = false
-        subject.embed.should be_false
-      end
+    describe "#to_url" do
+      subject { ganglia.to_url }
+      
+      it { should =~ /http:\/\/ganglia-host:1234\/path\/to/ }
+      it { should =~ /z=xlarge/ }
+      it { should =~ /title=The\+Graph\+Title/ }
+      it { should =~ /embed=1/ }
 
-      it "should default to true" do
-        subject.embed.should == true
-      end
-    end
-
-    describe :to_url do
-      subject do
-        Ganglia.new :ganglia_host => "http://ganglia-host:1234/path/to/ganglia",
-                    :window => Window.new(:hour, :length => 1.hour),
-                    :size => "xlarge",
-                    :title => "The Graph Title",
-                    :embed => true
-      end
-
-      it "should include the host" do
-        subject.to_url.should =~ /http:\/\/ganglia-host:1234\/path\/to/
-      end
-
-      it "should include the window" do
-        subject.window.ganglia_params.each do |k, v|
-          subject.to_url.should =~ /#{Regexp.escape "#{k}=#{Rack::Utils.escape(v)}"}/
+      it "includes the window" do
+        ganglia.window.ganglia_params.each do |k, v|
+          subject.should =~ /#{Regexp.escape "#{k}=#{Rack::Utils.escape(v)}"}/
         end
       end
-
-      it "should include the size" do
-        subject.to_url.should =~ /z=#{Rack::Utils.escape(subject.size)}/
-      end
-
-      it "should include the title" do
-        subject.to_url.should =~ /#{Regexp.escape("title=#{Rack::Utils.escape(subject.title)}")}/
-      end
-
-      it "should include the embed" do
-        subject.to_url.should =~ /embed=1/
-      end
     end
-
-    describe :to_html do
-      it "should create an image with the ganglia graph" do
-        subject.to_html.should == "<img src=\"#{subject.to_url}\"/>"
-      end
+    
+    describe "#to_html" do
+      subject { ganglia.to_html }
+      it { should == "<img src=\"#{ganglia.to_url}\"/>" }
     end
   end
 end

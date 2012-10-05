@@ -1,19 +1,26 @@
-spec = Gem::Specification.new do |s|
-  s.name = 'gdash'
-  s.version = "0.0.2"
-  s.author = 'R.I.Pienaar'
-  s.email = 'rip@devco.net'
-  s.homepage = 'http://devco.net/'
-  s.platform = Gem::Platform::RUBY
-  s.summary = 'Graphite Dashboard'
-  s.description = "A simple dashboard for creating and displaying Graphite graphs"
-# Add your other files here if you make them
-  s.files = FileList["{README.md,COPYING,CONTRIBUTORS,bin,lib,public,views,sample,Gemfile,Gemfile.lock}/**/*"].to_a
-  s.require_paths << 'lib'
-  s.has_rdoc = false
-  s.add_development_dependency('rake')
-  s.add_development_dependency('rdoc')
-  s.add_dependency 'graphite_graph'
-  s.add_dependency 'sinatra'
-  s.add_dependency 'redcarpet'
+# -*- encoding: utf-8 -*-
+require File.expand_path('../lib/gdash/version', __FILE__)
+
+Gem::Specification.new do |gem|
+  gem.authors       = ["R.I.Pienaar", "Jonathan Bryant"]
+  gem.email         = ["rip@devco.net", "watersofmemory@gmail.com"]
+  gem.description   = %q{A simple dashboard for creating and displaying graphs from multiple monitoring services.}
+  gem.summary       = %q{Dashboards}
+  gem.homepage      = ""
+
+  gem.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
+  gem.files         = `git ls-files`.split("\n")
+  gem.test_files    = `git ls-files -- {test,spec}/*`.split("\n")
+  gem.name          = "gdash"
+  gem.require_paths = ["lib"]
+  gem.version       = GDash::VERSION
+  
+  gem.add_dependency "thin"
+  gem.add_dependency "json"
+  gem.add_dependency "haml"
+  gem.add_dependency "sinatra"
+  gem.add_dependency "i18n"
+  gem.add_dependency "activesupport"
+  gem.add_dependency "redcarpet"
+  gem.add_dependency "builder"
 end

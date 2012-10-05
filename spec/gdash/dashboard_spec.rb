@@ -2,130 +2,82 @@ require "spec_helper"
 
 module GDash
   describe Dashboard do
+    let(:dashboard) do
+      described_class.define :some_dashboard do |dashboard|
+        dashboard.title = "The Dashboard Title"
+        dashboard.description = "A description of the dashboard"
+        dashboard.refresh = 42
+      end
+    end
+    let(:foo) { described_class.new :a, :title => "foo" }
+    let(:bar) { described_class.new :b, :title => "bar" }
+    
     subject do
-      Dashboard.new :some_dashboard
+      dashboard
     end
 
-    describe :define do
-      it "should require a name" do
-        lambda { Dashboard.define }.should raise_error ArgumentError
+    it { should be_a Widget }
+    
+    its(:name) { should == :some_dashboard }
+    its(:title) { should == "The Dashboard Title" }
+    its(:description) { should == "A description of the dashboard" }
+    its(:refresh) { should == 42 }
+    its(:windows) { should == Window.all }
 
-        dashboard = Dashboard.define :some_dashboard
-        dashboard.name.should == :some_dashboard
+    describe ".define" do
+      it "requires a name" do
+        expect { described_class.define }.to raise_error ArgumentError
       end
 
-      it "should register itself" do
-        dashboard = Dashboard.define :some_dashboard
-        Dashboard[:some_dashboard].should == dashboard
+      it "registers itself" do
+        dashboard = described_class.define :some_dashboard
+        described_class[:some_dashboard].should == dashboard
       end
 
-      it "should register itself as a top-level dashboard" do
-        dashboard = Dashboard.define :some_dashboard
-        Dashboard.toplevel.include?(dashboard).should be_true
-      end
-
-      it "should yield itself to the block" do
-        yielded = nil
-        dashboard = Dashboard.define :some_dashboard do |d|
-          yielded = d
-        end
-        dashboard.should == yielded
+      it "registers itself as a top-level dashboard" do
+        dashboard = described_class.define :some_dashboard
+        described_class.toplevel.include?(dashboard).should be_true
       end
     end
 
-    describe :initialize do
-      it "should require a name" do
-        lambda { Dashboard.new }.should raise_error ArgumentError
-
-        dashboard = Dashboard.new :some_dashboard
-        dashboard.name.should == :some_dashboard
-        Dashboard[:some_dashboard].should == dashboard
+    describe "#initialize" do
+      it "requires a name" do
+        expect { described_class.new }.to raise_error ArgumentError
       end
 
-      it "should register itself" do
-        dashboard = Dashboard.new :some_dashboard
-        Dashboard[:some_dashboard].should == dashboard
-      end
-
-      it "should yield itself to the block" do
-        yielded = nil
-        dashboard = Dashboard.new :some_dashboard do |d|
-          yielded = d
-        end
-        dashboard.should == yielded
+      it "registers itself" do
+        dashboard = described_class.new :some_dashboard
+        described_class[:some_dashboard].should == dashboard
       end
     end
 
-    describe :each do
-      it "should yield each registered dashboard" do
-        Dashboard.new :foo
-        Dashboard.new :bar
-
+    describe "#each" do
+      let!(:foo) { described_class.new :foo }
+      let!(:bar) { described_class.new :bar }
+      
+      it "yields each registered dashboard" do
         dashboards = []
-        Dashboard.each do |dashboard|
+        described_class.each do |dashboard|
           dashboards << dashboard
         end
-        dashboards.include?(Dashboard[:foo]).should be_true
-        dashboards.include?(Dashboard[:bar]).should be_true
+        dashboards.should be_include foo
+        dashboards.should be_include bar
       end
     end
 
-    it "should be a widget" do
-      subject.should be_a Widget
-    end
-
-    describe :title do
-      it "should have an accessor" do
-        subject.title = "Foo"
-        subject.title.should == "Foo"
-      end
-    end
-
-    describe :description do
-      it "should have an accessor" do
-        subject.description = "Foo"
-        subject.description.should == "Foo"
-      end
-    end
-
-    describe :refresh do
-      it "should have an accessor" do
-        subject.refresh = 5
-        subject.refresh.should == 5
-      end
-
-      it "should default to 60s" do
-        subject.refresh.should == 60
-      end
-    end
-    
-    describe :nagios_host_group do
-      it "should have an accessor" do
-        subject.nagios_host_group = :foo
-        subject.nagios_host_group.should == :foo
-      end
-    end
-
-    describe :windows do
-      it "should default to the global windows" do
-        subject.windows.should == Window.all
-      end
-
-      it "should be sorted" do
+    describe "#windows" do
+      it "sorts the child windows" do
         subject.custom_window :foo, :length => 420.minutes
         subject.custom_window :foo, :length => 42.minutes
         subject.windows.should == subject.windows.sort
       end
     end
 
-    describe :custom_window do
-      it "should add a window to the windows" do
-        window = subject.custom_window :foo
-        subject.windows.should be_include window
-        Window.all.should_not be_include window
-      end
+    describe "#custom_window" do
+      let!(:window) { subject.custom_window :foo }
+      its(:windows) { should be_include window }
 
-      it "should yield the window to the block" do
+      it "yields the window to the block" do
         yielded = nil
         returned = subject.custom_window :foo do |w|
           yielded = w
@@ -134,10 +86,8 @@ module GDash
       end
     end
 
-    describe :<=> do
-      it "should sort on title" do
-        foo = Dashboard.new :a, :title => "foo"
-        bar = Dashboard.new :b, :title => "bar"
+    describe "#<=>" do
+      it "orders on title" do
         [foo, bar].sort.should == [bar, foo]
       end
     end

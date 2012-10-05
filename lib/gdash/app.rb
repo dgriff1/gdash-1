@@ -1,7 +1,7 @@
 module GDash
   class App < Sinatra::Base
-    set :views, File.expand_path(File.join(File.dirname(__FILE__), "../..", "views"))
-    set :public_folder, File.expand_path(File.join(File.dirname(__FILE__), "../..", "public"))
+    set :views, File.expand_path(File.join(File.dirname(__FILE__), "views"))
+    set :public_folder, File.expand_path(File.join(File.dirname(__FILE__), "public"))
 
     helpers Helper
 

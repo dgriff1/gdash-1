@@ -30,7 +30,7 @@ module GDash
       end
     end
 
-    attr_accessor :name, :title, :description, :refresh, :nagios_host_group
+    attr_accessor :name, :title, :description, :refresh
 
     def initialize name, *args, &block
       @refresh = 60

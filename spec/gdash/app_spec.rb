@@ -10,66 +10,50 @@ module GDash
   describe App do
     include Rack::Test::Methods
 
-    describe "/:name" do
+    describe "Showing a dashboard" do
       describe "when :name is a defined dashbaord" do
-        before do
-          get "/foo"
-        end
+        subject { get "/foo" }
 
-        it "should return a 200 OK" do
-          last_response.should be_ok
-        end
-
-        it "should return the dashboard" do
-          last_response.body.should =~ /#{Dashboard[:foo].to_html}/
-        end
+        it { should be_ok }
+        its(:body) { should =~ /#{Dashboard[:foo].to_html}/ }
       end
       
       describe :window do
-        before do
-          Window.define :foo
-          Window.define :bar
-        end
+        let!(:foo) { Window.define :foo }
+        let!(:bar) { Window.define :bar }
+        let(:dashboard) { Dashboard.new :foo }
+        before { Dashboard.stub! :new => dashboard }
         
-        pending "should look up the window" do
+        it "looks up the window" do
           get "/foo?window=foo"
-          assigns[:dashboard].window.should == Window[:foo]
+          dashboard.window.should == Window[:foo]
         end
         
-        pending "should use the default window if not specified" do
+        it "uses the default window if not specified" do
           get "/foo"
-          assigns[:dashboard].window.should == Window.default
+          dashboard.window.should == Window.default
         end
       end
     end
 
-    describe "/doc" do
-      it "should redirect" do
-        get "/doc"
-        last_response.should be_redirect
-      end
+    describe "Documentation" do
+      subject { get "/doc" }
+      it { should be_redirect }
     end
 
-    describe "/doc/:page" do
+    describe "Showing a help page" do
       describe "when :page exists" do
         before do
           File.open File.expand_path(File.join(File.dirname(__FILE__), %w{.. .. doc foo.md})), "w" do |f|
             f.puts "# Test"
           end
-          get "/doc/foo"
         end
+        after { File.unlink File.expand_path(File.join(File.dirname(__FILE__), %w{.. .. doc foo.md})) }
+        
+        subject { get "/doc/foo" }
 
-        after do
-          File.unlink File.expand_path(File.join(File.dirname(__FILE__), %w{.. .. doc foo.md}))
-        end
-
-        it "should return a 200 OK" do
-          last_response.should be_ok
-        end
-
-        it "should render the file as markdown" do
-          last_response.body.should =~ /<h1>\s*Test\s*<\/h1>/m
-        end
+        it { should be_ok }
+        its(:body) { should =~ /<h1>\s*Test\s*<\/h1>/m }
       end
     end
   end
