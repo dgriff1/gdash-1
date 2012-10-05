@@ -175,7 +175,7 @@
           end
 
           alm.ganglia_report :title => "JVM Memory" do |ganglia_report|
-            ganglia_report.report = "slm_jvm_all_memory_report"
+            ganglia_report.report = "slm_all_jvm_memory_report"
             ganglia_report.cluster = "ALM"
             ganglia_report.host = host
             ganglia_report.size = "large"
