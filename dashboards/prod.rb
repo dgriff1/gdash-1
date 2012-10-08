@@ -100,8 +100,8 @@
             ganglia_report.size = "large"
           end
 
-          compare.ganglia_report :title => "Full GC" do |ganglia_report|
-            ganglia_report.report = "slm_full_gc_report"
+          compare.ganglia_report :title => "ALM Connections" do |ganglia_report|
+            ganglia_report.report = "slm_connections_report"
             ganglia_report.cluster = "ALM"
             ganglia_report.host = host
             ganglia_report.size = "large"
