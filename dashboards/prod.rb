@@ -188,6 +188,13 @@
             ganglia_report.size = "large"
           end
 
+          alm.ganglia_report :title => "ALM Connections" do |ganglia_report|
+            ganglia_report.report = "slm_connections_report"
+            ganglia_report.cluster = "ALM"
+            ganglia_report.host = host
+            ganglia_report.size = "large"
+          end
+
           alm.ganglia_report :title => "Jetty Threads" do |ganglia_report|
             ganglia_report.report = "slm_jetty_threads_report"
             ganglia_report.cluster = "ALM"
