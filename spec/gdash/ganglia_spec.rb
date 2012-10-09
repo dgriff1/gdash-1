@@ -9,6 +9,8 @@ module GDash
         ganglia.size = "xlarge"
         ganglia.title = "The Graph Title"
         ganglia.embed = true
+        ganglia.custom :foo => :bar, :baz => :quux
+        ganglia.custom :a => :b
       end
     end
     
@@ -48,6 +50,9 @@ module GDash
       it { should =~ /z=xlarge/ }
       it { should =~ /title=The\+Graph\+Title/ }
       it { should =~ /embed=1/ }
+      it { should =~ /foo=bar/ }
+      it { should =~ /baz=quux/ }
+      it { should =~ /a=b/ }
 
       it "includes the window" do
         ganglia.window.ganglia_params.each do |k, v|

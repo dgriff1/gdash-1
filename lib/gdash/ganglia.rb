@@ -23,6 +23,14 @@ module GDash
       @size = s
     end
 
+    def custom args = {}
+      if args.blank?
+        @custom ||= {}
+      else
+        @custom = (@custom || {}).merge args
+      end
+    end
+
     def to_url
       params = url_params.map { |k, v| "#{k}=#{Rack::Utils.escape(v)}" }.join("&")
       "#{ganglia_host}/graph.php?#{params}"
@@ -36,7 +44,7 @@ module GDash
     private
 
     def url_params
-      window.ganglia_params.merge({
+      window.ganglia_params.merge(custom).merge({
        :z         => size,
        :title     => title,
        :embed     => embed ? 1 : 0 })

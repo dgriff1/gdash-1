@@ -30,6 +30,12 @@ There are two options common to both Graphs and Reports:
   - `xlarge`
   - `xxlarge`
 
+Custom attributes can be added to the URL parameters of a graph or report by using the `custom` method:
+
+    section.ganglia_graph :title => "Some Special Graph" do |graph|
+      graph.custom :foo, :bar
+    end
+
 ## Graphs
 
 Graphs are simple graphs which are dynamically built based on two main parameters:
