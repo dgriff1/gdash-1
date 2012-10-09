@@ -9,7 +9,7 @@
   } 
 }.each do |name, site|
   GDash::Dashboard.define :"#{name}_zuul_top" do |dashboard|
-    #dashboard.parent = :"#{name}"
+    dashboard.parent = GDash::Dashboard[:"#{site}"]
     dashboard.title = "Zuul (Beta) #{site[:title]}"
     dashboard.description = "#{site[:title]} Zuul metrics"
     dashboard.ganglia_host = "http://bld-mon-03.f4tech.com/ganglia-#{site[:prefix]}"
