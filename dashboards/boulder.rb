@@ -63,7 +63,25 @@ GDash::Dashboard.define :boulder do |boulder|
         end
       end
 
-      ["prod-a2", "prod-beacon", "prod-server", "trial-server"].each do |topic|
+      dashboard.section :title => "Mirror Maker Lags", :width => 3 do |lags|
+        lags.ganglia_graph :title => "All" do |ganglia_graph|
+          ganglia_graph.hosts = "bld-hadoop-01"
+          ganglia_graph.metrics = "consumer.kafka-mirror-group.[^\\.]+.lag"
+          ganglia_graph.type = :stack
+          ganglia_graph.size = "xlarge"
+        end
+
+        ["prod-a2", "prod-beacon", "prod-server-start", "prod-server-end", "trial-server-start", "trial-server-end", "dev-server-start", "dev-server-end", "test-server-start", "test-server-end", "loadtest-server-start", "loadtest-server-end"].each do |topic|
+          lags.ganglia_graph :title => "#{topic}" do |ganglia_graph|
+            ganglia_graph.hosts = "bld-hadoop-0[123]"
+            ganglia_graph.metrics = "consumer.kafka-mirror-group.#{topic}.broker\\d+.partition\\d+.lag"
+            ganglia_graph.type = :stack
+            ganglia_graph.size = "xlarge"
+          end
+        end
+      end
+
+      ["prod-a2", "prod-beacon", "prod-server-start", "prod-server-end", "trial-server-start", "trial-server-end", "dev-server-start", "dev-server-end", "test-server-start", "test-server-end", "loadtest-server-start", "loadtest-server-end"].each do |topic|
         dashboard.section :title => "Topic: #{topic}", :width => 3 do |section|
           section.ganglia_graph :title => "Messages In" do |ganglia_graph|
             ganglia_graph.hosts = "bld-hadoop-0[123]"
@@ -195,7 +213,25 @@ GDash::Dashboard.define :boulder do |boulder|
         end
       end
 
-      ["prod-a2", "prod-beacon", "prod-server-start", "prod-server-end", "trial-server-start", "trial_server-end", "dev-server-start", "dev-server-end", "test-server-start", "test-server-end", "loadtest-server-start", "loadtest-server-end"].each do |topic|
+      dashboard.section :title => "Mirror Maker Lags", :width => 3 do |lags|
+        lags.ganglia_graph :title => "All" do |ganglia_graph|
+          ganglia_graph.hosts = "bld-kafka-01"
+          ganglia_graph.metrics = "consumer.kafka-mirror-group.[^\\.]+.lag"
+          ganglia_graph.type = :stack
+          ganglia_graph.size = "xlarge"
+        end
+
+        ["prod-a2", "prod-beacon", "prod-server-start", "prod-server-end", "trial-server-start", "trial-server-end", "dev-server-start", "dev-server-end", "test-server-start", "test-server-end", "loadtest-server-start", "loadtest-server-end"].each do |topic|
+          lags.ganglia_graph :title => "#{topic}" do |ganglia_graph|
+            ganglia_graph.hosts = "bld-kafka-0[123]"
+            ganglia_graph.metrics = "consumer.kafka-mirror-group.#{topic}.broker\\d+.partition\\d+.lag"
+            ganglia_graph.type = :stack
+            ganglia_graph.size = "xlarge"
+          end
+        end
+      end
+
+      ["prod-a2", "prod-beacon", "prod-server-start", "prod-server-end", "trial-server-start", "trial-server-end", "dev-server-start", "dev-server-end", "test-server-start", "test-server-end", "loadtest-server-start", "loadtest-server-end"].each do |topic|
         dashboard.section :title => "Topic: #{topic}", :width => 3 do |section|
           section.ganglia_graph :title => "Messages In" do |ganglia_graph|
             ganglia_graph.hosts = "bld-kafka-0[123]"

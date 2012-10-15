@@ -208,6 +208,13 @@
       end
 
       kafka.section :title => "Mirror Maker Lags", :width => 3 do |lags|
+        lags.ganglia_graph :title => "All" do |ganglia_graph|
+          ganglia_graph.hosts = "#{site[:prefix]}-kafka-01"
+          ganglia_graph.metrics = "consumer.kafka-mirror-group.[^\\.]+.lag"
+          ganglia_graph.type = :stack
+          ganglia_graph.size = "xlarge"
+        end
+
         ["prod-server-start", "prod-server-end", "prod-beacon", "trial-server-start", "trial-server-end"].each do |topic|
           lags.ganglia_graph :title => "#{topic}" do |ganglia_graph|
             ganglia_graph.hosts = "#{site[:prefix]}-kafka-0[123]"
