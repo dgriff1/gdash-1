@@ -83,16 +83,16 @@ module GDash
     
     let!(:time) { Time.now }
     before { Time.stub! :now => time }
-    let(:default_window) { described_class.define(:foo, :length => 10.minutes) }
+    let!(:default_window) { described_class.define(:foo, :length => 10.minutes) }
 
     describe "#ganglia_params" do
       context "default" do
         subject { default_window.ganglia_params }
         
-        its([:cs]) { should == (time - window.length).strftime("%m/%d/%Y %H:%M") }
+        its([:cs]) { should == (time - default_window.length).strftime("%m/%d/%Y %H:%M") }
         its([:ce]) { should == time.strftime("%m/%d/%Y %H:%M") }
         
-        describe "r" do
+        describe "[:r]" do
           subject { default_window.ganglia_params[:r] }
           
           context "when the title is set" do
@@ -119,7 +119,7 @@ module GDash
       context "default" do
         subject { default_window.cacti_params }
         
-        its([:graph_start]) { should == (time.to_i - window.length) }
+        its([:graph_start]) { should == (time.to_i - default_window.length) }
         its([:graph_end]) { should == time.to_i }
       end
     end
