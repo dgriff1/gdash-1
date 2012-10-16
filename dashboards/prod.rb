@@ -157,9 +157,10 @@
             end
 
             analytics.ganglia_report :title => "Response Time" do |ganglia_report|
-              ganglia_report.report = "analytics_response_time_report"
+              ganglia_report.report = "slm_response_time_report"
               ganglia_report.cluster = "ALM"
               ganglia_report.host = host
+              ganglia_report.custom :prefix => "analytics"
               ganglia_report.size = "large"
             end
 
@@ -171,9 +172,10 @@
             end
 
             analytics.ganglia_report :title => "JVM Memory" do |ganglia_report|
-              ganglia_report.report = "analytics_jvm_memory_report"
+              ganglia_report.report = "slm_all_jvm_memory_report"
               ganglia_report.cluster = "ALM"
               ganglia_report.host = host
+              ganglia_report.custom :prefix => "analytics"
               ganglia_report.size = "large"
             end
 
