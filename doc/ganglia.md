@@ -33,7 +33,7 @@ There are two options common to both Graphs and Reports:
 Custom attributes can be added to the URL parameters of a graph or report by using the `custom` method:
 
     section.ganglia_graph :title => "Some Special Graph" do |graph|
-      graph.custom :foo, :bar
+      graph.custom :foo => :bar, :baz => :quux
     end
 
 ## Graphs
