@@ -150,7 +150,7 @@
 
           alm_dash.section :title => "#{host} - Analytics", :width => 2 do |analytics|
             analytics.ganglia_report :title => "Request Rate" do |ganglia_report|
-              ganglia_report.report = "analytics_request_rate_report"
+              ganglia_report.report = "analytics_jvm_request_rate_report"
               ganglia_report.cluster = "ALM"
               ganglia_report.host = host
               ganglia_report.size = "large"
@@ -169,6 +169,14 @@
               ganglia_report.host = host
               ganglia_report.size = "large"
             end
+
+            analytics.ganglia_report :title => "ALM Sessions" do |ganglia_report|
+              ganglia_report.report = "analytics_jvm_memory_report"
+              ganglia_report.cluster = "ALM"
+              ganglia_report.host = host
+              ganglia_report.size = "large"
+            end
+
           end # End of Analytics Metrics
 
         end # End of host each block
