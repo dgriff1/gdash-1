@@ -170,7 +170,7 @@
               ganglia_report.size = "large"
             end
 
-            analytics.ganglia_report :title => "ALM Sessions" do |ganglia_report|
+            analytics.ganglia_report :title => "JVM Memory" do |ganglia_report|
               ganglia_report.report = "analytics_jvm_memory_report"
               ganglia_report.cluster = "ALM"
               ganglia_report.host = host
