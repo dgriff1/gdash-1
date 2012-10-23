@@ -2,8 +2,8 @@ require "spec_helper"
 
 module GDash
   describe "Index", :type => :request do
-    let!(:foo) { Dashboard.new :foo, :title => "Foo", :description => "Foos" }
-    let!(:bar) { Dashboard.new :bar, :title => "Bar", :description => "Bars" }
+    let!(:foo) { Dashboard.toplevel :foo, :title => "Foo", :description => "Foos" }
+    let!(:bar) { Dashboard.toplevel :bar, :title => "Bar", :description => "Bars" }
     
     let :context do
       Class.new do

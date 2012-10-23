@@ -2,11 +2,13 @@ require "spec_helper"
 
 module GDash
   describe CactiGraph, :type => :request do
+    let!(:data_center) { DataCenter.define :foo, :cacti_host => "https://cacti-host/path/to/cacti" }
+
     let :graph do
       described_class.new do |graph|
         graph.graph_id = 1
         graph.rra_id = 2
-        graph.cacti_host = "https://cacti-host/path/to/cacti"
+        graph.data_center = :foo
       end
     end
     
@@ -22,8 +24,7 @@ module GDash
     
     its(:graph_id) { should == 1 }
     its(:rra_id) { should == 2 }
-    its(:cacti_host) { should == "https://cacti-host/path/to/cacti" }
-    
+
     describe "#to_url" do
       subject { graph.to_url }
 

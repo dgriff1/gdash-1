@@ -1,14 +1,37 @@
 module GDash
   class Widget
     class << self
-      def inherited widget
-        define_method widget.name.demodulize.underscore do |*args, &block|
-          add_child widget.new(*args, &block)
+      def define name, options = {}, &block
+        name = name.to_s
+
+        if widget = Widget[name]
+          options.each do |k, v|
+            widget.send :"#{k}=", v if widget.respond_to? :"#{k}="
+          end
+          yield widget if block_given?
+        else
+          Widget[name] = new(options.merge(:name => name), &block)
         end
+
+        Widget[name]
+      end
+
+      def [] name
+        widgets[name.to_s]
+      end
+
+      def []= name, widget
+        widgets[name.to_s] = widget
+      end
+
+      private
+
+      def widgets
+        @widgets ||= {}
       end
     end
 
-    attr_accessor :parent, :window, :ganglia_host, :graphite_host, :cacti_host, :nagios_host, :nagios_username, :nagios_password
+    attr_accessor :name, :parent, :window
 
     def initialize options = {}
       options.each do |k, v|
@@ -16,6 +39,18 @@ module GDash
       end
 
       yield self if block_given?
+    end
+
+    [:dashboard, :ganglia_graph, :ganglia_report, :cacti_graph].each do |widget|
+      define_method widget do |*args, &block|
+        add_child GDash.const_get(widget.to_s.camelize).define(*args, &block)
+      end
+    end
+
+    [:section, :nagios].each do |widget|
+      define_method widget do |*args, &block|
+        add_child GDash.const_get(widget.to_s.camelize).new(*args, &block)
+      end
     end
 
     def children
@@ -38,28 +73,12 @@ module GDash
       nested_dashboards.present?
     end
 
-    def ganglia_host
-      @ganglia_host || (parent && parent.ganglia_host)
+    def data_center
+      @data_center || (parent && parent.data_center)
     end
 
-    def graphite_host
-      @graphite_host || (parent && parent.graphite_host)
-    end
-
-    def cacti_host
-      @cacti_host || (parent && parent.cacti_host)
-    end
-
-    def nagios_host
-      @nagios_host || (parent && parent.nagios_host)
-    end
-
-    def nagios_username
-      @nagios_username || (parent && parent.nagios_username)
-    end
-
-    def nagios_password
-      @nagios_password || (parent && parent.nagios_password)
+    def data_center= data_center
+      @data_center = data_center.is_a?(DataCenter) ? data_center : DataCenter[data_center]
     end
 
     def window
@@ -69,7 +88,7 @@ module GDash
     private
 
     def add_child obj
-      children << obj
+      children << obj unless children.include?(obj)
       obj.parent = self
       obj
     end

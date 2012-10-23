@@ -4,7 +4,7 @@ module GDash
       attr_accessor :default
 
       def register window
-        windows[window.name] = window
+        windows[window.name.to_s] = window
         self.default = window if default.nil? or window.default?
       end
 
@@ -13,7 +13,7 @@ module GDash
       end
 
       def [] name
-        windows[name]
+        windows[name.to_s]
       end
 
       def each
@@ -38,7 +38,7 @@ module GDash
     attr_accessor :name, :length, :title, :default, :ganglia_params, :graphite_params, :cacti_params
 
     def initialize name, options = {}
-      @name = name
+      @name = name.to_s
       options.each do |k, v|
         send :"#{k}=", v if respond_to? :"#{k}="
       end

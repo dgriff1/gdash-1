@@ -1,14 +1,11 @@
 require "spec_helper"
 
-GDash::Dashboard.new :foo do
-end
-
-GDash::Dashboard.new :bar do
-end
 
 module GDash
   describe App do
     include Rack::Test::Methods
+
+    let!(:dashboard) { GDash::Dashboard.define :foo }
 
     describe "Showing a dashboard" do
       describe "when :name is a defined dashbaord" do
@@ -21,9 +18,7 @@ module GDash
       describe :window do
         let!(:foo) { Window.define :foo }
         let!(:bar) { Window.define :bar }
-        let(:dashboard) { Dashboard.new :foo }
-        before { Dashboard.stub! :new => dashboard }
-        
+
         it "looks up the window" do
           get "/foo?window=foo"
           dashboard.window.should == Window[:foo]

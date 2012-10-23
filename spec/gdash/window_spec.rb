@@ -14,7 +14,7 @@ module GDash
     
     subject { window }
     
-    its(:name) { should == :foo }
+    its(:name) { should == "foo" }
     its(:title) { should == "Foo" }
     its(:length) { should == 42 }
     its(:default) { should be_true }

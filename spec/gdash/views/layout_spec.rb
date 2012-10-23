@@ -10,7 +10,7 @@ module GDash
     end
     
     let :dashboard do
-      Dashboard.new :foo, :title => "A Dashboard"
+      Dashboard.define :foo, :title => "A Dashboard"
     end
     
     let(:template) { Tilt.new(File.expand_path(File.join(File.dirname(__FILE__), %w{.. .. .. lib gdash views layout.haml}))) }

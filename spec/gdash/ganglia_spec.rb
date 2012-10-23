@@ -2,9 +2,11 @@ require "spec_helper"
 
 module GDash
   describe Ganglia do
+    let!(:data_center) { DataCenter.define :foo, :ganglia_host => "http://ganglia-host:1234/path/to/ganglia" }
+
     let :ganglia do
       described_class.new do |ganglia|
-        ganglia.ganglia_host = "http://ganglia-host:1234/path/to/ganglia"
+        ganglia.data_center = :foo
         ganglia.window = Window.new(:hour, :length => 1.hour)
         ganglia.size = "xlarge"
         ganglia.title = "The Graph Title"
@@ -17,7 +19,7 @@ module GDash
     subject { ganglia }
 
     it { should be_a Widget }
-    
+
     its(:size) { should == "xlarge" }
     its(:title) { should == "The Graph Title" }
     its(:embed) { should be_true }

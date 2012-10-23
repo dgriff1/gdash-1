@@ -2,8 +2,11 @@ require "spec_helper"
 
 module GDash
   describe GangliaGraph do
+    let!(:data_center) { DataCenter.define :foo, :ganglia_host => "http://ganglia-host:1234/path/to/ganglia" }
+
     let :graph do
       described_class.new do |graph|
+        graph.data_center = :foo
         graph.window = Window.new(:hour, :length => 1.hour)
         graph.size = "xlarge"
         graph.title = "The Graph Title"

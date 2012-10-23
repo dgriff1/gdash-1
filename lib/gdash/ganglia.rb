@@ -1,21 +1,13 @@
 module GDash
   class Ganglia < Widget
-    class << self
-      def inherited widget
-        Widget.send :define_method, widget.name.demodulize.underscore do |*args, &block|
-          add_child widget.new(*args, &block)
-        end
-      end
-    end
-
     SIZES = ["small", "medium", "large", "xlarge", "xxlarge"]
 
-    attr_accessor :size, :title, :embed
+    attr_accessor :name, :size, :title, :embed
 
     def initialize *args, &block
       @size = "large"
       @embed = true
-      super
+      super *args, &block
     end
 
     def size= s
@@ -33,7 +25,7 @@ module GDash
 
     def to_url
       params = url_params.map { |k, v| "#{k}=#{Rack::Utils.escape(v)}" }.join("&")
-      "#{ganglia_host}/graph.php?#{params}"
+      "#{data_center.ganglia_host}/graph.php?#{params}"
     end
 
     def to_html html = nil

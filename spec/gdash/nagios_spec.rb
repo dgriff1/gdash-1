@@ -45,12 +45,17 @@ module GDash
 }
 EOF
 
+    let! :data_center do
+      DataCenter.define :foo do |data_center|
+        data_center.nagios_host = "http://nagios-server/nagios"
+        data_center.nagios_username = "user"
+        data_center.nagios_password = "passowrd"
+      end
+    end
+
     let :nagios do
       described_class.new :some_host_group do |nagios|
-        nagios.nagios_host = "http://nagios-server/nagios"
-        nagios.nagios_username = "user"
-        nagios.nagios_password = "passowrd"
-
+        nagios.data_center = :foo
         nagios.stub! :open => StringIO.new(text)
       end
     end
@@ -61,10 +66,6 @@ EOF
     
     its(:host_group) { should == "some_host_group" }
     its(:description) { should == "Description of the Host Group" }
-    
-    its(:nagios_host) { should == "http://nagios-server/nagios" }
-    its(:nagios_username) { should == "user" }
-    its(:nagios_password) { should == "passowrd" }
 
     describe "#hosts" do
       subject { nagios.hosts }

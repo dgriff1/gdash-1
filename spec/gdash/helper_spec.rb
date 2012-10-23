@@ -9,13 +9,13 @@ module GDash
     end
     
     let! :foo do
-      Dashboard.define :foo, :title => "Foobar" do |dashboard|
+      Dashboard.toplevel :foo, :title => "Foobar" do |dashboard|
         dashboard.dashboard :bar, :title => "BarBar"
       end
     end
     
     let! :baz do
-      Dashboard.define :baz, :title => "All About Baz" do |baz|
+      Dashboard.toplevel :baz, :title => "All About Baz" do |baz|
         baz.custom_window :custom_window do |window|
           window.length = 42.minutes
           window.title = "Custom Time Window"

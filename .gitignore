@@ -1,3 +1,6 @@
 config/gdash.yaml
 .idea
 *.i*
+log
+*.log
+

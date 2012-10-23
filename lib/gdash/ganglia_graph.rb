@@ -15,8 +15,6 @@ module GDash
     private
 
     def url_params
-      {
-        }
       super.merge({
         :vl        => vertical_label,
         :x         => upper_limit,

@@ -3,40 +3,36 @@ require "spec_helper"
 module GDash
   describe Dashboard do
     let(:dashboard) do
-      described_class.define :some_dashboard do |dashboard|
+      described_class.toplevel :some_dashboard do |dashboard|
         dashboard.title = "The Dashboard Title"
         dashboard.description = "A description of the dashboard"
         dashboard.refresh = 42
       end
     end
-    let(:foo) { described_class.new :a, :title => "foo" }
-    let(:bar) { described_class.new :b, :title => "bar" }
+    let(:foo) { described_class.new :name => :foo, :title => "foo" }
+    let(:bar) { described_class.new :name => :bar, :title => "bar" }
     
-    subject do
-      dashboard
-    end
+    subject { dashboard }
 
     it { should be_a Widget }
     
-    its(:name) { should == :some_dashboard }
+    its(:name) { should == "some_dashboard" }
     its(:title) { should == "The Dashboard Title" }
     its(:description) { should == "A description of the dashboard" }
     its(:refresh) { should == 42 }
     its(:windows) { should == Window.all }
 
-    describe ".define" do
-      it "requires a name" do
-        expect { described_class.define }.to raise_error ArgumentError
-      end
-
-      it "registers itself" do
-        dashboard = described_class.define :some_dashboard
-        described_class[:some_dashboard].should == dashboard
-      end
-
+    describe ".toplevel" do
       it "registers itself as a top-level dashboard" do
-        dashboard = described_class.define :some_dashboard
-        described_class.toplevel.include?(dashboard).should be_true
+        dashboard = described_class.toplevel :some_dashboard
+        Dashboard.toplevel.include?(dashboard).should be_true
+      end
+
+      context "registers unique dashboards" do
+        let(:dashboard) { described_class.toplevel :some_dashboard }
+        subject { described_class.toplevel :some_dashboard }
+
+        it { should == dashboard }
       end
     end
 
@@ -46,14 +42,14 @@ module GDash
       end
 
       it "registers itself" do
-        dashboard = described_class.new :some_dashboard
+        dashboard = described_class.new :name => :some_dashboard
         described_class[:some_dashboard].should == dashboard
       end
     end
 
     describe "#each" do
-      let!(:foo) { described_class.new :foo }
-      let!(:bar) { described_class.new :bar }
+      let!(:foo) { described_class.new :name => :foo }
+      let!(:bar) { described_class.new :name => :bar }
       
       it "yields each registered dashboard" do
         dashboards = []

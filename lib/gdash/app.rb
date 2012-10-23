@@ -19,10 +19,10 @@ module GDash
     end
 
     get "/:name" do
-      @dashboard = Dashboard[params["name"].to_sym]
+      @dashboard = Widget[params["name"]]
 
       if @dashboard
-        @dashboard.window = params.has_key?("window") ? Window[params["window"].to_sym] : Window.default
+        @dashboard.window = params.has_key?("window") ? Window[params["window"]] : Window.default
         haml @dashboard.to_html
       end
     end

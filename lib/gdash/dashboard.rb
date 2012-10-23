@@ -1,28 +1,26 @@
 module GDash
   class Dashboard < Widget
     class << self
-      def define *args, &block
-        dashboard = new *args, &block
-        toplevel << dashboard
-        dashboard
-      end
-
-      def register dashboard
-        dashboards[dashboard.name] = dashboard
-      end
-
-      def [] name
-        dashboards[name]
-      end
-
       def each
         dashboards.values.each do |dashboard|
           yield dashboard if block_given?
         end
       end
 
-      def toplevel
+      def [] name
+        dashboards.stringify_keys[name.to_s]
+      end
+
+      def toplevel *args, &block
         @toplevel ||= []
+
+        if args.present?
+          dashboard = define *args, &block
+          @toplevel << dashboard.name.to_s unless @toplevel.include?(dashboard.name.to_s)
+          dashboard
+        else
+          @toplevel.map { |name| Widget[name] }
+        end
       end
 
       def dashboards
@@ -30,13 +28,13 @@ module GDash
       end
     end
 
-    attr_accessor :name, :title, :description, :refresh
+    attr_accessor :title, :description, :refresh
 
-    def initialize name, *args, &block
+    def initialize *args, &block
       @refresh = 60
-      @name = name
       super(*args, &block)
-      self.class.register self
+      raise ArgumentError.new("A name is required") if name.blank?
+      self.class.dashboards[name.to_s] = self
     end
 
     def to_html html = nil

@@ -6,7 +6,7 @@ module GDash
       params = window.cacti_params || {}
       params = params.merge(:action => "view", :local_graph_id => graph_id, :rra_id => rra_id)
       params = params.map { |k, v| "#{k}=#{Rack::Utils.escape(v)}" }.join "&"
-      "#{cacti_host}/graph_image.php?#{params}"
+      "#{data_center.cacti_host}/graph_image.php?#{params}"
     end
 
     def to_html html = nil

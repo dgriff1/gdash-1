@@ -10,6 +10,47 @@ module GDash
       TestWidget.new
     end
 
+    describe :define do
+      it "should return the named widget" do
+        widget_one = TestWidget.define :foo
+        widget_one.should be_a TestWidget
+
+        widget_two = TestWidget.define :foo
+        widget_two.should == widget_one
+
+        widget_three = TestWidget.define :bar
+        widget_three.should_not == widget_one
+      end
+
+      it "should take options" do
+        TestWidget.define(:foo, :foo => "bar").foo.should == "bar"
+        TestWidget.define(:foo, :bar => "quux").bar.should == "quux"
+      end
+
+      it "should take a name" do
+        TestWidget.define(:foo).name.should == "foo"
+      end
+
+      it "should yield the widget to the block" do
+        yielded = nil
+        returned = TestWidget.define :foo do |w|
+          yielded = w
+        end
+        yielded.should == returned
+
+        TestWidget.define :foo do |w|
+          w.should == yielded
+        end
+      end
+    end
+
+    describe :[] do
+      it "should find a defined widget" do
+        widget = TestWidget.define :foo
+        Widget["foo"].should == widget
+      end
+    end
+
     describe :initialize do
       it "should take options" do
         lambda { TestWidget.new }.should_not raise_error
@@ -71,12 +112,12 @@ module GDash
 
     describe :ganglia_graph do
       before do
-        @ganglia_graph = GangliaGraph.new
+        @ganglia_graph = GangliaGraph.define :some_graph
         GangliaGraph.stub!(:new).and_return @ganglia_graph
       end
 
       it "should add a ganglia graph child" do
-        subject.ganglia_graph
+        subject.ganglia_graph :some_graph
         subject.children.last.should == @ganglia_graph
       end
 
@@ -84,7 +125,7 @@ module GDash
         GangliaGraph.stub!(:new).and_yield(@ganglia_graph).and_return @ganglia_graph
 
         yielded = nil
-        subject.ganglia_graph do |g|
+        subject.ganglia_graph :some_graph do |g|
           yielded = g
         end
 
@@ -92,19 +133,19 @@ module GDash
       end
 
       it "should set the parent" do
-        subject.ganglia_graph
+        subject.ganglia_graph :some_graph
         @ganglia_graph.parent.should == subject
       end
     end
 
     describe :ganglia_report do
       before do
-        @ganglia_report = GangliaReport.new
+        @ganglia_report = GangliaReport.define :some_report
         GangliaReport.stub!(:new).and_return @ganglia_report
       end
 
       it "should add a ganglia report child" do
-        subject.ganglia_report
+        subject.ganglia_report :some_report
         subject.children.last.should == @ganglia_report
       end
 
@@ -112,7 +153,7 @@ module GDash
         GangliaReport.stub!(:new).and_yield(@ganglia_report).and_return @ganglia_report
 
         yielded = nil
-        subject.ganglia_report do |r|
+        subject.ganglia_report :some_report do |r|
           yielded = r
         end
 
@@ -120,19 +161,19 @@ module GDash
       end
 
       it "should set the parent" do
-        subject.ganglia_report
+        subject.ganglia_report :some_report
         @ganglia_report.parent.should == subject
       end
     end
 
     describe :cacti_graph do
       before do
-        @cacti_graph = CactiGraph.new
+        @cacti_graph = CactiGraph.define :some_graph
         CactiGraph.stub!(:new).and_return @cacti_graph
       end
 
       it "should add a cacti graph child" do
-        subject.cacti_graph
+        subject.cacti_graph :some_graph
         subject.children.last.should == @cacti_graph
       end
 
@@ -140,7 +181,7 @@ module GDash
         CactiGraph.stub!(:new).and_yield(@cacti_graph).and_return @cacti_graph
 
         yielded = nil
-        subject.cacti_graph do |g|
+        subject.cacti_graph :some_graph do |g|
           yielded = g
         end
 
@@ -148,19 +189,19 @@ module GDash
       end
 
       it "should set the parent" do
-        subject.cacti_graph
+        subject.cacti_graph :some_graph
         @cacti_graph.parent.should == subject
       end
     end
 
     describe :dashboard do
       before do
-        @dashboard = Dashboard.new :some_dashboard
+        @dashboard = Dashboard.define :some_dashboard
         Dashboard.stub!(:new).and_return @dashboard
       end
 
       it "should add a dashboard child" do
-        subject.dashboard
+        subject.dashboard :some_dashboard
         subject.children.last.should == @dashboard
       end
 
@@ -168,7 +209,7 @@ module GDash
         Dashboard.stub!(:new).and_yield(@dashboard).and_return @dashboard
 
         yielded = nil
-        subject.dashboard do |d|
+        subject.dashboard :some_dashboard do |d|
           yielded = d
         end
 
@@ -176,7 +217,7 @@ module GDash
       end
 
       it "should set the parent" do
-        subject.dashboard
+        subject.dashboard :some_dashboard
         @dashboard.parent.should == subject
       end
     end
@@ -235,82 +276,97 @@ module GDash
       end
     end
 
-    describe :ganglia_host do
+    describe :data_center do
+      let!(:foo) { DataCenter.define :foo }
+
       it "should have an accessor" do
-        subject.ganglia_host = "Foo"
-        subject.ganglia_host.should == "Foo"
+        subject.data_center = :foo
+        subject.data_center.should == foo
       end
 
-      it "should fallback to the parent's value" do
-        widget = Widget.new :ganglia_host => "Foo"
+      it "should fall back to the parent's value" do
+        widget = Widget.new :data_center => :foo
         subject.parent = widget
-        subject.ganglia_host.should == "Foo"
+        widget.data_center.should == foo
       end
     end
 
-    describe :graphite_host do
-      it "should have an accessor" do
-        subject.graphite_host = "Foo"
-        subject.graphite_host.should == "Foo"
-      end
-
-      it "should fallback to the parent's value" do
-        widget = Widget.new :graphite_host => "Foo"
-        subject.parent = widget
-        subject.graphite_host.should == "Foo"
-      end
-    end
-
-    describe :cacti_host do
-      it "should have an accessor" do
-        subject.cacti_host = "Foo"
-        subject.cacti_host.should == "Foo"
-      end
-
-      it "should fallback to the parent's value" do
-        widget = Widget.new :cacti_host => "Foo"
-        subject.parent = widget
-        subject.cacti_host.should == "Foo"
-      end
-    end
-
-    describe :nagios_host do
-      it "should have an accessor" do
-        subject.nagios_host = "Foo"
-        subject.nagios_host.should == "Foo"
-      end
-
-      it "should fallback to the parent's value" do
-        widget = Widget.new :nagios_host => "Foo"
-        subject.parent = widget
-        subject.nagios_host.should == "Foo"
-      end
-    end
-
-    describe :nagios_username do
-      it "should have an accessor" do
-        subject.nagios_username = "Foo"
-        subject.nagios_username.should == "Foo"
-      end
-
-      it "should fallback to the parent's value" do
-        widget = Widget.new :nagios_username => "Foo"
-        subject.parent = widget
-        subject.nagios_username.should == "Foo"
-      end
-    end
-
-    describe :nagios_password do
-      it "should have an accessor" do
-        subject.nagios_password = "Foo"
-        subject.nagios_password.should == "Foo"
-      end
-
-      it "should fallback to the parent's value" do
-        widget = Widget.new :nagios_password => "Foo"
-        subject.parent = widget
-        subject.nagios_password.should == "Foo"
-      end
-    end
+    #describe :ganglia_host do
+    #  it "should have an accessor" do
+    #    subject.ganglia_host = "Foo"
+    #    subject.ganglia_host.should == "Foo"
+    #  end
+    #
+    #  it "should fallback to the parent's value" do
+    #    widget = Widget.new :ganglia_host => "Foo"
+    #    subject.parent = widget
+    #    subject.ganglia_host.should == "Foo"
+    #  end
+    #end
+    #
+    #describe :graphite_host do
+    #  it "should have an accessor" do
+    #    subject.graphite_host = "Foo"
+    #    subject.graphite_host.should == "Foo"
+    #  end
+    #
+    #  it "should fallback to the parent's value" do
+    #    widget = Widget.new :graphite_host => "Foo"
+    #    subject.parent = widget
+    #    subject.graphite_host.should == "Foo"
+    #  end
+    #end
+    #
+    #describe :cacti_host do
+    #  it "should have an accessor" do
+    #    subject.cacti_host = "Foo"
+    #    subject.cacti_host.should == "Foo"
+    #  end
+    #
+    #  it "should fallback to the parent's value" do
+    #    widget = Widget.new :cacti_host => "Foo"
+    #    subject.parent = widget
+    #    subject.cacti_host.should == "Foo"
+    #  end
+    #end
+    #
+    #describe :nagios_host do
+    #  it "should have an accessor" do
+    #    subject.nagios_host = "Foo"
+    #    subject.nagios_host.should == "Foo"
+    #  end
+    #
+    #  it "should fallback to the parent's value" do
+    #    widget = Widget.new :nagios_host => "Foo"
+    #    subject.parent = widget
+    #    subject.nagios_host.should == "Foo"
+    #  end
+    #end
+    #
+    #describe :nagios_username do
+    #  it "should have an accessor" do
+    #    subject.nagios_username = "Foo"
+    #    subject.nagios_username.should == "Foo"
+    #  end
+    #
+    #  it "should fallback to the parent's value" do
+    #    widget = Widget.new :nagios_username => "Foo"
+    #    subject.parent = widget
+    #    subject.nagios_username.should == "Foo"
+    #  end
+    #end
+    #
+    #describe :nagios_password do
+    #  it "should have an accessor" do
+    #    subject.nagios_password = "Foo"
+    #    subject.nagios_password.should == "Foo"
+    #  end
+    #
+    #  it "should fallback to the parent's value" do
+    #    widget = Widget.new :nagios_password => "Foo"
+    #    subject.parent = widget
+    #    subject.nagios_password.should == "Foo"
+    #  end
+    #end
   end
 end

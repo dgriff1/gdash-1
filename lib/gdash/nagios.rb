@@ -100,7 +100,7 @@ module GDash
 
     def json
       unless @json
-        @json = open("#{nagios_host}/cgi-bin/status-json.cgi?hostgroup=#{host_group}&style=summary&noheader", :http_basic_authentication => [nagios_username, nagios_password]).string
+        @json = open("#{data_center.nagios_host}/cgi-bin/status-json.cgi?hostgroup=#{host_group}&style=summary&noheader", :http_basic_authentication => [data_center.nagios_username, data_center.nagios_password]).string
         @json = JSON.parse @json
         @json = @json["hostgroups"].select do |hostgroup|
           hostgroup["hostgroup_name"] == host_group
