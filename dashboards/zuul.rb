@@ -31,11 +31,11 @@
 
       key_metrics.ganglia_graph :title => "Zuul Exception Rate" do |graph|    # Request Rate 99%
         graph.hosts = "#{site[:prefix]}-zuul-*"
-        graph.metrics = "zuul.service.unexpected.1MinuteRate"
+        graph.metrics = "zuul.service.unexpected.count"
         graph.type = :stack
         graph.size = "xlarge"
         graph.legend = true
-        graph.upper_limit = 10
+        graph.upper_limit = 100
         graph.lower_limit = 0
       end
     end
