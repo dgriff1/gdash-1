@@ -35,8 +35,8 @@
         graph.type = :stack
         graph.size = "xlarge"
         graph.legend = true
-        graph.upper_limit = 100
-        graph.lower_limit = 0
+       # graph.upper_limit = 100
+       # graph.lower_limit = 0
       end
     end
 
