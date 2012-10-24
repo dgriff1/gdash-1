@@ -29,7 +29,7 @@
         ganglia_report.size = "xlarge"
       end
 
-      key_metrics.ganglia_graph :title => "Zuul Exception Rate" do |graph|    # Request Rate 99%
+      key_metrics.ganglia_graph :title => "Zuul Exception Count" do |graph|    # Request Rate 99%
         graph.hosts = "#{site[:prefix]}-zuul-*"
         graph.metrics = "zuul.service.unexpected.count"
         graph.type = :stack
