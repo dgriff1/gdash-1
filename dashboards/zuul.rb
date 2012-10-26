@@ -9,14 +9,6 @@
   } 
 }.each do |name, site|
   GDash::Dashboard.define :"#{name}_zuul_top" do |dashboard|
-    zuul.nagios_host = "http://#{site}-mon-01/nagios"
-    zuul.nagios_username = "gdash"
-    zuul.nagios_password = "gdash"
-
-    dashboard.section :title => "Nagios", :width => 1 do |nagios|
-      nagios.nagios "zuul-servers"
-    end
-
     dashboard.parent = GDash::Dashboard[:"#{site}"]
     dashboard.title = "Zuul (Beta) #{site[:title]}"
     dashboard.description = "#{site[:title]} Zuul metrics"
