@@ -16,10 +16,10 @@ module GDash
 
         if args.present?
           dashboard = define *args, &block
-          @toplevel << dashboard.name.to_s unless @toplevel.include?(dashboard.name.to_s)
+          @toplevel << dashboard unless @toplevel.include?(dashboard)
           dashboard
         else
-          @toplevel.map { |name| Widget[name] }
+          @toplevel
         end
       end
 

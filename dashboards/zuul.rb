@@ -19,7 +19,7 @@ require 'dashboards/zuul/detail'
 ZUUL_SITES.each do |name, site|
   GDash::Dashboard.toplevel name do |zuul_site|
     zuul_site.dashboard :"#{name}_zuul_top" do |dashboard|
-      dashboard.title = "Zuul (Beta) #{site[:title]}"
+      dashboard.title = "Zuul"
       dashboard.description = "#{site[:title]} Zuul metrics"
       dashboard.data_center = site[:data_center]
 

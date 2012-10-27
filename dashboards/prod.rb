@@ -66,11 +66,11 @@ PROD_SITES.each do |name, site|
         ganglia_report.size = "xlarge"
       end
 
-      key_metrics.ganglia_graph :"#{site[:prefix]}_analytics_request_rate", :title => "Analytics Request Rate" do |ganglia_graph|
-        ganglia_graph.metrics = "analytics.org.mortbay.jetty.handler.StatisticsHandler.statisticshandler.0.requests$"
-        ganglia_graph.type = :stack
-        ganglia_graph.size = "xlarge"
-      end
+      #key_metrics.ganglia_graph :"#{site[:prefix]}_analytics_request_rate", :title => "Analytics Request Rate" do |ganglia_graph|
+      #  ganglia_graph.metrics = "analytics.org.mortbay.jetty.handler.StatisticsHandler.statisticshandler.0.requests$"
+      #  ganglia_graph.type = :stack
+      #  ganglia_graph.size = "xlarge"
+      #end
 
       key_metrics.ganglia_report :"#{site[:prefix]}_analytics_response_time", :title => "Analytics Response Time" do |ganglia_report|
         ganglia_report.report = "analytics_response_time_report"

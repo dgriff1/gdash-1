@@ -2,7 +2,7 @@ ZUUL_SITES.each do |name, site|
   GDash::Dashboard.toplevel name do |zuul_site|
     zuul_site.dashboard :"#{name}_zuul_top" do |dashboard|
       dashboard.dashboard :"#{site[:prefix]}_zuul" do |zuul_dash|
-        zuul_dash.title = "Zuul App Server Detail"
+        zuul_dash.title = "App Server Detail"
         site[:hosts].each do |host|
 
           zuul_dash.system_section "Zuul", :zuul, :title => "#{host} System Stats"
@@ -33,7 +33,7 @@ ZUUL_SITES.each do |name, site|
             end
           end
 
-          zuul_dash.section :title => "#{host} Zuul", :width => 2 do |zuul|
+          zuul_dash.section :title => host, :width => 2 do |zuul|
             zuul.ganglia_report :"#{host}_request_rate", :title => "Request Rate" do |ganglia_report|
               ganglia_report.report = "zuul_request_rate_report"
               ganglia_report.cluster = "Zuul"
