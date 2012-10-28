@@ -6,7 +6,11 @@ module GDash
     helpers Helper
 
     get "/" do
-      haml :index, :layout => false
+      if Dashboard.toplevel.empty?
+        redirect doc_path(Doc.new(:getting_started))
+      else
+        haml :index, :layout => false
+      end
     end
 
     get "/doc/:filename" do

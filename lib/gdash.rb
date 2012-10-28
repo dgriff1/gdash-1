@@ -11,10 +11,6 @@ require "redcarpet"
 require "thor"
 require "builder"
 
-require 'bundler'
-
-Bundler.require :default
-
 require "gdash/version"
 require "gdash/configuration"
 
@@ -41,6 +37,12 @@ module GDash
       @config ||= Configuration.new(*args)
       yield config if block_given?
       @config
+    end
+
+    def init! options = {}
+      dashfile = options[:dashfile] || File.expand_path("Dashfile", FileUtils.pwd)
+      load dashfile
+      load config.dashboards
     end
   end
 end

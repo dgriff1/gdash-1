@@ -5,7 +5,21 @@ module GDash
   describe App do
     include Rack::Test::Methods
 
-    let!(:dashboard) { GDash::Dashboard.define :foo }
+    let!(:dashboard) { GDash::Dashboard.toplevel :foo }
+
+    describe "Root" do
+      subject { get "/" }
+
+      context "when dashboards are defined" do
+        it { should be_ok }
+        its(:body) { should_not be_empty }
+      end
+
+      context "when no dashboards are defined" do
+        before { GDash::Dashboard.stub! :toplevel => [] }
+        it { should be_redirect }
+      end
+    end
 
     describe "Showing a dashboard" do
       describe "when :name is a defined dashbaord" do
