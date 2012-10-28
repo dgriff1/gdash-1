@@ -33,9 +33,9 @@ PROD_SITES = {
   } 
 }
 
-require 'dashboards/prod/host_comparison'
-require 'dashboards/prod/kafka'
-require 'dashboards/prod/zookeeper'
+require 'prod/host_comparison'
+require 'prod/kafka'
+require 'prod/zookeeper'
 
 PROD_SITES.each do |name, site|
   GDash::Dashboard.define :"#{name}" do |dashboard|

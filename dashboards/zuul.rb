@@ -13,8 +13,8 @@ ZUUL_SITES = {
   } 
 }
 
-require 'dashboards/zuul/compare'
-require 'dashboards/zuul/detail'
+require 'zuul/compare'
+require 'zuul/detail'
 
 ZUUL_SITES.each do |name, site|
   GDash::Dashboard.toplevel name do |zuul_site|
