@@ -1,4 +1,4 @@
-require 'dashboards/boulder/hadoop'
+require 'boulder/hadoop'
 
 PROD_SITES.each do |name, site|
   GDash::Dashboard.define :"#{name}" do |dashboard|
