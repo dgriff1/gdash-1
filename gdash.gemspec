@@ -23,4 +23,5 @@ Gem::Specification.new do |gem|
   gem.add_dependency "activesupport"
   gem.add_dependency "redcarpet"
   gem.add_dependency "builder"
+  gem.add_dependency "thor"
 end

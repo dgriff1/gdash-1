@@ -1,3 +1,17 @@
+PATH
+  remote: .
+  specs:
+    gdash (0.9.0)
+      activesupport
+      builder
+      haml
+      i18n
+      json
+      redcarpet
+      sinatra
+      thin
+      thor
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -110,22 +124,15 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  activesupport
-  builder
   capistrano
   capybara
   fuubar
+  gdash!
   god
   guard-rspec
-  haml
-  i18n
-  json
   rack-test
   rake
   rb-fsevent (~> 0.9.1)
-  redcarpet
   rspec
   ruby_gntp
-  sinatra
-  thin
   turnip

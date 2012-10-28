@@ -1,10 +1,22 @@
-require 'rubygems'
-require 'open-uri'
+require "rubygems"
+
+require "open-uri"
+require "sinatra"
+require "thin"
+require "haml"
+require "json"
+require "i18n"
+require "active_support/core_ext"
+require "redcarpet"
+require "thor"
+require "builder"
+
 require 'bundler'
 
 Bundler.require :default
 
 require "gdash/version"
+require "gdash/configuration"
 
 require 'gdash/doc'
 require 'gdash/window'
@@ -21,8 +33,14 @@ require 'gdash/section'
 require 'gdash/helper'
 require 'gdash/app'
 
-#Dir[File.expand_path(File.join(File.dirname(__FILE__), %w{.. dashboards ** *}))].each do |file|
-#  load file
-#end
+require "gdash/cli"
 
-load File.expand_path('../dashboards/dashboards.rb', File.dirname(__FILE__))
+module GDash
+  class << self
+    def config *args
+      @config ||= Configuration.new(*args)
+      yield config if block_given?
+      @config
+    end
+  end
+end

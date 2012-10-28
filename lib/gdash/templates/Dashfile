@@ -1,0 +1,3 @@
+GDash.config do |config|
+  config.dashboards = "dashboards.rb"
+end
