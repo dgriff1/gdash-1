@@ -10,7 +10,7 @@ PROD_SITES.each do |name, site|
            ["Response Time", "slm_response_time_report"],
            ["ALM Connections", "slm_connections_report"],
            ["JVM Memory", "slm_all_jvm_memory_report"]].each do |(title, report)|
-            compare.ganglia_report :"#{site[:prefix]}_#{host}_#{report}", :title => title do |ganglia_report|
+            compare.ganglia_report :"#{site[:prefix]}_#{host}_key_metric_#{report}", :title => title do |ganglia_report|
               ganglia_report.report = report
               ganglia_report.cluster = "ALM"
               ganglia_report.host = host
@@ -42,7 +42,7 @@ PROD_SITES.each do |name, site|
              ["Artifact Change %", "slm_artifacts_changed_per_request_report"],
              ["Artifact Indexing Performance", "slm_artifact_indexing_performance_report"],
              ["Quartz Connections", "slm_quartz_connections_report"]].each do |(title, report)|
-              alm.ganglia_report :"#{site[:prefix]}_#{host}_#{report}", :title => title do |ganglia_report|
+              alm.ganglia_report :"#{site[:prefix]}_#{host}_comparison_#{report}", :title => title do |ganglia_report|
                 ganglia_report.report = report
                 ganglia_report.cluster = "ALM"
                 ganglia_report.host = host
