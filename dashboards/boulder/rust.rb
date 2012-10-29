@@ -16,9 +16,9 @@ GDash::Dashboard.toplevel :boulder do |boulder|
         nagios.nagios "rust-servers"
       end
 
-      dashboard.system_section "RUST", "#{name}_system"
+      dashboard.system_section "RUST", "#{name}_system", :host => instance[:host]
 
-      dashboard.section :title => "Rust", :width => 2 do |section|
+      dashboard.section :title => instance[:title], :width => 2 do |section|
         section.ganglia_graph :"#{name}_dimension_times", :title => "Dimension Times" do |ganglia_graph|
           ganglia_graph.hosts = instance[:host]
           ganglia_graph.metrics = ".*dimension_total_time.duration.mean"
