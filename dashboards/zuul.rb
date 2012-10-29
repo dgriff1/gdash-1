@@ -3,13 +3,13 @@ ZUUL_SITES = {
     :title => "Denver",
     :prefix => "qd",
     :data_center => :denver,
-    :hosts => (1..3).map { |n| "qd-zuul-01.rally.prod" }
+    :hosts => (1..3).map { |n| "qd-zuul-0#{n}.rally.prod" }
   }, 
   :qs => {
     :title => "Seattle",
     :prefix => "qs",
     :data_center => :seattle,
-    :hosts => (1..3).map { |n| "qs-zuul-01.rally.prod" }
+    :hosts => (1..3).map { |n| "qs-zuul-0#{n}.rally.prod" }
   } 
 }
 
