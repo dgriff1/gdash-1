@@ -24,7 +24,7 @@ PROD_SITES.each do |name, site|
         alm_compare.dashboard :"#{site[:prefix]}_alm_#{host}" do |alm_dash|
           alm_dash.title = host
 
-          alm_dash.system_section "ALM", site[:prefix], :title => "#{host} System Stats"
+          alm_dash.system_section "ALM", "#{site[:prefix]}_#{host}", :title => "#{host} System Stats"
 
           alm_dash.section :title => "#{host} - ALM", :width => 2 do |alm|
             [["Request Rate", "slm_request_rate_report"],

@@ -6,7 +6,7 @@ PROD_SITES.each do |name, site|
       kafka.title = "Kafka"
       kafka.description = "Kafka cluster"
 
-      kafka.system_section "Kafka", site[:prefix]
+      kafka.system_section "Kafka", "#{site[:prefix]}_prod_kafka"
 
       kafka.section :title => "Mirror Maker Lags", :width => 3 do |lags|
         lags.ganglia_graph :"#{site[:prefix]}_mirror_maker_lags", :title => "All" do |ganglia_graph|

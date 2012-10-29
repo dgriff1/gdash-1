@@ -4,7 +4,7 @@ PROD_SITES.each do |name, site|
       zookeeper.title = "ZooKeeper"
       zookeeper.description = "ZooKeeper cluster"
 
-      zookeeper.system_section "Zookeeper", site[:prefix]
+      zookeeper.system_section "Zookeeper", "#{site[:prefix]}_prod_zookeeper"
 
       zookeeper.section :title => "Cluster", :width => 2 do |section|
         section.ganglia_graph :"#{site[:prefix]}_zookeeper_heap_used", :title => "Heap Used" do |report|

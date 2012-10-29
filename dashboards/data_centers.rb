@@ -3,8 +3,8 @@ GDash::DataCenter.define :boulder do |boulder|
   boulder.ganglia_host = "http://bld-mon-03/ganglia"
   boulder.cacti_host = "http://bld-cacti-01/cacti"
   boulder.nagios_host = "http://bld-nagios-01/nagios"
-  boulder.nagios_username = "gdash"
-  boulder.nagios_password = "gdash"
+  boulder.nagios_username = "bcotton"
+  boulder.nagios_password = "just4nagios"
 end
 
 GDash::DataCenter.define :denver do |denver|

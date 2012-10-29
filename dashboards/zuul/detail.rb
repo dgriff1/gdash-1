@@ -5,7 +5,7 @@ ZUUL_SITES.each do |name, site|
         zuul_dash.title = "App Server Detail"
         site[:hosts].each do |host|
 
-          zuul_dash.system_section "Zuul", :zuul, :title => "#{host} System Stats"
+          zuul_dash.system_section "Zuul", "#{site[:prefix]}_zuul", :title => "#{host} System Stats"
 
           zuul_dash.section :title => "#{host} Cassandra Stats", :width => 3 do |system|
             system.ganglia_graph :"#{host}_cassandra_load_average", :title => "Operating System System Load Average -for Cassandra" do |graph|

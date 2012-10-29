@@ -4,7 +4,7 @@ GDash::Dashboard.toplevel :boulder do |boulder|
       alm_dash.title = "ALM App Server Detail"
 
       LOADTEST_HOSTS.each do |host|
-        alm_dash.system_section "Loadtest", :loadtest, :title => "#{host} System Stats"
+        alm_dash.system_section "Loadtest", :"loadtest_#{host}", :title => "#{host} System Stats"
 
         alm_dash.section :title => "#{host} - ALM", :width => 4 do |alm|
           alm.ganglia_report :"#{host}_alm_request_rate", :title => "Request Rate" do |ganglia_report|
