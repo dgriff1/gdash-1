@@ -24,7 +24,7 @@ PROD_SITES.each do |name, site|
         alm_compare.dashboard :"#{site[:prefix]}_alm_#{host}" do |alm_dash|
           alm_dash.title = host
 
-          alm_dash.system_section "ALM", "#{site[:prefix]}_#{host}", :title => "#{host} System Stats"
+          alm_dash.system_section "ALM", "#{site[:prefix]}_#{host}_system", :title => "#{host} System Stats"
 
           alm_dash.section :title => "#{host} - ALM", :width => 2 do |alm|
             [["Request Rate", "slm_request_rate_report"],
@@ -42,7 +42,7 @@ PROD_SITES.each do |name, site|
              ["Artifact Change %", "slm_artifacts_changed_per_request_report"],
              ["Artifact Indexing Performance", "slm_artifact_indexing_performance_report"],
              ["Quartz Connections", "slm_quartz_connections_report"]].each do |(title, report)|
-              alm.ganglia_report :"#{site[:prefix]}_#{report}", :title => title do |ganglia_report|
+              alm.ganglia_report :"#{site[:prefix]}_#{host}_#{report}", :title => title do |ganglia_report|
                 ganglia_report.report = report
                 ganglia_report.cluster = "ALM"
                 ganglia_report.host = host
@@ -52,14 +52,14 @@ PROD_SITES.each do |name, site|
           end
 
           alm_dash.section :title => "#{host} - Analytics", :width => 2 do |analytics|
-            analytics.ganglia_report :"#{site[:prefix]}_analytics_request_rate", :title => "Request Rate" do |ganglia_report|
+            analytics.ganglia_report :"#{site[:prefix]}_#{host}_analytics_request_rate", :title => "Request Rate" do |ganglia_report|
               ganglia_report.report = "analytics_jvm_request_rate_report"
               ganglia_report.cluster = "ALM"
               ganglia_report.host = host
               ganglia_report.size = "large"
             end
 
-            analytics.ganglia_report :"#{site[:prefix]}_analytics_response_time", :title => "Response Time" do |ganglia_report|
+            analytics.ganglia_report :"#{site[:prefix]}_#{host}_analytics_response_time", :title => "Response Time" do |ganglia_report|
               ganglia_report.report = "slm_response_time_report"
               ganglia_report.cluster = "ALM"
               ganglia_report.host = host
@@ -67,14 +67,14 @@ PROD_SITES.each do |name, site|
               ganglia_report.size = "large"
             end
 
-            analytics.ganglia_report :"#{site[:prefix]}_analytics_alm_sessions", :title => "ALM Sessions" do |ganglia_report|
+            analytics.ganglia_report :"#{site[:prefix]}_#{host}_analytics_alm_sessions", :title => "ALM Sessions" do |ganglia_report|
               ganglia_report.report = "slm_sessions_report"
               ganglia_report.cluster = "ALM"
               ganglia_report.host = host
               ganglia_report.size = "large"
             end
 
-            analytics.ganglia_report :"#{site[:prefix]}_analytics_jvm_memory", :title => "JVM Memory" do |ganglia_report|
+            analytics.ganglia_report :"#{site[:prefix]}_#{host}_analytics_jvm_memory", :title => "JVM Memory" do |ganglia_report|
               ganglia_report.report = "slm_all_jvm_memory_report"
               ganglia_report.cluster = "ALM"
               ganglia_report.host = host
