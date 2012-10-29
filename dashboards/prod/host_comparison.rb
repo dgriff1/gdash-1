@@ -10,7 +10,7 @@ PROD_SITES.each do |name, site|
            ["Response Time", "slm_response_time_report"],
            ["ALM Connections", "slm_connections_report"],
            ["JVM Memory", "slm_all_jvm_memory_report"]].each do |(title, report)|
-            compare.ganglia_report :"#{site[:prefix]}_#{report}", :title => title do |ganglia_report|
+            compare.ganglia_report :"#{site[:prefix]}_#{host}_#{report}", :title => title do |ganglia_report|
               ganglia_report.report = report
               ganglia_report.cluster = "ALM"
               ganglia_report.host = host
