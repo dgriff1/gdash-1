@@ -23,6 +23,10 @@ ZUUL_SITES.each do |name, site|
       dashboard.description = "#{site[:title]} Zuul metrics"
       dashboard.data_center = site[:data_center]
 
+      dashboard.section :title => "Nagios", :width => 1 do |nagios|
+        nagios.nagios "zuul-servers"
+      end
+
       dashboard.section :title => "Key Metrics", :width => 2 do |key_metrics|
         key_metrics.ganglia_report :"#{site[:prefix]}_zuul_request_rate", :title => "Zuul Request Rate" do |ganglia_report|
           ganglia_report.report = "zuul_request_rate_report"
