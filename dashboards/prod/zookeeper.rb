@@ -33,25 +33,25 @@ PROD_SITES.each do |name, site|
       end
 
       site[:zookeeper_servers].each do |host|
-        zookeeper.section :title => "Host: #{host}", :width => 4 do |section|
-          section.ganglia_report :"#{site[:prefix]}_#{host}_connection_throughput" do |graph|
-            graph.report = "zk_connection_throughput_report"
-            graph.cluster = "Zookeeper"
-            graph.host = "#{host}.rally.prod"
-            graph.size = "xlarge"
-          end
-
-          section.ganglia_report :"#{site[:prefix]}_#{host}_connection_latency" do |ganglia_report|
-            ganglia_report.report = "zk_connection_latency_report"
+        zookeeper.section :title => "Host: #{host}", :width => 3 do |section|
+          section.ganglia_report :"#{site[:prefix]}_#{host}_connection_throughput", :title => "Connection Throughput" do |ganglia_report|
+            ganglia_report.report = "zk_connection_throughput_report"
             ganglia_report.cluster = "Zookeeper"
-            ganglia_report.host = "#{host}.rally.prod"
+            ganglia_report.host = host
             ganglia_report.size = "xlarge"
           end
 
-          section.ganglia_report :"#{site[:prefix]}_#{host}_leader_follower_latency" do |ganglia_report|
+          section.ganglia_report :"#{site[:prefix]}_#{host}_connection_latency", :title => "Connection Latency" do |ganglia_report|
+            ganglia_report.report = "zk_connection_latency_report"
+            ganglia_report.cluster = "Zookeeper"
+            ganglia_report.host = host
+            ganglia_report.size = "xlarge"
+          end
+
+          section.ganglia_report :"#{site[:prefix]}_#{host}_leader_follower_latency", :title => "Leader/Follower Latency" do |ganglia_report|
             ganglia_report.report = "zk_leader_follower_latency_report"
             ganglia_report.cluster = "Zookeeper"
-            ganglia_report.host = "#{host}.rally.prod"
+            ganglia_report.host = host
             ganglia_report.size = "xlarge"
           end
         end
