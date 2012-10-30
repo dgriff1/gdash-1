@@ -3,4 +3,5 @@ config/gdash.yaml
 *.i*
 log
 *.log
+pkg
 

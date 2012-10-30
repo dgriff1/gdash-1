@@ -1,12 +1,7 @@
 source 'http://rubygems.org'
 
-gem 'sinatra'
-gem "i18n"
-gem "activesupport", :require => "active_support/core_ext"
-gem 'redcarpet'
-gem "builder"
-gem "haml"
-gem "json"
+gemspec
+
 
 group :development do
   gem "rake"
@@ -24,7 +19,6 @@ group :test do
 end
 
 group :production do
-  gem "thin"
   gem "capistrano"
   gem "god"
 end
