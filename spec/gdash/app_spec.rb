@@ -23,7 +23,7 @@ module GDash
 
     describe "Showing a dashboard" do
       describe "when :name is a defined dashbaord" do
-        subject { get "/foo" }
+        subject { get "/dashboards/foo" }
 
         it { should be_ok }
         its(:body) { should =~ /#{Dashboard[:foo].to_html}/ }
@@ -34,12 +34,18 @@ module GDash
         let!(:bar) { Window.define :bar }
 
         it "looks up the window" do
-          get "/foo?window=foo"
+          get "/dashboards/foo?window=foo"
           dashboard.window.should == Window[:foo]
+        end
+
+        it "accepts custom time windows" do
+          get "/dashboards/foo?window=custom&start=#{Rack::Utils.escape("2012-01-01 00:00:00")}&end=#{Rack::Utils.escape("2012-01-01 01:00:00")}"
+          dashboard.window.start.should == DateTime.parse("2012-01-01 00:00:00")
+          dashboard.window.length.should == 3600
         end
         
         it "uses the default window if not specified" do
-          get "/foo"
+          get "/dashboards/foo"
           dashboard.window.should == Window.default
         end
       end

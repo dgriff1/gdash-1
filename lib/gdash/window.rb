@@ -35,7 +35,7 @@ module GDash
       end
     end
 
-    attr_accessor :name, :length, :title, :default, :ganglia_params, :graphite_params, :cacti_params
+    attr_accessor :name, :start, :end, :length, :title, :default, :ganglia_params, :graphite_params, :cacti_params
 
     def initialize name, options = {}
       @name = name.to_s
@@ -47,6 +47,10 @@ module GDash
 
     def length
       @length ||= 0
+    end
+
+    def start
+      @start || DateTime.now
     end
 
     def <=> other
@@ -63,7 +67,7 @@ module GDash
     end
 
     def ganglia_params
-      time = Time.now
+      time = start
       @ganglia_params || {
         :r => (title || ""),
         :cs => (time - length).strftime("%m/%d/%Y %H:%M"),
@@ -76,7 +80,7 @@ module GDash
     end
 
     def cacti_params
-      time = Time.now
+      time = start
       @cacti_params || {
         :graph_start => (time.to_i - length),
         :graph_end => time.to_i

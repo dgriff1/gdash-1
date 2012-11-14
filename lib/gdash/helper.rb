@@ -8,7 +8,7 @@ module GDash
       params = "?"
       params += "window=#{Rack::Utils.escape(options[:window].name)}" if options.has_key? :window
 
-      "/#{dashboard.name}#{params}"
+      "/dashboards/#{dashboard.name}#{params}"
     end
 
     def docs_path

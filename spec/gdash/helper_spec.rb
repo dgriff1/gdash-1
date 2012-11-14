@@ -44,12 +44,12 @@ module GDash
     describe "#dashboard_path" do
       context "without a window" do
         subject { helper.dashboard_path foo }
-        it { should == "/foo?" }
+        it { should == "/dashboards/foo?" }
       end
 
       context "with a window" do
         subject { helper.dashboard_path foo, :window => window }
-        it { should == "/foo?window=a_window" }
+        it { should == "/dashboards/foo?window=a_window" }
       end
     end
 
@@ -68,9 +68,9 @@ module GDash
 
       it { should have_selector "ul.nav.nav-list" }
       it { should have_selector "li.nav-header", :content => "Dashboards" }
-      it { should have_selector "a", :href => "/foo", :content => "Foobar" }
-      it { should have_selector "a", :href => "/bar", :content => "BarBar" }
-      it { should have_selector "a", :href => "/baz", :content => "All About Baz" }
+      it { should have_selector "a", :href => "/dashboards/foo", :content => "Foobar" }
+      it { should have_selector "a", :href => "/dashboards/bar", :content => "BarBar" }
+      it { should have_selector "a", :href => "/dashboards/baz", :content => "All About Baz" }
 
       context "with a current dashboard" do
         subject { helper.dashboard_nav(foo) }
@@ -83,16 +83,16 @@ module GDash
 
       it { should have_selector "ul.nav.nav-pills" }
       
-      it { should have_selector "a", :href => "/foo?window=one_hour", :content => "1 Hour" }
-      it { should have_selector "a", :href => "/foo?window=two_hours", :content => "2 Hours" }
-      it { should have_selector "a", :href => "/foo?window=four_hours", :content => "4 Hours" }
-      it { should have_selector "a", :href => "/foo?window=twelve_hours", :content => "12 Hours" }
-      it { should have_selector "a", :href => "/foo?window=one_day", :content => "1 Day" }
-      it { should have_selector "a", :href => "/foo?window=two_days", :content => "2 Days" }
-      it { should have_selector "a", :href => "/foo?window=one_week", :content => "1 Hour" }
-      it { should have_selector "a", :href => "/foo?window=two_weeks", :content => "2 Weeks" }
-      it { should have_selector "a", :href => "/foo?window=one_month", :content => "Month" }
-      it { should have_selector "a", :href => "/foo?window=one_year", :content => "Year" }
+      it { should have_selector "a", :href => "/dashboards/foo?window=one_hour", :content => "1 Hour" }
+      it { should have_selector "a", :href => "/dashboards/foo?window=two_hours", :content => "2 Hours" }
+      it { should have_selector "a", :href => "/dashboards/foo?window=four_hours", :content => "4 Hours" }
+      it { should have_selector "a", :href => "/dashboards/foo?window=twelve_hours", :content => "12 Hours" }
+      it { should have_selector "a", :href => "/dashboards/foo?window=one_day", :content => "1 Day" }
+      it { should have_selector "a", :href => "/dashboards/foo?window=two_days", :content => "2 Days" }
+      it { should have_selector "a", :href => "/dashboards/foo?window=one_week", :content => "1 Hour" }
+      it { should have_selector "a", :href => "/dashboards/foo?window=two_weeks", :content => "2 Weeks" }
+      it { should have_selector "a", :href => "/dashboards/foo?window=one_month", :content => "Month" }
+      it { should have_selector "a", :href => "/dashboards/foo?window=one_year", :content => "Year" }
 
       context "with a current window" do
         subject { helper.window_nav foo, Window.all.first }
@@ -101,7 +101,7 @@ module GDash
 
       context "with a custom window" do
         subject { helper.window_nav baz }
-        it { should have_selector "a", :href => "/baz?window=custom_window", :content => "Custom Time Window" }
+        it { should have_selector "a", :href => "/dashboards/baz?window=custom_window", :content => "Custom Time Window" }
       end
     end
 

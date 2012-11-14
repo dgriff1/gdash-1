@@ -2,6 +2,11 @@ require "spec_helper"
 
 module GDash
   describe Window do
+    before do
+      @now = DateTime.now
+      DateTime.stub! :now => @now
+    end
+
     let :window do
       described_class.define :foo, :title => "Foo" do |window|
         window.length = 42
@@ -16,6 +21,7 @@ module GDash
     
     its(:name) { should == "foo" }
     its(:title) { should == "Foo" }
+    its(:start) { should == @now }
     its(:length) { should == 42 }
     its(:default) { should be_true }
     its(:ganglia_params) { should == { :foo => :bar } }
@@ -72,6 +78,13 @@ module GDash
       subject { described_class }
       
       its(:default) { should == bar }
+    end
+
+    describe "#start" do
+      context "default" do
+        subject { described_class.define(:foo).start }
+        it { should == @now }
+      end
     end
 
     describe "#length" do
