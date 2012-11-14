@@ -5,8 +5,18 @@ module GDash
     end
 
     def dashboard_path dashboard, options = {}
-      params = "?"
-      params += "window=#{Rack::Utils.escape(options[:window].name)}" if options.has_key? :window
+      params = nil
+
+      if options.has_key? :window
+        params = { :window => options[:window].name }
+
+        if options[:window].name == "custom"
+          params[:start] = options[:window].start.strftime("%Y-%m-%d %H:%M:%S")
+          params[:end] = (options[:window].start + options[:window].length.seconds).strftime("%Y-%m-%d %H:%M:%S")
+        end
+      end
+
+      params = "?" + params.map { |k, v| "#{k}=#{Rack::Utils.escape(v)}" }.join("&") if params.present?
 
       "/dashboards/#{dashboard.name}#{params}"
     end
@@ -60,9 +70,11 @@ module GDash
             html.b "", :class => "caret"
           end
           html.div :class => "dropdown-menu", :style => "padding: 20px;" do
-            html.form do
+            html.form :action => dashboard_path(dashboard), :method => :get do
               html.fieldset do
                 html.legend "Custom Time Window"
+
+                html.input :type => "hidden", :id => "window", :value => "custom"
 
                 html.label "Start", :for => "start"
                 html.input :type => "text", :id => "start", :placeholder => "yyyy-mm-dd HH:MM:SS"
@@ -70,13 +82,13 @@ module GDash
                 html.label "End", :for => "end"
                 html.input :type => "text", :id => "end", :placeholder => "yyyy-mm-dd HH:MM:SS"
 
-                html.button "Go!", :type => "submit", :class => "btn btn-primary", :id => "go"
+                html.input :type => "submit", :class => "btn btn-primary", :id => "go", :value => "Go!"
               end
             end
 
-            html.script :type => "text/javascript" do
-              html << %Q{$("#go").click(function() { window.location = encodeURI("#{dashboard_path(dashboard)}window=custom&start=" + $("#start").val() + "&end=" + $("#end").val()); });}
-            end
+            #html.script :type => "text/javascript" do
+            #  html << %Q{$("#go").click(function() { window.location = encodeURI("#{dashboard_path(dashboard)}?window=custom&start=" + $("#start").val() + "&end=" + $("#end").val()); });}
+            #end
           end
         end
       end

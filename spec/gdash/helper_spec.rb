@@ -44,12 +44,18 @@ module GDash
     describe "#dashboard_path" do
       context "without a window" do
         subject { helper.dashboard_path foo }
-        it { should == "/dashboards/foo?" }
+        it { should == "/dashboards/foo" }
       end
 
       context "with a window" do
         subject { helper.dashboard_path foo, :window => window }
         it { should == "/dashboards/foo?window=a_window" }
+      end
+
+      context "with a custom window" do
+        let(:window) { Window.new :custom, :start => DateTime.parse("2012-01-01 00:00:00"), :length => 3600.seconds }
+        subject { helper.dashboard_path foo, :window => window }
+        it { should == "/dashboards/foo?window=custom&start=#{Rack::Utils.escape("2012-01-01 00:00:00")}&end=#{Rack::Utils.escape("2012-01-01 01:00:00")}" }
       end
     end
 
