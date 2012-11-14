@@ -16,9 +16,9 @@ module GDash
     
     let! :baz do
       Dashboard.toplevel :baz, :title => "All About Baz" do |baz|
-        baz.custom_window :custom_window do |window|
+        baz.custom_window :my_window do |window|
           window.length = 42.minutes
-          window.title = "Custom Time Window"
+          window.title = "My Time Window"
         end
       end
     end
@@ -101,7 +101,12 @@ module GDash
 
       context "with a custom window" do
         subject { helper.window_nav baz }
-        it { should have_selector "a", :href => "/dashboards/baz?window=custom_window", :content => "Custom Time Window" }
+        it { should have_selector "a", :href => "/dashboards/baz?window=my_window", :content => "My Time Window" }
+      end
+
+      context "with live window" do
+        subject { helper.window_nav foo }
+        it { should have_selector "a", :href => "#", :class => "dropdown-toggle", "data-toggle" => "custom-window", :content => "Custom" }
       end
     end
 

@@ -30,7 +30,7 @@ module GDash
           options = {}
           options[:class] = "active" if dashboard == current
           html.li options do
-            html.a dashboard.title, { :href => dashboard_path(dashboard, :window => (dashboard.window || Window.default)) }
+            html.a dashboard.title, :href => dashboard_path(dashboard, :window => ((current && current.window) || Window.default))
           end
 
           if dashboard.nested_dashboards?
@@ -50,7 +50,33 @@ module GDash
           options = {}
           options[:class] = "active" if window == current
           html.li options do
-            html.a window.title, { :href => dashboard_path(dashboard, :window => window) }
+            html.a window.title, :href => dashboard_path(dashboard, :window => window)
+          end
+        end
+
+        html.li :class => "dropdown" do
+          html.a :href => "#", :class => "dropdown-toggle", "data-toggle" => "dropdown" do
+            html.text! "Custom"
+            html.b "", :class => "caret"
+          end
+          html.div :class => "dropdown-menu", :style => "padding: 20px;" do
+            html.form do
+              html.fieldset do
+                html.legend "Custom Time Window"
+
+                html.label "Start", :for => "start"
+                html.input :type => "text", :id => "start", :placeholder => "yyyy-mm-dd HH:MM:SS"
+
+                html.label "End", :for => "end"
+                html.input :type => "text", :id => "end", :placeholder => "yyyy-mm-dd HH:MM:SS"
+
+                html.button "Go!", :type => "submit", :class => "btn btn-primary", :id => "go"
+              end
+            end
+
+            html.script :type => "text/javascript" do
+              html << %Q{$("#go").click(function() { window.location = encodeURI("#{dashboard_path(dashboard)}window=custom&start=" + $("#start").val() + "&end=" + $("#end").val()); });}
+            end
           end
         end
       end
@@ -66,7 +92,7 @@ module GDash
             options = {}
             options[:class] = "active" if doc == current
             html.li options do
-              html.a doc.title, { :href => doc_path(doc) }
+              html.a doc.title, :href => doc_path(doc)
             end
           end
         end

@@ -1,5 +1,6 @@
 module GDash
   class App < Sinatra::Base
+    enable :sessions
     set :views, File.expand_path(File.join(File.dirname(__FILE__), "views"))
     set :public_folder, File.expand_path(File.join(File.dirname(__FILE__), "public"))
 
@@ -11,13 +12,17 @@ module GDash
           start = DateTime.parse params["start"]
           stop = DateTime.parse params["end"]
           length = stop.to_i - start.to_i
-          @window = Window.new :custom, :start => start, :length => length
+          @window = Window.new :custom, :start => start, :length => length.seconds
         else
           @window = Window[params["window"]]
         end
+      elsif session.has_key? :window
+        @window = session[:window]
       else
         @window = Window.default
       end
+
+      session[:window] = @window
     end
 
     get "/" do

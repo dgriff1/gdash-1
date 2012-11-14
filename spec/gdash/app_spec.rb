@@ -5,7 +5,12 @@ module GDash
   describe App do
     include Rack::Test::Methods
 
-    let!(:dashboard) { GDash::Dashboard.toplevel :foo }
+    let! :dashboard do
+      GDash::Dashboard.toplevel :foo do |foo|
+        foo.data_center = GDash::DataCenter.new :ganglia_host => "http://ganglia-host"
+        foo.ganglia_graph :bar
+      end
+    end
 
     describe "Root" do
       subject { get "/" }
@@ -26,7 +31,7 @@ module GDash
         subject { get "/dashboards/foo" }
 
         it { should be_ok }
-        its(:body) { should =~ /#{Dashboard[:foo].to_html}/ }
+        its(:body) { should =~ /#{Regexp.escape(Dashboard[:foo].to_html)}/ }
       end
       
       describe :window do
@@ -41,7 +46,7 @@ module GDash
         it "accepts custom time windows" do
           get "/dashboards/foo?window=custom&start=#{Rack::Utils.escape("2012-01-01 00:00:00")}&end=#{Rack::Utils.escape("2012-01-01 01:00:00")}"
           dashboard.window.start.should == DateTime.parse("2012-01-01 00:00:00")
-          dashboard.window.length.should == 3600
+          dashboard.window.length.should == 3600.seconds
         end
         
         it "uses the default window if not specified" do
