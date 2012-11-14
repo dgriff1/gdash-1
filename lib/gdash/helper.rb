@@ -85,10 +85,6 @@ module GDash
                 html.input :type => "submit", :class => "btn btn-primary", :id => "go", :value => "Go!"
               end
             end
-
-            #html.script :type => "text/javascript" do
-            #  html << %Q{$("#go").click(function() { window.location = encodeURI("#{dashboard_path(dashboard)}?window=custom&start=" + $("#start").val() + "&end=" + $("#end").val()); });}
-            #end
           end
         end
       end

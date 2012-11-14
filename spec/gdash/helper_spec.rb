@@ -114,6 +114,21 @@ module GDash
         subject { helper.window_nav foo }
         it { should have_selector "a", :href => "#", :class => "dropdown-toggle", "data-toggle" => "custom-window", :content => "Custom" }
       end
+
+      context "custom window dropdown" do
+        subject { helper.window_nav foo }
+        it { should have_selector "li.dropdown" }
+        it { should have_selector "a.dropdown-toggle", "data-toggle" => "dropdown" }
+        it { should have_selector ".dropdown-menu" }
+        it { should have_selector "form", :action => helper.dashboard_path(foo), :method => :get }
+        it { should have_selector "legend", :content => "Custom Time Window" }
+        it { should have_selector "input#window", :type => "hidden", :value => "custom" }
+        it { should have_selector "label", :for => "start", :content => "Start" }
+        it { should have_selector "input#start", :type => "text" }
+        it { should have_selector "label", :for => "start", :content => "End" }
+        it { should have_selector "input#end", :type => "text" }
+        it { should have_selector "input", :type => "submit", :value => "Go!" }
+      end
     end
 
     describe "#doc_nav" do
