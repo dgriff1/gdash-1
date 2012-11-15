@@ -11,8 +11,8 @@ module GDash
         params = { :window => options[:window].name }
 
         if options[:window].name == "custom"
-          params[:start] = options[:window].start.strftime("%Y-%m-%d %H:%M:%S")
-          params[:end] = (options[:window].start + options[:window].length.seconds).strftime("%Y-%m-%d %H:%M:%S")
+          params[:end] = options[:window].start.strftime("%Y-%m-%d %H:%M:%S")
+          params[:start] = (options[:window].start - options[:window].length.seconds).strftime("%Y-%m-%d %H:%M:%S")
         end
       end
 
