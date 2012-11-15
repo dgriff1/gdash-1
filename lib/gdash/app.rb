@@ -12,7 +12,7 @@ module GDash
           start = DateTime.parse params["start"]
           stop = DateTime.parse params["end"]
           length = stop.to_i - start.to_i
-          @window = Window.new :custom, :start => start, :length => length.seconds
+          @window = Window.new :custom, :start => stop, :length => length.seconds
         else
           @window = Window[params["window"]]
         end

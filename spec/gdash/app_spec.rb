@@ -45,7 +45,7 @@ module GDash
 
         it "accepts custom time windows" do
           get "/dashboards/foo?window=custom&start=#{Rack::Utils.escape("2012-01-01 00:00:00")}&end=#{Rack::Utils.escape("2012-01-01 01:00:00")}"
-          dashboard.window.start.should == DateTime.parse("2012-01-01 00:00:00")
+          dashboard.window.start.should == DateTime.parse("2012-01-01 01:00:00")
           dashboard.window.length.should == 3600.seconds
         end
         
