@@ -1,5 +1,5 @@
 module GDash
-  describe Nagios, :type => :request do
+  describe Nagios, :type => :feature do
     let(:text) { <<EOF }
 {"hostgroups": [{
    "hostgroup_name":"some_host_group",
@@ -114,28 +114,28 @@ EOF
 
       it { should have_selector "table.table" }
       
-      it { should have_selector "span.badge.badge-success", :content => nagios.hosts.hosts_up }
+      it { should have_selector "span.badge.badge-success", :text => nagios.hosts.hosts_up.to_s }
       it { should have_content "Up" }
 
-      it { should have_selector "span.badge.badge-success", :content => nagios.services.services_ok }
+      it { should have_selector "span.badge.badge-success", :text => nagios.services.services_ok.to_s }
       it { should have_content "OK" }      
       
-      it { should have_selector "span.badge.badge-important", :content => nagios.hosts.hosts_down }
+      it { should have_selector "span.badge.badge-important", :text => nagios.hosts.hosts_down.to_s }
       it { should have_content "Down" }
       
-      it { should have_selector "span.badge.badge-important", :content => nagios.services.services_critical }
+      it { should have_selector "span.badge.badge-important", :text => nagios.services.services_critical.to_s }
       it { should have_content "Critical" }
       
-      it { should have_selector "span.badge.badge-warning", :content => nagios.hosts.hosts_unreachable }
+      it { should have_selector "span.badge.badge-warning", :text => nagios.hosts.hosts_unreachable.to_s }
       it { should have_content "Unreachable" }
       
-      it { should have_selector "span.badge.badge-warning", :content => nagios.services.services_unknown }
+      it { should have_selector "span.badge.badge-warning", :text => nagios.services.services_unknown.to_s }
       it { should have_content "Unknown" }
       
-      it { should have_selector "span.badge.badge-info", :content => nagios.hosts.hosts_pending }
+      it { should have_selector "span.badge.badge-info", :text => nagios.hosts.hosts_pending.to_s }
       it { should have_content "Pending" }
       
-      it { should have_selector "span.badge.badge-info", :content => nagios.services.services_pending }
+      it { should have_selector "span.badge.badge-info", :text => nagios.services.services_pending.to_s }
       it { should have_content "Pending" }
     end
   end

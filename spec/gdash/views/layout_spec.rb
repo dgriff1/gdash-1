@@ -1,7 +1,7 @@
 require "spec_helper"
 
 module GDash
-  describe "Layout", :type => :request do
+  describe "Layout", :type => :feature do
     let :context do
       Class.new do
         attr_accessor :dashboard
@@ -30,36 +30,36 @@ module GDash
       
       context "with a dashboard" do
         before { context.dashboard = dashboard }
-        it { should have_selector "title", :content => dashboard.title }
-        it { should have_selector "meta", "http-equiv" => "refresh", "content" => dashboard.refresh }
+        it { should have_selector "title", :text => dashboard.title }
+        it { should have_selector "meta[http-equiv='refresh'][content=#{dashboard.refresh.to_s.inspect}]" }
       end
       
       context "without a dashboard" do
-        it { should have_selector "title", :content => "Ops Dashboard" }
+        it { should have_selector "title", :text => "GDash" }
       end
       
       context "bootstrap" do
-        it { should have_selector "link", :href => "/css/bootstrap.min.css", :rel => "stylesheet" }
-        it { should have_selector "script", :src => "/js/bootstrap.min.js", :content => "" }
+        it { should have_selector "link[href='/css/bootstrap.min.css'][rel='stylesheet']" }
+        it { should have_selector "script[src='/js/bootstrap.min.js']", :text => "" }
       end
       
       context "jQuery" do
-        it { should have_selector "script", :src => "/js/jquery-1.8.1.min.js", :content => "" }
+        it { should have_selector "script[src='/js/jquery-1.8.1.min.js']", :text => "" }
       end
     end
     
     context "body" do
-      it { should have_selector "body", :style => "padding-top: 50px;" }
+      it { should have_selector "body[style='padding-top: 50px;']" }
       
       context "navbar" do
         it { should have_selector ".navbar.navbar-fixed-top.navbar-inverse" }
         it { should have_selector ".navbar-inner" }
         
-        it { should have_selector "a.brand", :href => dashboards_path, :content => "Ops Dashboard" }
+        it { should have_selector "a.brand[href=#{dashboards_path.inspect}]", :text => "GDash" }
         
         it { should have_selector "ul.nav" }
         it { should have_selector "li" }
-        it { should have_selector "a", :href => docs_path, :content => "Documentation" }
+        it { should have_selector "a[href=#{docs_path.inspect}]", :text => "Documentation" }
       end
       
       context "main content" do

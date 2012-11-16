@@ -1,7 +1,7 @@
 require "spec_helper"
 
 module GDash
-  describe CactiGraph, :type => :request do
+  describe CactiGraph, :type => :feature do
     let!(:data_center) { DataCenter.define :foo, :cacti_host => "https://cacti-host/path/to/cacti" }
 
     let :graph do
@@ -42,7 +42,7 @@ module GDash
     
     describe "#to_html" do
       subject { graph.to_html }
-      it { should have_selector "img", :src => graph.to_url }
+      it { should have_selector "img[src=#{graph.to_url.inspect}]" }
     end
   end
 end

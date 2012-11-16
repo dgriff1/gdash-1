@@ -1,7 +1,7 @@
 require "spec_helper"
 
 module GDash
-  describe "Doc", :type => :request do
+  describe "Doc", :type => :feature do
     let :context do
       Class.new do
         include Helper
@@ -22,30 +22,30 @@ module GDash
     
     context "header" do
       it { should have_selector "head" }
-      it { should have_selector "title", :content => "Ops Dashboard" }
+      it { should have_selector "title", :text => "GDash" }
       
       context "bootstrap" do
-        it { should have_selector "link", :href => "/css/bootstrap.min.css", :rel => "stylesheet" }
-        it { should have_selector "script", :src => "/js/bootstrap.min.js", :content => "" }
+        it { should have_selector "link[href='/css/bootstrap.min.css'][rel='stylesheet']" }
+        it { should have_selector "script[src='/js/bootstrap.min.js']", :text => "" }
       end
       
       context "jQuery" do
-        it { should have_selector "script", :src => "/js/jquery-1.8.1.min.js", :content => "" }
+        it { should have_selector "script[src='/js/jquery-1.8.1.min.js']", :text => "" }
       end
     end
     
     context "body" do
-      it { should have_selector "body", :style => "padding-top: 50px;" }
+      it { should have_selector "body[style='padding-top: 50px;']" }
       
       context "navbar" do
         it { should have_selector ".navbar.navbar-fixed-top.navbar-inverse" }
         it { should have_selector ".navbar-inner" }
         
-        it { should have_selector "a.brand", :href => dashboards_path, :content => "Ops Dashboard" }
+        it { should have_selector "a.brand[href=#{dashboards_path.inspect}]", :text => "GDash" }
         
         it { should have_selector "ul.nav" }
         it { should have_selector "li" }
-        it { should have_selector "a", :href => docs_path, :content => "Documentation" }
+        it { should have_selector "a[href=#{docs_path.inspect}]", :text => "Documentation" }
       end
       
       context "main content" do
