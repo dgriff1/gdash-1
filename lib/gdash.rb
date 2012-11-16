@@ -14,6 +14,12 @@ require "builder"
 require "gdash/version"
 require "gdash/configuration"
 
+require "gdash/data/point"
+require "gdash/data/source"
+require "gdash/data/sources/ganglia"
+require "gdash/data/sources/cacti"
+require "gdash/data/set"
+
 require 'gdash/doc'
 require 'gdash/window'
 require 'gdash/windows'
