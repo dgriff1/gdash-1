@@ -112,11 +112,11 @@ module GDash
         it { should have_selector ".dropdown-menu" }
         it { should have_selector "form[action=#{helper.dashboard_path(foo).inspect}][method='get']" }
         it { should have_selector "legend", :text => "Custom Time Window" }
-        it { should have_selector "input#window[type='hidden'][value='custom']" }
+        it { should have_selector "input[name='window'][type='hidden'][value='custom']" }
         it { should have_selector "label[for='start']", :text => "Start" }
-        it { should have_selector "input#start[type='text']" }
+        it { should have_selector "input[name='start'][type='text']" }
         it { should have_selector "label[for='end']", :text => "End" }
-        it { should have_selector "input#end[type='text']" }
+        it { should have_selector "input[name='end'][type='text']" }
         it { should have_selector "input[type='submit'][value='Go!']" }
       end
     end

@@ -72,15 +72,15 @@ module GDash
               html.fieldset do
                 html.legend "Custom Time Window"
 
-                html.input :type => "hidden", :id => "window", :value => "custom"
+                html.input :type => "hidden", :name => "window", :value => "custom"
 
                 html.label "Start", :for => "start"
-                html.input :type => "text", :id => "start", :placeholder => "yyyy-mm-dd HH:MM:SS"
+                html.input :type => "text", :name => "start", :placeholder => "yyyy-mm-dd HH:MM:SS"
 
                 html.label "End", :for => "end"
-                html.input :type => "text", :id => "end", :placeholder => "yyyy-mm-dd HH:MM:SS"
+                html.input :type => "text", :name => "end", :placeholder => "yyyy-mm-dd HH:MM:SS"
 
-                html.input :type => "submit", :class => "btn btn-primary", :id => "go", :value => "Go!"
+                html.input :type => "submit", :class => "btn btn-primary", :name => "go", :value => "Go!"
               end
             end
           end

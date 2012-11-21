@@ -23,7 +23,7 @@
             = window_nav @dashboard
           %li
             %form.navbar-search
-              %input.search-query#tags{ :type => "text", :placeholder => "Filter" }
+              %input.search-query{ :name => "tags", :type => "text", :placeholder => "Filter" }
         %ul.nav.pull-right
           %li
             %a{ :href => docs_path } Documentation

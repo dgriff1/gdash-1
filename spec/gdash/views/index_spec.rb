@@ -51,7 +51,7 @@ module GDash
         it { should have_selector "b.caret", :text => "" }
         it { should have_selector "li" }
         it { should have_selector "form.navbar-search" }
-        it { should have_selector "input.search-query#tags[type='text'][placeholder='Filter']" }
+        it { should have_selector "input.search-query[name='tags'][type='text'][placeholder='Filter']" }
         it { should have_selector "ul.nav.pull-right" }
         it { should have_selector "li" }
         it { should have_selector "a[href=#{docs_path.inspect}]", :text => "Documentation" }
