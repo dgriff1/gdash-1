@@ -72,22 +72,17 @@ module GDash
     describe "#dashbaord_nav" do
       subject { helper.dashboard_nav }
 
-      it { should have_selector "ul.nav.nav-list" }
-      it { should have_selector "li.nav-header", :text => "Dashboards" }
+      it { should have_selector "ul.dropdown-menu[role='menu'][aria-labelledby='dropdownMenu']" }
+      it { should have_selector "li" }
       it { should have_selector "a[href=#{helper.dashboard_path(Dashboard[:foo], :window => Window.default).inspect}]", :text => "Foobar" }
       it { should have_selector "a[href=#{helper.dashboard_path(Dashboard[:bar], :window => Window.default).inspect}]", :text => "BarBar" }
       it { should have_selector "a[href=#{helper.dashboard_path(Dashboard[:baz], :window => Window.default).inspect}]", :text => "All About Baz" }
-
-      context "with a current dashboard" do
-        subject { helper.dashboard_nav(foo) }
-        it { should have_selector "li.active" }
-      end
     end
 
     describe "#window_nav" do
       subject { helper.window_nav foo }
 
-      it { should have_selector "ul.nav.nav-pills" }
+      it { should have_selector "ul.dropdown-menu[role='menu'][aria-labelledby='dropdownMenu']" }
       
       it { should have_selector "a[href='/dashboards/foo?window=one_hour']", :text => "Hour" }
       it { should have_selector "a[href='/dashboards/foo?window=two_hours']", :text => "2 Hours" }
@@ -99,11 +94,6 @@ module GDash
       it { should have_selector "a[href='/dashboards/foo?window=two_weeks']", :text => "2 Weeks" }
       it { should have_selector "a[href='/dashboards/foo?window=one_month']", :text => "Month" }
       it { should have_selector "a[href='/dashboards/foo?window=one_year']", :text => "Year" }
-
-      context "with a current window" do
-        subject { helper.window_nav foo, Window.all.first }
-        it { should have_selector "li.active" }
-      end
 
       context "with a custom window" do
         subject { helper.window_nav baz }
@@ -117,7 +107,7 @@ module GDash
 
       context "custom window dropdown" do
         subject { helper.window_nav foo }
-        it { should have_selector "li.dropdown" }
+        it { should have_selector "li.dropdown-submenu" }
         it { should have_selector "a.dropdown-toggle[data-toggle='dropdown']" }
         it { should have_selector ".dropdown-menu" }
         it { should have_selector "form[action=#{helper.dashboard_path(foo).inspect}][method='get']" }

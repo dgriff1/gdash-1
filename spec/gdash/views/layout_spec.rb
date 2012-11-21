@@ -58,6 +58,16 @@ module GDash
         it { should have_selector "a.brand[href=#{dashboards_path.inspect}]", :text => "GDash" }
         
         it { should have_selector "ul.nav" }
+        it { should have_selector "li.dropdown" }
+        it { should have_selector "a.dropdown-toggle[href='#'][data-toggle='dropdown']", :text => "Dashboards" }
+        it { should have_selector "b.caret", :text => "" }
+        it { should have_selector "li.dropdown" }
+        it { should have_selector "a.dropdown-toggle[href='#'][data-toggle='dropdown']", :text => "Time Windows" }
+        it { should have_selector "b.caret", :text => "" }
+        it { should have_selector "li" }
+        it { should have_selector "form.navbar-search" }
+        it { should have_selector "input.search-query#tags[type='text'][placeholder='Filter']" }
+        it { should have_selector "ul.nav.pull-right" }
         it { should have_selector "li" }
         it { should have_selector "a[href=#{docs_path.inspect}]", :text => "Documentation" }
       end
@@ -69,12 +79,7 @@ module GDash
         context "with a dashboard" do
           before { context.dashboard = dashboard }
           
-          it { should have_selector ".span2" }
-          it { should have_selector ".well" }
-          it { should =~ Regexp.compile(Regexp.escape(dashboard_nav(dashboard))) }
-        
-          it { should have_selector ".span10"}
-          it { should =~ Regexp.compile(Regexp.escape(window_nav(dashboard, dashboard.window))) }
+          it { should have_selector ".span12"}
           it { should have_content "Page Content" }
         end
         

@@ -32,45 +32,43 @@ module GDash
     def dashboard_nav current = nil, dashboards = nil, html = nil
       html ||= Builder::XmlMarkup.new
 
-      html.ul :class => "nav nav-list" do
-        html.li "Dashboards", :class => "nav-header" if dashboards.nil?
-
+      html.ul :class => "dropdown-menu", :role => "menu", "aria-labelledby" => "dropdownMenu" do
         dashboards ||= Dashboard.toplevel.sort
         dashboards.each do |dashboard|
-          options = {}
-          options[:class] = "active" if dashboard == current
-          html.li options do
-            html.a dashboard.title, :href => dashboard_path(dashboard, :window => ((current && current.window) || Window.default))
-          end
-
           if dashboard.nested_dashboards?
-            html.li do
+            html.li :class => "dropdown-submenu" do
+              html.a dashboard.title, :href => dashboard_path(dashboard, :window => ((current && current.window) || Window.default))
               dashboard_nav current, dashboard.nested_dashboards, html
+            end
+          else
+            html.li do
+              html.a dashboard.title, :href => dashboard_path(dashboard, :window => ((current && current.window) || Window.default))
             end
           end
         end
       end
     end
 
-    def window_nav dashboard, current = nil
+    def window_nav dashboard = nil
       html = Builder::XmlMarkup.new
 
-      html.ul :class => "nav nav-pills" do
-        dashboard.windows.each do |window|
-          options = {}
-          options[:class] = "active" if window == current
-          html.li options do
-            html.a window.title, :href => dashboard_path(dashboard, :window => window)
+      windows = dashboard.nil? ? Window.all : dashboard.windows
+
+      html.ul  :class => "dropdown-menu", :role => "menu", "aria-labelledby" => "dropdownMenu" do
+        windows.each do |window|
+          path = dashboard.nil? ? dashboards_path : dashboard_path(dashboard, :window => window)
+          html.li do
+            html.a window.title, :href => path
           end
         end
 
-        html.li :class => "dropdown" do
+        path = dashboard.nil? ? dashboards_path : dashboard_path(dashboard)
+        html.li :class => "dropdown-submenu" do
           html.a :href => "#", :class => "dropdown-toggle", "data-toggle" => "dropdown" do
             html.text! "Custom"
-            html.b "", :class => "caret"
           end
-          html.div :class => "dropdown-menu", :style => "padding: 20px;" do
-            html.form :action => dashboard_path(dashboard), :method => :get do
+          html.div :class => "dropdown dropdown-menu", :style => "padding: 20px;" do
+            html.form :action => path, :method => :get do
               html.fieldset do
                 html.legend "Custom Time Window"
 

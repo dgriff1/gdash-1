@@ -15,15 +15,26 @@
       .navbar-inner
         %a.brand{ :href => dashboards_path } GDash
         %ul.nav
+          %li.dropdown
+            %a.dropdown-toggle{ :href => "#", "data-toggle" => "dropdown" }
+              Dashboards
+              %b.caret
+            = dashboard_nav @dashboard
+          %li.dropdown
+            %a.dropdown-toggle{ :href => "#", "data-toggle" => "dropdown" }
+              Time Windows
+              %b.caret
+            = window_nav @dashboard
+          %li
+            %form.navbar-search
+              %input.search-query#tags{ :type => "text", :placeholder => "Filter" }
+        %ul.nav.pull-right
           %li
             %a{ :href => docs_path } Documentation
     .container-fluid
       .row-fluid
         - if @dashboard
-          .span2
-            .well= dashboard_nav @dashboard
-          .span10
-            = window_nav @dashboard, @dashboard.window
+          .span12
             = yield
         - else
           = yield
