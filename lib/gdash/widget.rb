@@ -31,7 +31,7 @@ module GDash
       end
     end
 
-    attr_accessor :name, :parent, :window
+    attr_accessor :name, :parent, :window, :tags
 
     def initialize options = {}
       options.each do |k, v|
@@ -39,6 +39,48 @@ module GDash
       end
 
       yield self if block_given?
+    end
+
+    def tags
+      @tags ||= []
+    end
+
+    def tag t
+      tags << t.to_s
+    end
+
+    def tagged? matcher
+      self_tagged = if matcher.is_a? Regexp
+                      tags.any? do |t|
+                        t =~ matcher
+                      end
+                    else
+                      tags.include?(matcher.to_s)
+                    end
+
+      child_tagged = children.any? do |child|
+                       child.tagged? matcher
+                     end
+
+      self_tagged || child_tagged
+    end
+
+    def clone
+      fail "Should be overridden in #{self.class.name}"
+    end
+
+    def filter pattern
+      if tagged? pattern
+        cloned = clone
+        children.each do |child|
+          child = child.filter pattern
+          if child
+            child.parent = cloned
+            cloned.children << child
+          end
+        end
+        cloned
+      end
     end
 
     [:dashboard, :ganglia_graph, :ganglia_report, :cacti_graph].each do |widget|

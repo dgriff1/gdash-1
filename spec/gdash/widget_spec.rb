@@ -2,6 +2,14 @@ require "spec_helper"
 
 class TestWidget < GDash::Widget
   attr_accessor :foo, :bar
+
+  def clone
+    self.class.new :foo => foo, :bar => bar
+  end
+
+  def == other
+    other.name == self.name and other.foo == self.foo and other.bar == self.bar
+  end
 end
 
 module GDash
@@ -72,6 +80,79 @@ module GDash
           yielded = w
         end
         yielded.should == widget
+      end
+    end
+
+    describe :tag do
+      before { widget.tag :foo }
+      before { widget.tag :bar }
+
+      its(:tags) { should include "foo" }
+      its(:tags) { should include "bar" }
+      its(:tags) { should_not include "quux" }
+    end
+
+    describe :tagged? do
+      before { widget.tag :foo }
+
+      it { should be_tagged :foo }
+      it { should be_tagged "foo" }
+      it { should be_tagged /f/ }
+      it { should_not be_tagged :bar }
+
+      context "with children" do
+        let(:child) { Widget.new :parent => widget, :tags => ["bar"] }
+        before { widget.children << child }
+        it { should be_tagged :bar }
+      end
+    end
+
+    describe :clone do
+      it "raises an error" do
+        lambda { widget.clone.should raise_error }
+      end
+    end
+
+    describe :filter do
+      let!(:one) { TestWidget.new :foo => "foo_one", :bar => "bar_one", :tags => ["foo"] }
+
+      context "with matching filter" do
+        subject { one.filter :foo }
+        it { should == one }
+
+        context "and no matching children" do
+          its(:children) { should be_empty }
+        end
+
+        context "and matching children" do
+          let!(:two)   { TestWidget.new :foo => "foo_two",   :bar => "bar_two",   :parent => one,   :tags => [] }
+          let!(:three) { TestWidget.new :foo => "foo_three", :bar => "bar_three", :parent => one,   :tags => [] }
+          let!(:four)  { TestWidget.new :foo => "foo_four",  :bar => "bar_four",  :parent => two,   :tags => [] }
+          let!(:five)  { TestWidget.new :foo => "foo_five",  :bar => "bar_five",  :parent => two,   :tags => [] }
+          let!(:six)   { TestWidget.new :foo => "foo_six",   :bar => "bar_six",   :parent => three, :tags => ["keep"] }
+          let!(:seven) { TestWidget.new :foo => "foo_seven", :bar => "bar_seven", :parent => three, :tags => [] }
+
+          before { one.children << two << three }
+          before { two.children << four << five }
+          before { three.children << six << seven }
+
+          subject { one.filter /keep/ }
+
+          it { should == one }
+          its(:children) { should_not include two }
+          its(:children) { should include three }
+
+          context "and matching nested children" do
+            subject { one.filter(/keep/).children.last }
+            its(:children) { should include six }
+            its(:children) { should_not include seven }
+          end
+        end
+      end
+
+      context "without matching filter" do
+        subject { one.filter :quux }
+        it { should be_nil }
       end
     end
 
