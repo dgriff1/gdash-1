@@ -6,32 +6,38 @@ end
 
 module GDash
   describe Widget do
-    subject do
-      TestWidget.new
-    end
+    let(:widget) { TestWidget.new }
+    subject { widget }
 
     describe :define do
-      it "should return the named widget" do
-        widget_one = TestWidget.define :foo
-        widget_one.should be_a TestWidget
+      context "returns the named widget" do
+        let(:one) { TestWidget.define :foo }
+        let(:two) { TestWidget.define :foo }
+        let(:three) { TestWidget.define :bar }
 
-        widget_two = TestWidget.define :foo
-        widget_two.should == widget_one
+        subject { one }
 
-        widget_three = TestWidget.define :bar
-        widget_three.should_not == widget_one
+        it { should be_a TestWidget }
+        it { should == two }
+        it { should_not == three }
       end
 
-      it "should take options" do
-        TestWidget.define(:foo, :foo => "bar").foo.should == "bar"
-        TestWidget.define(:foo, :bar => "quux").bar.should == "quux"
+      context "takes options" do
+        let(:widget) { TestWidget.define :foo, :foo => "baz", :bar => "quux" }
+
+        subject { widget }
+
+        its(:foo) { should == "baz" }
+        its(:bar) { should == "quux" }
       end
 
-      it "should take a name" do
-        TestWidget.define(:foo).name.should == "foo"
+      context "takes a name" do
+        let(:widget) { TestWidget.define :foo }
+
+        its(:name) { should == "foo" }
       end
 
-      it "should yield the widget to the block" do
+      it "yields the widget to the block" do
         yielded = nil
         returned = TestWidget.define :foo do |w|
           yielded = w
@@ -45,22 +51,22 @@ module GDash
     end
 
     describe :[] do
-      it "should find a defined widget" do
-        widget = TestWidget.define :foo
-        Widget["foo"].should == widget
-      end
+      let!(:widget) { TestWidget.define :foo }
+
+      subject { Widget }
+
+      its(["foo"]) { should == widget }
     end
 
     describe :initialize do
-      it "should take options" do
-        lambda { TestWidget.new }.should_not raise_error
-        widget = TestWidget.new :foo => "Foo", :bar => "Bar"
+      context "takes options" do
+        let(:widget) { TestWidget.new :foo => "Foo", :bar => "Bar" }
 
-        widget.foo.should == "Foo"
-        widget.bar.should == "Bar"
+        its(:foo) { should == "Foo" }
+        its(:bar) { should == "Bar" }
       end
 
-      it "should yield itself to the block" do
+      it "yields itself to the block" do
         yielded = nil
         widget = TestWidget.new do |w|
           yielded = w
@@ -70,224 +76,201 @@ module GDash
     end
 
     describe :children do
-      it "should default to an empty array" do
-        subject.children.should == []
-      end
+      subject { widget.children }
+
+      it { should == [] }
     end
 
     describe :renderable_children do
-      it "should return non-dashboard children" do
-        section_one = subject.section
-        dashboard = subject.dashboard :bar
-        section_two = subject.section
+      let!(:one) { widget.section }
+      let!(:two) { widget.section }
+      let!(:three) { widget.dashboard :bar }
 
-        subject.renderable_children.should be_include section_one
-        subject.renderable_children.should be_include section_two
-        subject.renderable_children.should_not be_include dashboard
-      end
+      subject { widget.renderable_children }
+
+      it { should include one }
+      it { should include two }
+      it { should_not include three }
     end
 
     describe :nested_dashboards do
-      it "should return only dashboard children" do
-        section_one = subject.section
-        dashboard = subject.dashboard :bar
-        section_two = subject.section
+      let!(:one) { widget.section }
+      let!(:two) { widget.section }
+      let!(:three) { widget.dashboard :bar }
 
-        subject.nested_dashboards.should_not be_include section_one
-        subject.nested_dashboards.should_not be_include section_two
-        subject.nested_dashboards.should be_include dashboard
-      end
+      subject { widget.nested_dashboards }
+
+      it { should_not include one }
+      it { should_not include two }
+      it { should include three }
     end
 
     describe :nested_dashboards? do
-      it "should return true if there are nested dashboards" do
-        subject.dashboard :bar
-        subject.should be_nested_dashboards
+      context "with nested dashboards" do
+        let!(:bar) { widget.dashboard :bar }
+
+        it { should be_nested_dashboards }
       end
 
-      it "should return false if there are no nested dashboards" do
-        subject.should_not be_nested_dashboards
+      context "without nested dashboards" do
+        it { should_not be_nested_dashboards }
       end
     end
 
     describe :ganglia_graph do
-      before do
-        @ganglia_graph = GangliaGraph.define :some_graph
-        GangliaGraph.stub!(:new).and_return @ganglia_graph
-      end
+      let(:graph) { GangliaGraph.define :some_graph }
+      before { GangliaGraph.stub! :new => graph }
+      before { widget.ganglia_graph :some_graph }
 
-      it "should add a ganglia graph child" do
-        subject.ganglia_graph :some_graph
-        subject.children.last.should == @ganglia_graph
-      end
+      subject { widget.children.last }
 
-      it "should yield the ganglia graph" do
-        GangliaGraph.stub!(:new).and_yield(@ganglia_graph).and_return @ganglia_graph
+      it { should == graph }
+      its(:parent) { should == widget }
+
+      it "yields the ganglia graph" do
+        GangliaGraph.stub!(:new).and_yield(graph).and_return graph
 
         yielded = nil
         subject.ganglia_graph :some_graph do |g|
           yielded = g
         end
 
-        yielded.should == @ganglia_graph
-      end
-
-      it "should set the parent" do
-        subject.ganglia_graph :some_graph
-        @ganglia_graph.parent.should == subject
+        yielded.should == graph
       end
     end
 
     describe :ganglia_report do
-      before do
-        @ganglia_report = GangliaReport.define :some_report
-        GangliaReport.stub!(:new).and_return @ganglia_report
-      end
+      let(:report) { GangliaReport.define :some_report }
+      before { GangliaReport.stub! :new => report }
+      before { widget.ganglia_report :some_report }
 
-      it "should add a ganglia report child" do
-        subject.ganglia_report :some_report
-        subject.children.last.should == @ganglia_report
-      end
+      subject { widget.children.last }
 
-      it "should yield the ganglia report" do
-        GangliaReport.stub!(:new).and_yield(@ganglia_report).and_return @ganglia_report
+      it { should == report }
+      its(:parent) { should == widget }
+
+      it "yields the ganglia report" do
+        GangliaReport.stub!(:new).and_yield(report).and_return report
 
         yielded = nil
-        subject.ganglia_report :some_report do |r|
-          yielded = r
+        subject.ganglia_report :some_report do |g|
+          yielded = g
         end
 
-        yielded.should == @ganglia_report
-      end
-
-      it "should set the parent" do
-        subject.ganglia_report :some_report
-        @ganglia_report.parent.should == subject
+        yielded.should == report
       end
     end
 
     describe :cacti_graph do
-      before do
-        @cacti_graph = CactiGraph.define :some_graph
-        CactiGraph.stub!(:new).and_return @cacti_graph
-      end
+      let(:graph) { CactiGraph.define :some_graph }
+      before { CactiGraph.stub! :new => graph }
+      before { widget.cacti_graph :some_graph }
 
-      it "should add a cacti graph child" do
-        subject.cacti_graph :some_graph
-        subject.children.last.should == @cacti_graph
-      end
+      subject { widget.children.last }
 
-      it "should yield the ganglia graph" do
-        CactiGraph.stub!(:new).and_yield(@cacti_graph).and_return @cacti_graph
+      it { should == graph }
+      its(:parent) { should == widget }
+
+      it "yields the cacti graph" do
+        CactiGraph.stub!(:new).and_yield(graph).and_return graph
 
         yielded = nil
         subject.cacti_graph :some_graph do |g|
           yielded = g
         end
 
-        yielded.should == @cacti_graph
-      end
-
-      it "should set the parent" do
-        subject.cacti_graph :some_graph
-        @cacti_graph.parent.should == subject
+        yielded.should == graph
       end
     end
 
     describe :dashboard do
-      before do
-        @dashboard = Dashboard.define :some_dashboard
-        Dashboard.stub!(:new).and_return @dashboard
-      end
+      let(:dashboard) { Dashboard.define :some_dashboard }
+      before { Dashboard.stub! :new => dashboard }
+      before { widget.dashboard :some_dashboard }
 
-      it "should add a dashboard child" do
-        subject.dashboard :some_dashboard
-        subject.children.last.should == @dashboard
-      end
+      subject { widget.children.last }
 
-      it "should yield the dashboard" do
-        Dashboard.stub!(:new).and_yield(@dashboard).and_return @dashboard
+      it { should == dashboard }
+      its(:parent) { should == widget }
+
+      it "yields the dashboard" do
+        Dashboard.stub!(:new).and_yield(dashboard).and_return dashboard
 
         yielded = nil
-        subject.dashboard :some_dashboard do |d|
-          yielded = d
+        subject.dashboard :some_dashboard do |g|
+          yielded = g
         end
 
-        yielded.should == @dashboard
-      end
-
-      it "should set the parent" do
-        subject.dashboard :some_dashboard
-        @dashboard.parent.should == subject
+        yielded.should == dashboard
       end
     end
 
     describe :section do
-      before do
-        @section = Section.new
-        Section.stub!(:new).and_return @section
-      end
+      let(:section) { Section.new }
+      before { Section.stub! :new => section }
+      before { widget.section :some_section }
 
-      it "should add a section child" do
-        subject.section
-        subject.children.last.should == @section
-      end
+      subject { widget.children.last }
 
-      it "should yield the section" do
-        Section.stub!(:new).and_yield(@section).and_return @section
+      it { should == section }
+      its(:parent) { should == widget }
+
+      it "yields the section" do
+        Section.stub!(:new).and_yield(section).and_return section
 
         yielded = nil
-        subject.section do |s|
-          yielded = s
+        subject.section do |g|
+          yielded = g
         end
 
-        yielded.should == @section
-      end
-
-      it "should set the parent" do
-        subject.section
-        @section.parent.should == subject
+        yielded.should == section
       end
     end
 
     describe :parent do
-      it "should have accessors" do
-        subject.parent = "Foo"
-        subject.parent.should == "Foo"
+      context "default" do
+        its(:parent) { should be_nil }
+      end
+
+      context "with a parent" do
+        before { subject.parent = "Foo" }
+        its(:parent) { should == "Foo" }
       end
     end
 
     describe :window do
-      it "should have an accessor" do
-        window = Window.new :foo
-        subject.window = window
-        subject.window.should == window
+      let(:window) { Window.new :foo }
+      before { widget.window = window }
+
+      its(:window) { should == window }
+
+      context "falls back to the parent's value" do
+        let(:child) { Widget.new :parent => widget }
+
+        subject { child }
+
+        its(:window) { should == widget.window }
       end
 
-      it "should fallback to the parent's value" do
-        window = Window.new :foo
-        widget = Widget.new :window => window
-        subject.parent = widget
-        subject.window.should == window
-      end
+      context "default" do
+        before { widget.window = nil }
 
-      it "should default to the default window" do
-        subject.window.should == Window.default
+        its(:window) { should == Window.default }
       end
     end
 
     describe :data_center do
       let!(:foo) { DataCenter.define :foo }
+      before { widget.data_center = :foo }
 
-      it "should have an accessor" do
-        subject.data_center = :foo
-        subject.data_center.should == foo
-      end
+      its(:data_center) { should == foo }
 
-      it "should fall back to the parent's value" do
-        widget = Widget.new :data_center => :foo
-        subject.parent = widget
-        widget.data_center.should == foo
+      context "falls back to the parent's value" do
+        let(:child) { Widget.new :parent => widget }
+
+        subject { child }
+
+        its(:data_center) { should == widget.data_center }
       end
     end
   end
