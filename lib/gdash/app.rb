@@ -1,6 +1,6 @@
 module GDash
   class App < Sinatra::Base
-    enable :sessions
+    use Rack::Session::Cookie, :key => "gdash.session", :secret => Digest::SHA1.hexdigest("gdash.session")
     set :views, File.expand_path(File.join(File.dirname(__FILE__), "views"))
     set :public_folder, File.expand_path(File.join(File.dirname(__FILE__), "public"))
 
