@@ -8,7 +8,6 @@ module GDash
     let! :dashboard do
       GDash::Dashboard.toplevel :foo do |foo|
         foo.data_center = GDash::DataCenter.new :ganglia_host => "http://ganglia-host"
-        foo.cacti_graph :bar
       end
     end
 

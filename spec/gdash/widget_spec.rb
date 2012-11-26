@@ -150,28 +150,6 @@ module GDash
       end
     end
 
-    describe :cacti_graph do
-      let(:graph) { CactiGraph.define :some_graph }
-      before { CactiGraph.stub! :new => graph }
-      before { widget.cacti_graph :some_graph }
-
-      subject { widget.children.last }
-
-      it { should == graph }
-      its(:parent) { should == widget }
-
-      it "yields the cacti graph" do
-        CactiGraph.stub!(:new).and_yield(graph).and_return graph
-
-        yielded = nil
-        subject.cacti_graph :some_graph do |g|
-          yielded = g
-        end
-
-        yielded.should == graph
-      end
-    end
-
     describe :dashboard do
       let(:dashboard) { Dashboard.define :some_dashboard }
       before { Dashboard.stub! :new => dashboard }
