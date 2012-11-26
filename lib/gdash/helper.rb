@@ -16,6 +16,11 @@ module GDash
         end
       end
 
+      if options.has_key? :tags
+        params ||= {}
+        params[:tags] = options[:tags].map(&:to_s).join(" ")
+      end
+
       params = "?" + params.map { |k, v| "#{k}=#{Rack::Utils.escape(v)}" }.join("&") if params.present?
 
       "/dashboards/#{dashboard.name}#{params}"
@@ -29,23 +34,51 @@ module GDash
       "/doc/#{Rack::Utils.escape(doc.name)}"
     end
 
-    def dashboard_nav current = nil, dashboards = nil, html = nil
+    def dashboard_nav dashboards = nil, current = nil, html = nil
       html ||= Builder::XmlMarkup.new
 
+      title = current.nil? ? "Dashboards" : current.title
+      title ||= "Dashboards"
+
+      html.a :class => "dropdown-toggle", :href => "#", "data-toggle" => "dropdown" do
+        html.text! title
+        html.b :class => "caret" do
+        end
+      end
+
+      build_dashboard_nav((dashboards || Dashboard.toplevel), html)
+    end
+
+    def build_dashboard_nav dashboards, html
       html.ul :class => "dropdown-menu", :role => "menu", "aria-labelledby" => "dropdownMenu" do
-        dashboards ||= Dashboard.toplevel.sort
         dashboards.each do |dashboard|
           if dashboard.nested_dashboards?
             html.li :class => "dropdown-submenu" do
-              html.a dashboard.title, :href => dashboard_path(dashboard, :window => ((current && current.window) || Window.default))
-              dashboard_nav current, dashboard.nested_dashboards, html
+              html.a dashboard.title, :href => dashboard_path(dashboard)
+              build_dashboard_nav dashboard.nested_dashboards, html
             end
           else
             html.li do
-              html.a dashboard.title, :href => dashboard_path(dashboard, :window => ((current && current.window) || Window.default))
+              html.a dashboard.title, :href => dashboard_path(dashboard)
             end
           end
         end
+      end
+    end
+
+    private :build_dashboard_nav
+
+    def filter_form tags = []
+      html ||= Builder::XmlMarkup.new
+
+      html.form :class => "navbar-search" do
+        options = { :class => "search-query", :name => "tags", :type => "text" }
+        if tags.present?
+          options[:value] = tags.map(&:to_s).join(" ")
+        else
+          options[:placeholder] = "Filter"
+        end
+        html.input options
       end
     end
 
@@ -53,8 +86,15 @@ module GDash
       html = Builder::XmlMarkup.new
 
       windows = dashboard.nil? ? Window.all : dashboard.windows
+      title = dashboard.nil? ? "Time Window" : dashboard.window.title
 
-      html.ul  :class => "dropdown-menu", :role => "menu", "aria-labelledby" => "dropdownMenu" do
+      html.a :class => "dropdown-toggle", :href => "#", "data-toggle" => "dropdown" do
+        html.text! title
+        html.b :class => "caret" do
+        end
+      end
+
+      html.ul :class => "dropdown-menu", :role => "menu", "aria-labelledby" => "dropdownMenu" do
         windows.each do |window|
           path = dashboard.nil? ? dashboards_path : dashboard_path(dashboard, :window => window)
           html.li do

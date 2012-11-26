@@ -15,20 +15,14 @@
       .navbar-inner
         %a.brand{ :href => dashboards_path } GDash
         %ul.nav
-          %li.dropdown
-            %a.dropdown-toggle{ :href => "#", "data-toggle" => "dropdown" }
-              Dashboards
-              %b.caret
-            = dashboard_nav @dashboard
-          %li.dropdown
-            %a.dropdown-toggle{ :href => "#", "data-toggle" => "dropdown" }
-              Time Windows
-              %b.caret
-            = window_nav @dashboard
-          %li
-            %form.navbar-search
-              %input.search-query{ :name => "tags", :type => "text", :placeholder => "Filter" }
+          %li.dropdown= dashboard_nav GDash::Dashboard.toplevel, @dashboard
+          %li.dropdown= window_nav @dashboard
+          %li= filter_form @tags
         %ul.nav.pull-right
+          - if @dashboard.present?
+            %li
+              %a{ :href => dashboard_path(@dashboard, :window => @dashboard.window, :tags => (@tags || [])) }
+                %i.icon-share.icon-white
           %li
             %a{ :href => docs_path } Documentation
     .container-fluid

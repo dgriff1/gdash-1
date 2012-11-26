@@ -4,7 +4,7 @@ module GDash
   describe "Layout", :type => :feature do
     let :context do
       Class.new do
-        attr_accessor :dashboard
+        attr_accessor :dashboard, :tags
         include Helper
       end.new
     end
@@ -20,7 +20,9 @@ module GDash
         "Page Content"
       end
     end
-    
+
+    before { context.dashboard = dashboard }
+
     include Helper
     
     it { should have_selector "html" }
@@ -29,12 +31,12 @@ module GDash
       it { should have_selector "head" }
       
       context "with a dashboard" do
-        before { context.dashboard = dashboard }
         it { should have_selector "title", :text => dashboard.title }
         it { should have_selector "meta[http-equiv='refresh'][content=#{dashboard.refresh.to_s.inspect}]" }
       end
       
       context "without a dashboard" do
+        before { context.dashboard = nil }
         it { should have_selector "title", :text => "GDash" }
       end
       
@@ -52,6 +54,8 @@ module GDash
       it { should have_selector "body[style='padding-top: 50px;']" }
       
       context "navbar" do
+        before { dashboard.tags = ["foo", "bar"] }
+
         it { should have_selector ".navbar.navbar-fixed-top.navbar-inverse" }
         it { should have_selector ".navbar-inner" }
         
@@ -59,15 +63,18 @@ module GDash
         
         it { should have_selector "ul.nav" }
         it { should have_selector "li.dropdown" }
-        it { should have_selector "a.dropdown-toggle[href='#'][data-toggle='dropdown']", :text => "Dashboards" }
+        it { should have_selector "a.dropdown-toggle[href='#'][data-toggle='dropdown']", :text => dashboard.title }
         it { should have_selector "b.caret", :text => "" }
         it { should have_selector "li.dropdown" }
-        it { should have_selector "a.dropdown-toggle[href='#'][data-toggle='dropdown']", :text => "Time Windows" }
+        it { should have_selector "a.dropdown-toggle[href='#'][data-toggle='dropdown']" }
         it { should have_selector "b.caret", :text => "" }
         it { should have_selector "li" }
         it { should have_selector "form.navbar-search" }
         it { should have_selector "input.search-query[name='tags'][type='text'][placeholder='Filter']" }
         it { should have_selector "ul.nav.pull-right" }
+        it { should have_selector "li" }
+        pending { should have_selector "a[href=#{dashboard_path(dashboard, :window => dashboard.window, :tags => ["foo", "bar"]).inspect}]" }
+        it { should have_selector "i.icon-share.icon-white" }
         it { should have_selector "li" }
         it { should have_selector "a[href=#{docs_path.inspect}]", :text => "Documentation" }
       end
@@ -77,13 +84,12 @@ module GDash
         it { should have_selector ".row-fluid" }
         
         context "with a dashboard" do
-          before { context.dashboard = dashboard }
-          
           it { should have_selector ".span12"}
           it { should have_content "Page Content" }
         end
         
         context "without a dashboard" do
+          before { context.dashboard = nil }
           it { should have_content "Page Content" }
         end
       end

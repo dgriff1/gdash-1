@@ -57,9 +57,20 @@ module GDash
         subject { helper.dashboard_path foo, :window => window }
         it { should == "/dashboards/foo?window=custom&end=#{Rack::Utils.escape("2012-01-01 01:00:00")}&start=#{Rack::Utils.escape("2012-01-01 00:00:00")}" }
       end
+
+      context "with a filter" do
+        subject { helper.dashboard_path foo, :tags => ["foo", :bar, "baz"] }
+        it { should == "/dashboards/foo?tags=foo+bar+baz" }
+      end
+
+      context "with a window and a filter" do
+        subject { helper.dashboard_path foo, :window => window, :tags => ["foo", :bar, "baz"] }
+        it { should == "/dashboards/foo?window=a_window&tags=foo+bar+baz" }
+      end
     end
 
     describe "#docs_path" do
+
       subject { helper.docs_path }
       it { should == "/doc" }
     end
@@ -70,20 +81,41 @@ module GDash
     end
 
     describe "#dashbaord_nav" do
-      subject { helper.dashboard_nav }
+      subject { helper.dashboard_nav [foo, baz] }
 
+      it { should have_selector "a.dropdown-toggle[href='#'][data-toggle='dropdown']", :text => "Dashboards" }
+      it { should have_selector "b.caret", :text => "" }
       it { should have_selector "ul.dropdown-menu[role='menu'][aria-labelledby='dropdownMenu']" }
       it { should have_selector "li" }
-      it { should have_selector "a[href=#{helper.dashboard_path(Dashboard[:foo], :window => Window.default).inspect}]", :text => "Foobar" }
-      it { should have_selector "a[href=#{helper.dashboard_path(Dashboard[:bar], :window => Window.default).inspect}]", :text => "BarBar" }
-      it { should have_selector "a[href=#{helper.dashboard_path(Dashboard[:baz], :window => Window.default).inspect}]", :text => "All About Baz" }
+      it { should have_selector "a[href=#{helper.dashboard_path(Dashboard[:foo]).inspect}]", :text => "Foobar" }
+      it { should have_selector "a[href=#{helper.dashboard_path(Dashboard[:bar]).inspect}]", :text => "BarBar" }
+      it { should have_selector "a[href=#{helper.dashboard_path(Dashboard[:baz]).inspect}]", :text => "All About Baz" }
+
+      context "with current dashboard" do
+        subject { helper.dashboard_nav [foo, baz], foo }
+        it { should have_selector "a.dropdown-toggle[href='#'][data-toggle='dropdown']", :text => foo.title }
+      end
+    end
+
+    describe "#filter_form" do
+      subject { helper.filter_form }
+
+      it { should have_selector "form.navbar-search" }
+      it { should have_selector "input.search-query[name='tags'][type='text'][placeholder='Filter']" }
+
+      context "with a set of tags" do
+        subject { helper.filter_form [:foo, :bar] }
+        it { should have_selector "input.search-query[name='tags'][type='text'][value='foo bar']" }
+      end
     end
 
     describe "#window_nav" do
+      before { foo.window = Window.default }
       subject { helper.window_nav foo }
 
+      it { should have_selector "a.dropdown-toggle[href='#'][data-toggle='dropdown']", :text => Window.default.title }
+      it { should have_selector "b.caret", :text => "" }
       it { should have_selector "ul.dropdown-menu[role='menu'][aria-labelledby='dropdownMenu']" }
-      
       it { should have_selector "a[href='/dashboards/foo?window=one_hour']", :text => "Hour" }
       it { should have_selector "a[href='/dashboards/foo?window=two_hours']", :text => "2 Hours" }
       it { should have_selector "a[href='/dashboards/foo?window=four_hours']", :text => "4 Hours" }

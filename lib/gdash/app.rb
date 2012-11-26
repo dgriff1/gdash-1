@@ -6,13 +6,13 @@ module GDash
 
     helpers Helper
 
-    before do
+    before "/dashboards/*" do
       if params.has_key? "window"
         if params["window"] == "custom" and params.has_key?("start") and params.has_key?("end")
           start = DateTime.parse params["start"]
           stop = DateTime.parse params["end"]
           length = stop.to_i - start.to_i
-          @window = Window.new :custom, :start => stop, :length => length.seconds
+          @window = Window.new :custom, :start => stop, :length => length.seconds, :title => "Custom"
         else
           @window = Window[params["window"]]
         end
@@ -23,6 +23,20 @@ module GDash
       end
 
       session[:window] = @window
+    end
+
+    before "/dashboards/*" do
+      if params.has_key? "tags"
+        @tags = params["tags"].split(/[^-_\w\d]+/)
+      elsif session.has_key? :tags
+        @tags = session[:tags]
+      else
+        @tags = [".*"]
+      end
+
+      session[:tags] = @tags
+
+      @tag_patterns = @tags.map &Regexp.method(:compile)
     end
 
     get "/" do

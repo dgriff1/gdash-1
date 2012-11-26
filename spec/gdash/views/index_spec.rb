@@ -47,7 +47,7 @@ module GDash
         it { should have_selector "a.dropdown-toggle[href='#'][data-toggle='dropdown']", :text => "Dashboards" }
         it { should have_selector "b.caret", :text => "" }
         it { should have_selector "li.dropdown" }
-        it { should have_selector "a.dropdown-toggle[href='#'][data-toggle='dropdown']", :text => "Time Windows" }
+        it { should have_selector "a.dropdown-toggle[href='#'][data-toggle='dropdown']" }
         it { should have_selector "b.caret", :text => "" }
         it { should have_selector "li" }
         it { should have_selector "form.navbar-search" }
