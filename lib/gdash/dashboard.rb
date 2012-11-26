@@ -1,5 +1,5 @@
 module GDash
-  class Dashboard < Widget
+  class Dashboard < Named
     class << self
       def each
         dashboards.values.each do |dashboard|

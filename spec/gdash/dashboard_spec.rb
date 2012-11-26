@@ -14,7 +14,7 @@ module GDash
     
     subject { dashboard }
 
-    it { should be_a Widget }
+    it { should be_a Named }
     
     its(:name) { should == "some_dashboard" }
     its(:title) { should == "The Dashboard Title" }

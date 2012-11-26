@@ -1,21 +1,6 @@
 module GDash
   class Widget
     class << self
-      def define name, options = {}, &block
-        name = name.to_s
-
-        if widget = Widget[name]
-          options.each do |k, v|
-            widget.send :"#{k}=", v if widget.respond_to? :"#{k}="
-          end
-          yield widget if block_given?
-        else
-          Widget[name] = new(options.merge(:name => name), &block)
-        end
-
-        Widget[name]
-      end
-
       def [] name
         widgets[name.to_s]
       end
@@ -80,12 +65,6 @@ module GDash
           end
         end
         cloned
-      end
-    end
-
-    [:dashboard, :ganglia_graph, :ganglia_report, :cacti_graph].each do |widget|
-      define_method widget do |*args, &block|
-        add_child GDash.const_get(widget.to_s.camelize).define(*args, &block)
       end
     end
 

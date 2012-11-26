@@ -1,5 +1,5 @@
 module GDash
-  class Ganglia < Widget
+  class Ganglia < Named
     SIZES = ["small", "medium", "large", "xlarge", "xxlarge"]
 
     attr_accessor :name, :size, :title, :embed

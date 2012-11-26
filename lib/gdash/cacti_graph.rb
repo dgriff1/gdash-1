@@ -1,5 +1,5 @@
 module GDash
-  class CactiGraph < Widget
+  class CactiGraph < Named
     attr_accessor :graph_id, :rra_id
 
     def to_url

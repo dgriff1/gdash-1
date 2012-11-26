@@ -18,7 +18,7 @@ module GDash
     
     subject { ganglia }
 
-    it { should be_a Widget }
+    it { should be_a Named }
 
     its(:size) { should == "xlarge" }
     its(:title) { should == "The Graph Title" }

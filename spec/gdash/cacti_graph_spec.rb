@@ -20,7 +20,7 @@ module GDash
     
     subject { graph }
 
-    it { should be_a Widget }
+    it { should be_a Named }
     
     its(:graph_id) { should == 1 }
     its(:rra_id) { should == 2 }

@@ -17,54 +17,6 @@ module GDash
     let(:widget) { TestWidget.new }
     subject { widget }
 
-    describe :define do
-      context "returns the named widget" do
-        let(:one) { TestWidget.define :foo }
-        let(:two) { TestWidget.define :foo }
-        let(:three) { TestWidget.define :bar }
-
-        subject { one }
-
-        it { should be_a TestWidget }
-        it { should == two }
-        it { should_not == three }
-      end
-
-      context "takes options" do
-        let(:widget) { TestWidget.define :foo, :foo => "baz", :bar => "quux" }
-
-        subject { widget }
-
-        its(:foo) { should == "baz" }
-        its(:bar) { should == "quux" }
-      end
-
-      context "takes a name" do
-        let(:widget) { TestWidget.define :foo }
-
-        its(:name) { should == "foo" }
-      end
-
-      it "yields the widget to the block" do
-        yielded = nil
-        returned = TestWidget.define :foo do |w|
-          yielded = w
-        end
-        yielded.should == returned
-
-        TestWidget.define :foo do |w|
-          w.should == yielded
-        end
-      end
-    end
-
-    describe :[] do
-      let!(:widget) { TestWidget.define :foo }
-
-      subject { Widget }
-
-      its(["foo"]) { should == widget }
-    end
 
     describe :initialize do
       context "takes options" do
