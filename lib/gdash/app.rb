@@ -26,12 +26,12 @@ module GDash
     end
 
     before "/dashboards/*" do
+      @tags = []
+
       if params.has_key? "tags"
         @tags = params["tags"].split(/[^-_\w\d]+/)
       elsif session.has_key? :tags
         @tags = session[:tags]
-      else
-        @tags = [".*"]
       end
 
       session[:tags] = @tags
