@@ -32,6 +32,16 @@ module GDash
       context "jQuery" do
         it { should have_selector "script[src='/js/jquery-1.8.1.min.js']", :text => "" }
       end
+
+      context "Backbone" do
+        it { should have_selector "script[src='/js/json2.js']", :text => "" }
+        it { should have_selector "script[src='/js/underscore-min.js']", :text => "" }
+        it { should have_selector "script[src='/js/backbone-min.js']", :text => "" }
+      end
+
+      context "D3" do
+        it { should have_selector "script[src='/js/d3.v2.js']", :text => "" }
+      end
     end
     
     context "body" do

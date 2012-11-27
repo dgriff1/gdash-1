@@ -12,11 +12,11 @@ guard 'rspec', :cli => "--color --format Fuubar", :turnip => true do
   watch(%r{^spec/features/steps/(.+)_steps\.rb$})   { |m| Dir[File.join("**/#{m[1]}.feature")][0] || 'spec/features' }
 end
 
-guard 'coffeescript', :input => 'lib/gdash',  :output => 'lib/gdash/public/js'
-guard 'coffeescript', :input => 'spec/gdash', :output => 'spec/gdash'
+guard 'coffeescript', :input => 'lib/gdash/coffeescript',  :output => 'lib/gdash/public/js'
+guard 'coffeescript', :input => 'spec/gdash/coffeescript', :output => 'spec/gdash/javascript'
 
-guard :jasmine, :rackup_config => "jasmine.ru", :server_env => :development, :console => :always do
-  watch(%r{spec/gdash/spec\.(js\.coffee|js|coffee)$}) { 'spec/gdash' }
-  watch(%r{spec/gdash/.+_spec\.(js\.coffee|js|coffee)$})
-  watch(%r{lib/gdash/public/js/(.+?)\.(js\.coffee|js|coffee)(?:\.\w+)*$}) { |m| "spec/gdash/#{ m[1] }_spec.#{ m[2] }" }
+guard :jasmine, :server => :thin, :rackup_config => File.expand_path("jasmine.ru", File.dirname(__FILE__)), :server_env => :development, :console => :always, :spec_dir => File.expand_path("spec/gdash/javascripts", File.dirname(__FILE__)) do
+  watch(%r{lib/gdash/coffeescript/spec\.coffee$}) { 'lib/gdash/public/js' }
+  watch(%r{spec/gdash/javascript/.+_spec\.js})
+  watch(%r{lib/gdash/public/js/(.+?)\.js(?:\.\w+)*$}) { |m| "spec/gdash/javascript/#{ m[1] }_spec.js" }
 end

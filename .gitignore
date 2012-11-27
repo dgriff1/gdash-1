@@ -4,4 +4,4 @@ config/gdash.yaml
 log
 *.log
 pkg
-
+tmp

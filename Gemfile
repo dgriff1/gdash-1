@@ -2,6 +2,8 @@ source 'http://rubygems.org'
 
 gemspec
 
+gem "tzinfo"
+
 group :development do
   gem "rake"
   gem "guard-rspec"

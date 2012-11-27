@@ -13,7 +13,7 @@ class JasmineTest < Rails::Application
   config.active_support.deprecation = :log
   config.assets.enabled = true
   config.assets.version = '1.0'
-  config.assets.paths += [File.expand_path("lib/gdash/public/js", File.dirname(__FILE__))]
+  config.assets.paths += [File.expand_path("lib/gdash/public/js", File.dirname(__FILE__)), File.expand_path("lib/gdash/public/css", File.dirname(__FILE__))]
   config.secret_token = '9696be98e32a5f213730cb7ed6161c79'
 end
 
