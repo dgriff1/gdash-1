@@ -15,8 +15,8 @@ end
 guard 'coffeescript', :input => 'lib/gdash/coffeescript',  :output => 'lib/gdash/public/js'
 guard 'coffeescript', :input => 'spec/gdash/coffeescript', :output => 'spec/gdash/javascript'
 
-guard :jasmine, :server => :thin, :rackup_config => File.expand_path("jasmine.ru", File.dirname(__FILE__)), :server_env => :development, :console => :always, :spec_dir => File.expand_path("spec/gdash/javascripts", File.dirname(__FILE__)) do
-  watch(%r{lib/gdash/coffeescript/spec\.coffee$}) { 'lib/gdash/public/js' }
+guard :jasmine, :server => :thin, :rackup_config => "jasmine.ru", :spec_dir => File.expand_path("spec/gdash/javascript", File.dirname(__FILE__)) do
+  watch(%r{spec/gdash/javascript/spec\.js}) { 'spec/gdash/javascript' }
   watch(%r{spec/gdash/javascript/.+_spec\.js})
   watch(%r{lib/gdash/public/js/(.+?)\.js(?:\.\w+)*$}) { |m| "spec/gdash/javascript/#{ m[1] }_spec.js" }
 end
