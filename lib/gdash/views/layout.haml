@@ -15,7 +15,8 @@
       .navbar-inner
         %a.brand{ :href => dashboards_path } GDash
         %ul.nav
-          %li.dropdown= dashboard_nav GDash::Dashboard.toplevel, @dashboard
+          %li.dropdown= dashboard_nav GDash::Dashboard.toplevel, @dashboard, nil, @data_center
+          %li.dropdown= data_center_nav @dashboard, @data_center
           %li.dropdown= window_nav @dashboard
           %li= filter_form @tags
         %ul.nav.pull-right

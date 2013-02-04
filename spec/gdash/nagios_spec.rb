@@ -67,6 +67,16 @@ EOF
     its(:host_group) { should == "some_host_group" }
     its(:description) { should == "Description of the Host Group" }
 
+    describe "#clone" do
+      subject { nagios.clone }
+
+      # its(:name) { should == nagios.name }
+      its(:data_center) { should == nagios.data_center }
+      its(:window) { should == nagios.window }
+      its(:host_group) { should == nagios.host_group }
+      its(:description) { should == nagios.description }
+    end
+
     describe "#hosts" do
       subject { nagios.hosts }
       

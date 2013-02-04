@@ -4,7 +4,7 @@ class TestWidget < GDash::Widget
   attr_accessor :foo, :bar
 
   def clone
-    self.class.new :foo => foo, :bar => bar
+    self.class.new :name => name, :foo => foo, :bar => bar
   end
 
   def == other
@@ -105,6 +105,37 @@ module GDash
       context "without matching filter" do
         subject { one.filter :quux }
         it { should be_nil }
+      end
+    end
+
+    describe "#filter_by_data_center" do
+      let(:data_center) { DataCenter.define :foo }
+      subject { widget.filter_by_data_center data_center }
+
+      context "when matches" do
+        let(:widget) { TestWidget.new :data_center => data_center }
+        it { should == widget }
+      end
+
+      context "with matching children" do
+        let(:matching_child) { TestWidget.new :data_center => data_center }
+        let(:non_matching_child) { TestWidget.new }
+        let(:widget) { TestWidget.new }
+        before { widget.send(:add_child, matching_child) }
+        before { widget.send(:add_child, non_matching_child) }
+
+        it { should == widget }
+        its(:children) { should == [matching_child] }
+      end
+
+      context "with no matches" do
+        let(:widget) { TestWidget.new }
+        it { should be_nil }
+      end
+
+      context "with no data center" do
+        subject { widget.filter_by_data_center nil }
+        it { should == widget }
       end
     end
 

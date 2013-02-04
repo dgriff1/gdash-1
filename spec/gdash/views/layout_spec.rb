@@ -4,9 +4,13 @@ module GDash
   describe "Layout", :type => :feature do
     let :context do
       Class.new do
-        attr_accessor :dashboard, :tags
+        attr_accessor :dashboard, :tags, :data_center
         include Helper
       end.new
+    end
+
+    let :data_center do
+      Dashboard.define :foo, :title => "A Data Center"
     end
     
     let :dashboard do
@@ -22,6 +26,7 @@ module GDash
     end
 
     before { context.dashboard = dashboard }
+    before { context.data_center = data_center }
 
     include Helper
     
@@ -67,6 +72,9 @@ module GDash
         it { should have_selector "b.caret", :text => "" }
         it { should have_selector "li.dropdown" }
         it { should have_selector "a.dropdown-toggle[href='#'][data-toggle='dropdown']" }
+        it { should have_selector "b.caret", :text => "" }
+        it { should have_selector "li.dropdown" }
+        it { should have_selector "a.dropdown-toggle[href='#'][data-toggle='dropdown']", :text => data_center.title }
         it { should have_selector "b.caret", :text => "" }
         it { should have_selector "li" }
         it { should have_selector "form.navbar-search" }

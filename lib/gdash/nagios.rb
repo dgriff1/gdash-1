@@ -6,6 +6,10 @@ module GDash
       self.host_group = host_group.to_s
       super *args, &block
     end
+
+    def clone
+      self.class.new host_group, :name => name, :data_center => data_center, :window => window, :description => description
+    end
     
     def to_html html = nil
       html ||= Builder::XmlMarkup.new

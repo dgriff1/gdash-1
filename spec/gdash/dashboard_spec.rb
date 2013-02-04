@@ -47,6 +47,19 @@ module GDash
       end
     end
 
+    describe "#clone" do
+      subject { dashboard.clone }
+
+      its(:name) { should == dashboard.name }
+      its(:data_center) { should == dashboard.data_center }
+      its(:window) { should == dashboard.window }
+      its(:title) { should == dashboard.title }
+      its(:description) { should == dashboard.description }
+      its(:refresh) { should == dashboard.refresh }
+      its(:windows) { should == dashboard.windows }
+      its(:children) { should == dashboard.children.map(&:clone) }
+    end
+
     describe "#each" do
       let!(:foo) { described_class.new :name => :foo }
       let!(:bar) { described_class.new :name => :bar }

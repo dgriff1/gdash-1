@@ -25,7 +25,7 @@ module GDash
       session[:window] = @window
     end
 
-    before "/dashboards/*" do
+    before do
       @tags = []
 
       if params.has_key? "tags"
@@ -37,6 +37,20 @@ module GDash
       session[:tags] = @tags
 
       @tag_patterns = @tags.map &Regexp.method(:compile)
+    end
+
+    before "/*" do
+      if params.has_key? "data_center"
+        if params["data_center"].blank?
+          session.delete(:data_center)
+          @data_center = nil
+        else
+          @data_center = DataCenter[params["data_center"]]
+          session[:data_center] = @data_center
+        end
+      elsif session.has_key? :data_center
+        @data_center = session[:data_center]
+      end
     end
 
     get "/" do
@@ -58,10 +72,14 @@ module GDash
 
     get "/dashboards/:name" do
       @dashboard = Widget[params["name"]]
+      @dashboard = @dashboard.filter_by_data_center @data_center if @dashboard
 
       if @dashboard
         @dashboard.window = @window
         haml @dashboard.to_html
+      else
+        session.delete :data_center
+        redirect dashboards_path
       end
     end
   end

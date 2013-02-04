@@ -49,6 +49,9 @@ module GDash
         it { should have_selector "li.dropdown" }
         it { should have_selector "a.dropdown-toggle[href='#'][data-toggle='dropdown']" }
         it { should have_selector "b.caret", :text => "" }
+        it { should have_selector "li.dropdown" }
+        it { should have_selector "a.dropdown-toggle[href='#'][data-toggle='dropdown']", :text => "Data Center" }
+        it { should have_selector "b.caret", :text => "" }
         it { should have_selector "li" }
         it { should have_selector "form.navbar-search" }
         it { should have_selector "input.search-query[name='tags'][type='text'][placeholder='Filter']" }

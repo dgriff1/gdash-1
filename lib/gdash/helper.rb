@@ -1,7 +1,16 @@
 module GDash
   module Helper
-    def dashboards_path
-      "/"
+    def dashboards_path options = {}
+      params = nil
+
+      if options.has_key? :data_center
+        params ||= {}
+        params[:data_center] = options[:data_center].nil? ? "" : options[:data_center].name
+      end
+
+      params = "?" + params.map { |k, v| "#{k}=#{Rack::Utils.escape(v)}" }.join("&") if params.present?
+
+      "/#{params}"
     end
 
     def dashboard_path dashboard, options = {}
@@ -21,6 +30,11 @@ module GDash
         params[:tags] = options[:tags].map(&:to_s).join(" ")
       end
 
+      if options.has_key? :data_center
+        params ||= {}
+        params[:data_center] = options[:data_center].nil? ? "" : options[:data_center].name
+      end
+
       params = "?" + params.map { |k, v| "#{k}=#{Rack::Utils.escape(v)}" }.join("&") if params.present?
 
       "/dashboards/#{dashboard.name}#{params}"
@@ -34,7 +48,7 @@ module GDash
       "/doc/#{Rack::Utils.escape(doc.name)}"
     end
 
-    def dashboard_nav dashboards = nil, current = nil, html = nil
+    def dashboard_nav dashboards = nil, current = nil, html = nil, data_center = nil
       html ||= Builder::XmlMarkup.new
 
       title = current.nil? ? "Dashboards" : current.title
@@ -46,7 +60,9 @@ module GDash
         end
       end
 
-      build_dashboard_nav((dashboards || Dashboard.toplevel), html)
+      dashboards = (dashboards || Dashboard.toplevel).map { |dashboard| dashboard.filter_by_data_center data_center }.reject &:nil?
+
+      build_dashboard_nav(dashboards, html)
     end
 
     def build_dashboard_nav dashboards, html
@@ -61,6 +77,32 @@ module GDash
             html.li do
               html.a dashboard.title, :href => dashboard_path(dashboard)
             end
+          end
+        end
+      end
+    end
+
+    def data_center_nav dashboard = nil, data_center = nil
+      html = Builder::XmlMarkup.new
+
+      title = data_center.nil? ? "Data Centers" : data_center.title
+
+      html.a :class => "dropdown-toggle", :href => "#", "data-toggle" => "dropdown" do
+        html.text! title
+        html.b :class => "caret" do
+        end
+      end
+
+      html.ul :class => "dropdown-menu", :role => "menu", "arial-labelledby" => "dropdownMenu" do
+        html.li do
+          path = dashboard.nil? ? dashboards_path(:data_center => nil) : dashboard_path(dashboard, :data_center => nil)
+          html.a "All", :href => path
+        end
+
+        DataCenter.all.each do |data_center|
+          html.li do
+            path = dashboard.nil? ? dashboards_path(:data_center => data_center) : dashboard_path(dashboard, :data_center => data_center)
+            html.a data_center.title, :href => path
           end
         end
       end

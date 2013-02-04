@@ -37,6 +37,10 @@ module GDash
       self.class.dashboards[name.to_s] = self
     end
 
+    def clone
+      self.class.new :name => name, :window => window, :data_center => data_center, :title => title, :description => description, :refresh => refresh, :windows => windows
+    end
+
     def to_html html = nil
       html ||= Builder::XmlMarkup.new
 

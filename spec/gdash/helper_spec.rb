@@ -7,15 +7,26 @@ module GDash
       Dashboard.instance_variable_set :@dashboards, nil
       Dashboard.instance_variable_set :@toplevel, nil
     end
+
+    let! :data_center_one do
+      DataCenter.define :data_center_one, :title => "Foo"
+    end
     
+    let! :data_center_two do
+      DataCenter.define :data_center_two, :title => "Bar"
+    end
+        
     let! :foo do
       Dashboard.toplevel :foo, :title => "Foobar" do |dashboard|
         dashboard.dashboard :bar, :title => "BarBar"
+        dashboard.data_center = data_center_one
       end
     end
     
     let! :baz do
       Dashboard.toplevel :baz, :title => "All About Baz" do |baz|
+        baz.data_center = data_center_two
+
         baz.custom_window :my_window do |window|
           window.length = 42.minutes
           window.title = "My Time Window"
@@ -38,6 +49,16 @@ module GDash
     describe "#dashboards_path" do
       subject { helper.dashboards_path }
       it { should == "/" }
+
+      context "with a data center" do
+        subject { helper.dashboards_path :data_center => data_center_one }
+        it { should == "/?data_center=data_center_one"}
+
+        context "with a blank data center" do
+          subject { helper.dashboards_path :data_center => nil }
+          it { should == "/?data_center="}
+        end
+      end
     end
     
 
@@ -63,9 +84,19 @@ module GDash
         it { should == "/dashboards/foo?tags=foo+bar+baz" }
       end
 
-      context "with a window and a filter" do
-        subject { helper.dashboard_path foo, :window => window, :tags => ["foo", :bar, "baz"] }
-        it { should == "/dashboards/foo?window=a_window&tags=foo+bar+baz" }
+      context "with a data center" do
+        subject { helper.dashboard_path foo, :data_center => data_center_one }
+        it { should == "/dashboards/foo?data_center=data_center_one" }
+
+        context "with a blank data center" do
+        subject { helper.dashboard_path foo, :data_center => nil }
+          it { should == "/dashboards/foo?data_center="}
+        end
+      end
+
+      context "with all the options" do
+        subject { helper.dashboard_path foo, :window => window, :tags => ["foo", :bar, "baz"], :data_center => data_center_one }
+        it { should == "/dashboards/foo?window=a_window&tags=foo+bar+baz&data_center=data_center_one" }
       end
     end
 
@@ -94,6 +125,58 @@ module GDash
       context "with current dashboard" do
         subject { helper.dashboard_nav [foo, baz], foo }
         it { should have_selector "a.dropdown-toggle[href='#'][data-toggle='dropdown']", :text => foo.title }
+      end
+
+      context "with a data center" do
+        subject { helper.dashboard_nav [foo, baz], nil, nil, data_center_one }
+
+        it { should have_selector "a[href=#{helper.dashboard_path(Dashboard[:foo]).inspect}]", :text => "Foobar" }
+        it { should have_selector "a[href=#{helper.dashboard_path(Dashboard[:bar]).inspect}]", :text => "BarBar" }
+        it { should_not have_selector "a[href=#{helper.dashboard_path(Dashboard[:baz]).inspect}]", :text => "All About Baz" }
+      end
+    end
+
+    describe "#data_center_nav" do
+      subject { helper.data_center_nav }
+
+      it { should have_selector "a.dropdown-toggle[href='#'][data-toggle='dropdown']", :text => "Data Centers" }
+      it { should have_selector "b.caret", :text => "" }
+      it { should have_selector "li" }
+
+      context "with a no dashboard and no data center" do
+        subject { helper.data_center_nav }
+
+        it { should have_selector "a.dropdown-toggle[href='#'][data-toggle='dropdown']", :text => "Data Centers" }
+        it { should have_selector "a[href=#{helper.dashboards_path(:data_center => nil).inspect}]", :text => "All" }
+        it { should have_selector "a[href=#{helper.dashboards_path(:data_center => data_center_one).inspect}]", :text => "Foo" }
+        it { should have_selector "a[href=#{helper.dashboards_path(:data_center => data_center_two).inspect}]", :text => "Bar" }
+      end
+
+      context "with a no dashboard and a data center" do
+        subject { helper.data_center_nav nil, data_center_one }
+
+        it { should have_selector "a.dropdown-toggle[href='#'][data-toggle='dropdown']", :text => "Foo" }
+        it { should have_selector "a[href=#{helper.dashboards_path(:data_center => nil).inspect}]", :text => "All" }
+        it { should have_selector "a[href=#{helper.dashboards_path(:data_center => data_center_one).inspect}]", :text => "Foo" }
+        it { should have_selector "a[href=#{helper.dashboards_path(:data_center => data_center_two).inspect}]", :text => "Bar" }
+      end
+
+      context "with a dashboard and no data center" do
+        subject { helper.data_center_nav foo }
+
+        it { should have_selector "a.dropdown-toggle[href='#'][data-toggle='dropdown']", :text => "Data Centers" }
+        it { should have_selector "a[href=#{helper.dashboard_path(Dashboard[:foo], :data_center => nil).inspect}]", :text => "All" }
+        it { should have_selector "a[href=#{helper.dashboard_path(Dashboard[:foo], :data_center => data_center_one).inspect}]", :text => "Foo" }
+        it { should have_selector "a[href=#{helper.dashboard_path(Dashboard[:foo], :data_center => data_center_two).inspect}]", :text => "Bar" }
+      end
+
+      context "with a dashboard and a data center" do
+        subject { helper.data_center_nav foo, data_center_one }
+
+        it { should have_selector "a.dropdown-toggle[href='#'][data-toggle='dropdown']", :text => "Foo" }
+        it { should have_selector "a[href=#{helper.dashboard_path(Dashboard[:foo], :data_center => nil).inspect}]", :text => "All" }
+        it { should have_selector "a[href=#{helper.dashboard_path(Dashboard[:foo], :data_center => data_center_one).inspect}]", :text => "Foo" }
+        it { should have_selector "a[href=#{helper.dashboard_path(Dashboard[:foo], :data_center => data_center_two).inspect}]", :text => "Bar" }
       end
     end
 

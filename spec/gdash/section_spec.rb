@@ -16,6 +16,17 @@ module GDash
     its(:title) { should == "A Section" }
     its(:width) { should == 2 }
 
+    describe "#clone" do
+      subject { section.clone }
+
+      its(:name) { should == section.name }
+      its(:data_center) { should == section.data_center }
+      its(:window) { should == section.window }
+      its(:title) { should == section.title }
+      its(:width) { should == section.width }
+      its(:children) { should == section.children }
+    end
+
     describe "#width" do
       context "default" do
         subject { described_class.new.width }

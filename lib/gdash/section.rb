@@ -7,6 +7,10 @@ module GDash
       super
     end
 
+    def clone
+      self.class.new :name => name, :data_center => data_center, :window => window, :title => title, :width => width
+    end
+
     def to_html html = nil
       html ||= Builder::XmlMarkup.new
       html.div :class => "row-fluid" do

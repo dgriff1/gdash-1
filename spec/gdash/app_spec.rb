@@ -5,9 +5,13 @@ module GDash
   describe App do
     include Rack::Test::Methods
 
+    let! :data_center do
+      GDash::DataCenter.new :ganglia_host => "http://ganglia-host"
+    end
+
     let! :dashboard do
       GDash::Dashboard.toplevel :foo do |foo|
-        foo.data_center = GDash::DataCenter.new :ganglia_host => "http://ganglia-host"
+        foo.data_center = data_center
       end
     end
 
@@ -74,6 +78,12 @@ module GDash
           dashboard.window.should == Window.default
         end
       end
+
+      # describe :data_center do
+      #   let
+      #   it "filters by data center" do
+      #   end
+      # end
     end
 
     describe "Documentation" do

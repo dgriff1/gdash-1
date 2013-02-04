@@ -19,6 +19,10 @@ module GDash
         data_centers[name.to_s]
       end
 
+      def all
+        data_centers.values
+      end
+
       private
 
       def data_centers

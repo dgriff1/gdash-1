@@ -2,7 +2,7 @@ require "spec_helper"
 
 module GDash
   describe DataCenter do
-    let :data_center do
+    let! :data_center do
       DataCenter.define :foo, :title => "Foo Data Center" do |data_center|
         data_center.prefix = "asdf"
         data_center.ganglia_host = "http://ganglia"
@@ -31,6 +31,11 @@ module GDash
     describe ".[]" do
       subject { DataCenter[:foo] }
       it { should == data_center }
+    end
+
+    describe ".all" do
+      subject { DataCenter.all }
+      it { should == [data_center] }
     end
   end
 end

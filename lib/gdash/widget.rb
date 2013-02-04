@@ -68,6 +68,20 @@ module GDash
       end
     end
 
+    def filter_by_data_center data_center = nil
+      return self if data_center.nil?
+
+      filtered_children = (children || []).map { |child| child.filter_by_data_center data_center }.reject(&:nil?)
+
+      if filtered_children.present? or self.data_center == data_center
+        widget = clone
+        filtered_children.each do |child|
+          widget.send :add_child, child
+        end
+        widget
+      end
+    end
+
     [:section, :nagios].each do |widget|
       define_method widget do |*args, &block|
         add_child GDash.const_get(widget.to_s.camelize).new(*args, &block)
