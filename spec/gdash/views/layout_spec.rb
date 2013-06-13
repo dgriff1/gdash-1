@@ -59,29 +59,13 @@ module GDash
       it { should have_selector "body[style='padding-top: 50px;']" }
       
       context "navbar" do
-        before { dashboard.tags = ["foo", "bar"] }
-
         it { should have_selector ".navbar.navbar-fixed-top.navbar-inverse" }
         it { should have_selector ".navbar-inner" }
         
         it { should have_selector "a.brand[href=#{dashboards_path.inspect}]", :text => "GDash" }
         
-        it { should have_selector "ul.nav" }
-        it { should have_selector "li.dropdown" }
-        it { should have_selector "a.dropdown-toggle[href='#'][data-toggle='dropdown']", :text => dashboard.title }
-        it { should have_selector "b.caret", :text => "" }
-        it { should have_selector "li.dropdown" }
-        it { should have_selector "a.dropdown-toggle[href='#'][data-toggle='dropdown']" }
-        it { should have_selector "b.caret", :text => "" }
-        it { should have_selector "li.dropdown" }
-        it { should have_selector "a.dropdown-toggle[href='#'][data-toggle='dropdown']", :text => data_center.title }
-        it { should have_selector "b.caret", :text => "" }
-        it { should have_selector "li" }
-        it { should have_selector "form.navbar-search" }
-        it { should have_selector "input.search-query[name='tags'][type='text'][placeholder='Filter']" }
         it { should have_selector "ul.nav.pull-right" }
         it { should have_selector "li" }
-        pending { should have_selector "a[href=#{dashboard_path(dashboard, :window => dashboard.window, :tags => ["foo", "bar"]).inspect}]" }
         it { should have_selector "i.icon-share.icon-white" }
         it { should have_selector "li" }
         it { should have_selector "a[href=#{docs_path.inspect}]", :text => "Documentation" }
@@ -92,7 +76,10 @@ module GDash
         it { should have_selector ".row-fluid" }
         
         context "with a dashboard" do
-          it { should have_selector ".span12"}
+          it { should have_selector ".span2" }
+          it { should have_selector ".span10" }
+          it { should have_selector "#dashboard-nav" }
+          it { should have_selector "#window-nav" }
           it { should have_content "Page Content" }
         end
         

@@ -1,60 +1,60 @@
-GDash::Window.define :one_hour do |window|
-  window.title = "Hour"
-  window.length = 1.hour
-  window.default = true
-  window.ganglia_params = { :r => "hour" }
+GDash.window :one_hour do
+  title "Hour"
+  length 1.hour
+  default true
+  ganglia_params({ :r => "hour" })
 end
 
-GDash::Window.define :two_hours do |window|
-  window.length = 2.hours
-  window.title = "2 Hours"
-  window.ganglia_params = { :r => "2hr" }
+GDash.window :two_hours do
+  length 2.hours
+  title "2 Hours"
+  ganglia_params({ :r => "2hr" })
 end
 
-GDash::Window.define :four_hours do |window|
-  window.title = "4 Hours"
-  window.length = 4.hours
-  window.ganglia_params = { :r => "4hr" }
+GDash.window :four_hours do
+  title "4 Hours"
+  length 4.hours
+  ganglia_params({ :r => "4hr" })
 end
 
-GDash::Window.define :twelve_hours do |window|
-  window.title = "12 Hours"
-  window.length = 12.hours
-  window.ganglia_params = { :r => "12hr" }
+GDash.window :twelve_hours do
+  title "12 Hours"
+  length 12.hours
+  ganglia_params({ :r => "12hr" })
 end
 
-GDash::Window.define :one_day do |window|
-  window.title = "Day"
-  window.length = 1.day
-  window.ganglia_params = { :r => "day" }
+GDash.window :one_day do
+  title "Day"
+  length 1.day
+  ganglia_params({ :r => "day" })
 end
 
-GDash::Window.define :two_days do |window|
-  window.title = "2 Days"
-  window.length = 2.days
-  window.ganglia_params = { :r => "2days" }
+GDash.window :two_days do
+  title "2 Days"
+  length 2.days
+  ganglia_params({ :r => "2days" })
 end
 
-GDash::Window.define :one_week do |window|
-  window.title = "1 Week"
-  window.length = 1.week
-  window.ganglia_params = { :r => "week" }
+GDash.window :one_week do
+  title "1 Week"
+  length 1.week
+  ganglia_params({ :r => "week" })
 end
 
-GDash::Window.define :two_weeks do |window|
-  window.title = "2 Weeks"
-  window.length = 2.weeks
-  window.ganglia_params = { :r => "2weeks" }
+GDash.window :two_weeks do
+  title "2 Weeks"
+  length 2.weeks
+  ganglia_params({ :r => "2weeks" })
 end
 
-GDash::Window.define :one_month do |window|
-  window.title = "Month"
-  window.length = 1.month
-  window.ganglia_params = { :r => "month" }
+GDash.window :one_month do
+  title "Month"
+  length 1.month
+  ganglia_params({ :r => "month" })
 end
 
-GDash::Window.define :one_year do |window|
-  window.title = "Year"
-  window.length = 1.year
-  window.ganglia_params = { :r => "year" }
+GDash.window :one_year do
+  title "Year"
+  length 1.year
+  ganglia_params({ :r => "year" })
 end

@@ -10,8 +10,8 @@ module GDash
     end
 
     let! :dashboard do
-      GDash::Dashboard.toplevel :foo do |foo|
-        foo.data_center = data_center
+      GDash.dashboard :foo do |foo|
+        # foo.data_center = data_center
       end
     end
 
@@ -24,7 +24,7 @@ module GDash
       end
 
       context "when no dashboards are defined" do
-        before { GDash::Dashboard.stub! :toplevel => [] }
+        before { GDash::Dashboard.stub! :all => [] }
         it { should be_redirect }
       end
     end
@@ -34,54 +34,27 @@ module GDash
         subject { get "/dashboards/foo" }
 
         it { should be_ok }
-        its(:body) { should =~ /#{Regexp.escape(Dashboard[:foo].to_html)}/ }
+        its(:body) { should =~ /#{Regexp.escape(View.new(Dashboard[:foo], :window => Window.default).to_html)}/ }
       end
       
-      describe :window do
-        let!(:foo) { Window.define :foo }
-        let!(:bar) { Window.define :bar }
+      # describe :window do
+      #   let!(:foo) { Window.define :foo }
+      #   let!(:bar) { Window.define :bar }
 
-        it "looks up the window" do
-          get "/dashboards/foo?window=foo"
-          dashboard.window.should == Window[:foo]
-        end
+      #   it "looks up the window" do
+      #     get "/dashboards/foo?window=foo"
+      #     dashboard.window.should == Window[:foo]
+      #   end
 
-        it "accepts custom time windows" do
-          get "/dashboards/foo?window=custom&start=#{Rack::Utils.escape("2012-01-01 00:00:00")}&end=#{Rack::Utils.escape("2012-01-01 01:00:00")}"
-          dashboard.window.start.should == DateTime.parse("2012-01-01 01:00:00")
-          dashboard.window.length.should == 3600.seconds
-        end
+      #   it "accepts custom time windows" do
+      #     get "/dashboards/foo?window=custom&start=#{Rack::Utils.escape("2012-01-01 00:00:00")}&end=#{Rack::Utils.escape("2012-01-01 01:00:00")}"
+      #     dashboard.window.start.should == DateTime.parse("2012-01-01 01:00:00")
+      #     dashboard.window.length.should == 3600.seconds
+      #   end
         
-        it "uses the default window if not specified" do
-          get "/dashboards/foo"
-          dashboard.window.should == Window.default
-        end
-      end
-
-      describe :tags do
-        let!(:foo) { Window.define :foo }
-        let!(:bar) { Window.define :bar }
-
-        it "looks up the window" do
-          get "/dashboards/foo?window=foo"
-          dashboard.window.should == Window[:foo]
-        end
-
-        it "accepts custom time windows" do
-          get "/dashboards/foo?window=custom&start=#{Rack::Utils.escape("2012-01-01 00:00:00")}&end=#{Rack::Utils.escape("2012-01-01 01:00:00")}"
-          dashboard.window.start.should == DateTime.parse("2012-01-01 01:00:00")
-          dashboard.window.length.should == 3600.seconds
-        end
-
-        it "uses the default window if not specified" do
-          get "/dashboards/foo"
-          dashboard.window.should == Window.default
-        end
-      end
-
-      # describe :data_center do
-      #   let
-      #   it "filters by data center" do
+      #   it "uses the default window if not specified" do
+      #     get "/dashboards/foo"
+      #     dashboard.window.should == Window.default
       #   end
       # end
     end

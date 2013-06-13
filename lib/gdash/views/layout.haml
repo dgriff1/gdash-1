@@ -10,29 +10,24 @@
       %meta{ "http-equiv" => "refresh", :content => @dashboard.refresh }
     - else
       %title GDash
+    :css
+      .modal { max-height: 800px; max-width: 600px; }
   %body{ :style => "padding-top: 50px;" }
     .navbar.navbar-fixed-top.navbar-inverse
       .navbar-inner
         %a.brand{ :href => dashboards_path } GDash
         %ul.nav
-          %li.dropdown= dashboard_nav GDash::Dashboard.toplevel, @dashboard, nil, @data_center
-          %li.dropdown= data_center_nav @dashboard, @data_center
-          %li.dropdown= window_nav @dashboard
-          %li= filter_form @tags
+          - if @dashboard.present?
+            %li= dashboard_nav @dashboard
         %ul.nav.pull-right
           - if @dashboard.present?
             %li
-              %a{ :href => dashboard_path(@dashboard, :window => @dashboard.window, :tags => (@tags || [])) }
+              %a{ :href => "#" }
                 %i.icon-share.icon-white
           %li
             %a{ :href => docs_path } Documentation
     .container-fluid
-      .row-fluid
-        - if @dashboard
-          .span12
-            = yield
-        - else
-          = yield
+      = yield
     .container-fluid
       %h6
         Updated

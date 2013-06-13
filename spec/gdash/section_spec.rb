@@ -1,45 +1,58 @@
 require "spec_helper"
 
 module GDash
-  describe Section, :type => :feature do
+  describe Section do
     let :section do
-      described_class.new do |section|
-        section.title = "A Section"
-        section.width = 2
+      Section.new :foo do
+        title "A Section"
+        width 2
+
+        test_widget :a, :foo => "baz" do
+          bar "quux"
+        end
+        test_widget :b
       end
     end
     
     subject { section }
 
-    it { should be_a Widget }
+    it { should be_a Base }
     
     its(:title) { should == "A Section" }
     its(:width) { should == 2 }
 
-    describe "#clone" do
-      subject { section.clone }
-
-      its(:name) { should == section.name }
-      its(:data_center) { should == section.data_center }
-      its(:window) { should == section.window }
-      its(:title) { should == section.title }
-      its(:width) { should == section.width }
-      its(:children) { should == section.children }
-    end
-
     describe "#width" do
       context "default" do
-        subject { described_class.new.width }
+        subject { Section.new(:foo).width }
         it { should == 3 }
       end
     end
-    
-    describe "#to_html" do
-      subject { section.to_html }
-      
-      it { should have_selector ".row-fluid" }
-      it { should have_selector "h2", :text => section.title }
-      it { should have_selector "table.table" }
+
+    describe "#widgets" do
+      context "default" do
+        subject { Section.new(:foo).widgets }
+        it { should == [] }
+      end
+    end
+
+    describe "#widget" do
+      subject { section.widgets }
+
+      its(:length) { should == 2 }
+
+      describe "a" do
+        subject { section.widgets[0] }
+
+        it { should be_a TestWidget }
+        its(:foo) { should == "baz" }
+        its(:bar) { should == "quux" }
+      end
+
+      describe "b" do
+        subject { section.widgets[1] }
+
+        it { should be_a TestWidget }
+      end
     end
   end
 end

@@ -1,71 +1,23 @@
 module GDash
   class Dashboard < Named
-    class << self
-      def each
-        dashboards.values.each do |dashboard|
-          yield dashboard if block_given?
-        end
-      end
+    attr :refresh, :default => 60
 
-      def [] name
-        dashboards.stringify_keys[name.to_s]
-      end
+    collection :windows, :default => Window.all
+    collection :pages, :class => Page
 
-      def toplevel *args, &block
-        @toplevel ||= []
+    alias_method :old_windows, :windows
 
-        if args.present?
-          dashboard = define *args, &block
-          @toplevel << dashboard unless @toplevel.include?(dashboard)
-          dashboard
-        else
-          @toplevel
-        end
-      end
-
-      def dashboards
-        @dashboards ||= {}
-      end
+    def find page
+      pages.select { |p| p.name == page.to_s }.first
     end
 
-    attr_accessor :title, :description, :refresh
-
-    def initialize *args, &block
-      @refresh = 60
-      super(*args, &block)
-      raise ArgumentError.new("A name is required") if name.blank?
-      self.class.dashboards[name.to_s] = self
-    end
-
-    def clone
-      self.class.new :name => name, :window => window, :data_center => data_center, :title => title, :description => description, :refresh => refresh, :windows => windows
-    end
-
-    def to_html html = nil
-      html ||= Builder::XmlMarkup.new
-
-      dashboard = html.h1 do
-        html.text!(title || "")
-        html.br
-        html.small description
-      end
-
-      renderable_children.each do |child|
-        child.to_html html
-      end
-
-      dashboard
-    end
-
-    def windows
-      @windows ||= []
-      (Window.all + @windows).sort
+    def windows *args, &block
+      old_windows(*args, &block).sort
     end
 
     def custom_window *args, &block
-      @windows ||= []
       w = Window.new(*args, &block)
-      @windows << w
+      self.window w
       w
     end
 

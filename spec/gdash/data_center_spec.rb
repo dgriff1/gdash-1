@@ -3,14 +3,14 @@ require "spec_helper"
 module GDash
   describe DataCenter do
     let! :data_center do
-      DataCenter.define :foo, :title => "Foo Data Center" do |data_center|
-        data_center.prefix = "asdf"
-        data_center.ganglia_host = "http://ganglia"
-        data_center.graphite_host = "http://graphite"
-        data_center.cacti_host = "http://cacti"
-        data_center.nagios_host = "http://nagios"
-        data_center.nagios_username = "nagios_username"
-        data_center.nagios_password = "nagios_password"
+      GDash.data_center :foo, :title => "Foo Data Center" do
+        prefix "asdf"
+        ganglia_host "http://ganglia"
+        graphite_host "http://graphite"
+        cacti_host "http://cacti"
+        nagios_host "http://nagios"
+        nagios_username "nagios_username"
+        nagios_password "nagios_password"
       end
     end
 

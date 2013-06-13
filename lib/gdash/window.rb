@@ -1,90 +1,40 @@
 module GDash
-  class Window
+  class Window < Named
     class << self
       attr_accessor :default
 
-      def register window
-        windows[window.name.to_s] = window
-        self.default = window if default.nil? or window.default?
-      end
-
-      def all
-        windows.values.sort
-      end
-
-      def [] name
-        windows[name.to_s]
-      end
-
-      def each
-        all.each do |window|
-          yield window if block_given?
-        end
-      end
-
       def define *args, &block
-        w = new *args, &block
-        register w
-        w
-      end
-
-      private
-
-      def windows
-        @windows ||= {}
+        window = super *args, &block
+        self.default = window if window.default?
+        window
       end
     end
 
-    attr_accessor :name, :start, :end, :length, :title, :default, :ganglia_params, :graphite_params, :cacti_params
-
-    def initialize name, options = {}
-      @name = name.to_s
-      options.each do |k, v|
-        send :"#{k}=", v if respond_to? :"#{k}="
-      end
-      yield self if block_given?
+    attr :end, :length, :ganglia_params, :graphite_params, :cacti_params
+    attr :default, :default => false
+    attr :length, :default => 0
+    attr :start do
+      DateTime.now
     end
 
-    def length
-      @length ||= 0
+    attr :ganglia_params do
+      time = start
+      { :r => (title || ""), :cs => (time - length).strftime("%m/%d/%Y %H:%M"), :ce => time.strftime("%m/%d/%Y %H:%M") }
     end
 
-    def start
-      @start || DateTime.now
+    attr :cacti_params do
+      time = start
+      { :graph_start => (time.to_i) - length, :graph_end => time.to_i }
     end
+
+    attr :graphite_params, :default => {}
 
     def <=> other
       length <=> (other && other.length)
     end
 
     def default?
-      @default
-    end
-
-    def default= d
-      @default = d
-      self.class.default = self if @default
-    end
-
-    def ganglia_params
-      time = start
-      @ganglia_params || {
-        :r => (title || ""),
-        :cs => (time - length).strftime("%m/%d/%Y %H:%M"),
-        :ce => time.strftime("%m/%d/%Y %H:%M")
-      }
-    end
-
-    def graphite_params
-      @graphite_params || {}
-    end
-
-    def cacti_params
-      time = start
-      @cacti_params || {
-        :graph_start => (time.to_i - length),
-        :graph_end => time.to_i
-      }
+      self.default
     end
   end
 end

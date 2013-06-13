@@ -20,15 +20,21 @@ require "gdash/data/sources/ganglia"
 require "gdash/data/sources/cacti"
 require "gdash/data/set"
 
+require 'gdash/scope'
+require 'gdash/base'
+require 'gdash/named'
 require 'gdash/doc'
 require 'gdash/window'
 require 'gdash/windows'
 require 'gdash/data_center'
 require 'gdash/widget'
-require 'gdash/named'
-require 'gdash/nagios'
-require 'gdash/dashboard'
 require 'gdash/section'
+require 'gdash/page'
+require 'gdash/dashboard'
+require 'gdash/tab'
+require 'gdash/tab_set'
+require 'gdash/view'
+require 'gdash/nagios'
 require 'gdash/helper'
 require 'gdash/app'
 

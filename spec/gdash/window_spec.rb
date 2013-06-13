@@ -8,16 +8,18 @@ module GDash
     end
 
     let :window do
-      described_class.define :foo, :title => "Foo" do |window|
-        window.length = 42
-        window.default = true
-        window.ganglia_params = { :foo => :bar }
-        window.graphite_params = { :baz => :quux }
-        window.cacti_params = { :oof => :rab }
+      GDash.window :foo, :title => "Foo" do
+        length 42
+        default true
+        ganglia_params :foo => :bar
+        graphite_params :baz => :quux
+        cacti_params :oof => :rab
       end
     end
     
     subject { window }
+
+    it { should be_a Base }
     
     its(:name) { should == "foo" }
     its(:title) { should == "Foo" }
@@ -28,75 +30,31 @@ module GDash
     its(:graphite_params) { should == { :baz => :quux } }
     its(:cacti_params) { should == { :oof => :rab } }
 
-    describe ".define" do
-      let!(:foo) { described_class.define :foo }
-      subject { described_class }
-
-      context "should register the class" do
-        its(:all) { should be_include foo }
-      end
-      
-      context "when there is no default" do
-        before { described_class.default = nil }
-        let!(:bar) { described_class.define :bar }
-        its(:default) { should == bar }
-      end
-      
-      context "when there is a default" do
-        before { described_class.default = foo }
-
-        context "and the default option is not set" do
-          let!(:bar) { described_class.define :bar }
-          its(:default) { should == foo }
-        end
-        
-        context "and the default options is set" do
-          let!(:bar) { described_class.define :bar, :default => true }
-          its(:default) { should == bar }
-        end
-      end
-    end
-
-    describe ".each" do
-      let!(:foo) { described_class.define :foo }
-      let!(:bar) { described_class.define :bar }
-
-      it "yields each window" do
-        windows = []
-        described_class.each do |window|
-          windows << window
-        end
-
-        windows.should be_include foo
-        windows.should be_include bar
-      end
-    end
-
-    describe "#default" do
-      let!(:foo) { described_class.define :foo }
-      let!(:bar) { described_class.define :bar, :default => true }
-      subject { described_class }
+    describe ".default" do
+      let!(:foo) { GDash.window :foo }
+      let!(:bar) { GDash.window :bar, :default => true }
+      subject { Window }
       
       its(:default) { should == bar }
     end
 
     describe "#start" do
       context "default" do
-        subject { described_class.define(:foo).start }
+        subject { Window.new(:foo).start }
         it { should == @now }
       end
     end
 
     describe "#length" do
       context "default" do
-        subject { described_class.define(:foo).length }
+        subject { Window.new(:foo).length }
         it { should == 0 }
       end
     end
     
     let!(:time) { Time.now }
     before { Time.stub! :now => time }
-    let!(:default_window) { described_class.define(:foo, :length => 10.minutes) }
+    let!(:default_window) { GDash.window(:foo, :length => 10.minutes) }
 
     describe "#ganglia_params" do
       context "default" do
@@ -142,8 +100,8 @@ module GDash
     end
 
     describe "#<=>" do
-      let(:minute) { described_class.define :foo, :length => 1.minute }
-      let(:hour) { described_class.define :bar, :length => 1.hour }
+      let(:minute) { GDash.window :foo, :length => 1.minute }
+      let(:hour) { GDash.window :bar, :length => 1.hour }
       
       it "compares on length" do
         [hour, minute].sort.should == [minute, hour]

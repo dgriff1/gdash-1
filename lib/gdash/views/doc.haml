@@ -10,15 +10,10 @@
     .navbar.navbar-fixed-top.navbar-inverse
       .navbar-inner
         %a.brand{ :href => dashboards_path } GDash
-        %ul.nav
-          %li.dropdown= dashboard_nav GDash::Dashboard.toplevel, @dashboard, nil, @data_center
-          %li.dropdown= data_center_nav @dashboard, @data_center
-          %li.dropdown= window_nav @dashboard
-          %li= filter_form @tags
         %ul.nav.pull-right
           - if @dashboard.present?
             %li
-              %a{ :href => dashboard_path(@dashboard, :window => @dashboard.window, :tags => (@tags || [])) }
+              %a{ :href => "#" }
                 %i.icon-share.icon-white
           %li
             %a{ :href => docs_path } Documentation

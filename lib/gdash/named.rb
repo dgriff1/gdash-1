@@ -1,25 +1,38 @@
 module GDash
-  class Named < Widget
+  class Named < Base
     class << self
-      def inherited klass
-        Widget.send :define_method, klass.to_s.demodulize.underscore do |*args, &block|
-          add_child klass.define *args, &block
+      def define name, options = {}, &block
+        instances[name] ||= new name, options
+
+        if block_given?
+          if block.arity < 1
+            instances[name].instance_eval &block
+          else
+            yield instances[name] 
+          end
+        end
+
+        instances[name]
+      end
+
+      def [] name
+        instances[name]
+      end
+
+      def all
+        instances.values
+      end
+
+      def each
+        all.each do |instance|
+          yield instance if block_given?
         end
       end
 
-      def define name, options = {}, &block
-        name = name.to_s
+      private
 
-        if widget = Widget[name]
-          options.each do |k, v|
-            widget.send :"#{k}=", v if widget.respond_to? :"#{k}="
-          end
-          yield widget if block_given?
-        else
-          Widget[name] = new(options.merge(:name => name), &block)
-        end
-
-        Widget[name]
+      def instances
+        @instances ||= {}.with_indifferent_access
       end
     end
   end

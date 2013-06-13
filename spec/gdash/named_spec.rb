@@ -1,69 +1,75 @@
 require "spec_helper"
 
-class TestNamed < GDash::Named
-  attr_accessor :foo, :bar
+class NamedExample < GDash::Named
+  attr :a, :b
+  attr :c, :default => 42
+  attr :d do
+    c * -1
+  end
+  attr :e, :default => {}
+  attr :f, :default => []
+
+  collection :items
 end
 
 module GDash
   describe Named do
-    let :named do
-      TestNamed.new :name => "foo", :foo => :baz, :bar => :quux
-    end
-
-    subject { named }
-
-    it { should be_a Widget }
-    its(:name) { should == "foo" }
-    its(:foo) { should == :baz }
-    its(:bar) { should == :quux }
-
-    describe :define do
-      context "returns the named widget" do
-        let(:one) { TestNamed.define :foo }
-        let(:two) { TestNamed.define :foo }
-        let(:three) { TestNamed.define :bar }
-
-        subject { one }
-
-        it { should be_a TestNamed }
-        it { should == two }
-        it { should_not == three }
-      end
-
-      context "takes options" do
-        let(:named) { TestNamed.define :foo, :foo => "baz", :bar => "quux" }
-
-        subject { named }
-
-        its(:foo) { should == "baz" }
-        its(:bar) { should == "quux" }
-      end
-
-      context "takes a name" do
-        let(:named) { TestNamed.define :foo }
-
-        its(:name) { should == "foo" }
-      end
-
-      it "yields the widget to the block" do
-        yielded = nil
-        returned = TestNamed.define :foo do |w|
-          yielded = w
-        end
-        yielded.should == returned
-
-        TestNamed.define :foo do |w|
-          w.should == yielded
-        end
+    let! :foo_bar do
+      GDash.named_example :foo_bar, :foo => :bar, :a => "A" do |foo|
+        foo.description = "A Description"
+        foo.b = "B"
+        foo.options :baz => :quux
+        foo.item :asdf
+        foo.item :fdsa
       end
     end
 
-    describe :[] do
-      let!(:named) { TestNamed.define :foo }
+    let! :baz_quux do
+      GDash.named_example :baz_quux, :foo => :bar, :a => "A" do
+        description "A Description"
+        b "B"
+        options :baz => :quux
+        item :asdf
+        item :fdsa
+      end
+    end
 
-      subject { Widget }
+    describe ".[]" do
+      context "with foo_bar" do
+        subject { NamedExample[:foo_bar] }
+        it { should == foo_bar }
+      end
 
-      its(["foo"]) { should == named }
+      context "with baz_quux" do
+        subject { NamedExample["baz_quux"] }
+        it { should == baz_quux }
+      end
+    end
+
+    describe ".all" do
+      let(:all) { NamedExample.all }
+      subject { all }
+
+      it { should include foo_bar }
+      it { should include baz_quux }
+    end
+
+    describe ".each" do
+      let(:bases) { [] }
+      before do
+        NamedExample.each do |base|
+          bases << base
+        end
+      end
+      subject { bases }
+
+      it { should include foo_bar }
+      it { should include baz_quux }
+    end
+
+    describe ".named_example" do
+      subject { GDash.named_example :foo_bar }
+      it { should == foo_bar }
     end
   end
 end

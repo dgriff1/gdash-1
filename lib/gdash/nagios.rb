@@ -1,15 +1,9 @@
 module GDash
   class Nagios < Widget
-    attr_accessor :host_group, :description
-    
-    def initialize host_group, *args, &block
-      self.host_group = host_group.to_s
-      super *args, &block
+    attr :host_group do
+      name
     end
-
-    def clone
-      self.class.new host_group, :name => name, :data_center => data_center, :window => window, :description => description
-    end
+    attr :data_center
     
     def to_html html = nil
       html ||= Builder::XmlMarkup.new
@@ -74,9 +68,9 @@ module GDash
       nagios
     end
     
-    def name
-      json.hostgroup_name
-    end
+    # def name
+    #   json.hostgroup_name
+    # end
 
     def description
       @description || json.hostgroup_alias
@@ -104,10 +98,53 @@ module GDash
 
     def json
       unless @json
-        @json = open("#{data_center.nagios_host}/cgi-bin/status-json.cgi?hostgroup=#{host_group}&style=summary&noheader", :http_basic_authentication => [data_center.nagios_username, data_center.nagios_password]).string
-        @json = JSON.parse @json
+        @json = {"hostgroups" => [{
+   "hostgroup_name"=>"some_host_group",
+   "hostgroup_alias"=>"Description of the Host Group",
+   "hostgroup_host_totals"=> {
+     "hosts_up"=>2,
+     "hosts_down"=>0,
+     "hosts_unreachable"=>0,
+     "hosts_pending"=>0,
+     "hosts_unreachable_scheduled"=>0,
+     "hosts_unreachable_acknowledged"=>0,
+     "hosts_unreachable_disabled"=>0,
+     "hosts_unreachable_unacknowledged"=>0,
+     "hosts_down_scheduled"=>0,
+     "hosts_down_acknowledged"=>0,
+     "hosts_down_disabled"=>0,
+     "hosts_down_unacknowledged"=>0
+   },
+   "hostgroup_service_totals"=> {
+     "services_ok"=>20,
+     "services_warning"=>0,
+     "services_unknown"=>0,
+     "services_critical"=>1,
+     "services_pending"=>0,
+     "services_warning_host_problem"=>0,
+     "services_warning_scheduled"=>0,
+     "services_warning_acknowledged"=>0,
+     "services_warning_disabled"=>0,
+     "services_warning_unacknowledged"=>0,
+     "services_unknown_host_problem"=>0,
+     "services_unknown_scheduled"=>0,
+     "services_unknown_acknowledged"=>0,
+     "services_unknown_disabled"=>0,
+     "services_unknown_unacknowledged"=>0,
+     "services_critical_host_problem"=>0,
+     "services_critical_scheduled"=>0,
+     "services_critical_acknowledged"=>0,
+     "services_critical_disabled"=>0,
+     "services_critical_unacknowledged"=>1
+   }
+  },
+  {}]
+}
+
+        # @json = open("#{data_center.nagios_host}/cgi-bin/status-json.cgi?hostgroup=#{host_group}&style=summary&noheader", :http_basic_authentication => [data_center.nagios_username, data_center.nagios_password]).string
+        # @json = JSON.parse @json
         @json = @json["hostgroups"].select do |hostgroup|
-          hostgroup["hostgroup_name"] == host_group
+          hostgroup["hostgroup_name"] == name
         end
         @json = HashStruct.new @json.first
       end

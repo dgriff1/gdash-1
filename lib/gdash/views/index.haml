@@ -10,26 +10,22 @@
     .navbar.navbar-fixed-top.navbar-inverse
       .navbar-inner
         %a.brand{ :href => dashboards_path } GDash
-        %ul.nav
-          %li.dropdown= dashboard_nav GDash::Dashboard.toplevel, @dashboard, nil, @data_center
-          %li.dropdown= data_center_nav @dashboard, @data_center
-          %li.dropdown= window_nav @dashboard
-          %li= filter_form @tags
         %ul.nav.pull-right
           - if @dashboard.present?
             %li
-              %a{ :href => dashboard_path(@dashboard, :window => @dashboard.window, :tags => (@tags || [])) }
+              %a{ :href => "#" }
                 %i.icon-share.icon-white
           %li
             %a{ :href => docs_path } Documentation
     .container-fluid
       .row-fluid
+        %h1 Dashboards
         %table.table.table-hover
           %thead
             %th{ :width => "30%" } Name
             %th{ :width => "70%" } Description
           %tbody
-            - GDash::Dashboard.toplevel.sort.each do |dashboard|
+            - GDash::Dashboard.all.sort.each do |dashboard|
               %tr
                 %td
                   %a{ :href => dashboard_path(dashboard) }= dashboard.title
