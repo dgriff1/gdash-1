@@ -154,36 +154,36 @@ module GDash
                   html.td do
                     id = widget.object_id
 
-                    html.a :href => "#widget-#{id}", "data-toggle" => "modal" do
+                    # html.a :href => "#widget-#{id}", "data-toggle" => "modal" do
                       render widget
-                    end
+                    # end
 
-                    html.div :id => "widget-#{id}", :class => "modal hide", :tabindex => "1", :role => "dialog", "aria-labelledby" => "widgetModelLabel", "aria-hidden" => true do
-                      html.div :class => "modal-header" do
-                        html.button "x", :type => "button", :class => "close", "data-dismiss" => "modal", "aria-hidden" => true
-                        html.h3 widget.title
-                      end
+                    # html.div :id => "widget-#{id}", :class => "modal hide", :tabindex => "1", :role => "dialog", "aria-labelledby" => "widgetModelLabel", "aria-hidden" => true do
+                    #   html.div :class => "modal-header" do
+                    #     html.button "x", :type => "button", :class => "close", "data-dismiss" => "modal", "aria-hidden" => true
+                    #     html.h3 widget.title
+                    #   end
 
-                      html.div :class => "modal-body" do
-                        html.table :class => "table" do
-                          groups_of(Window.all, 3).each do |row|
-                            html.tr do
-                              row.each do |window|
-                                html.td do
-                                  with_scope :window => window do
-                                    render widget
-                                  end
-                                end
-                              end
-                            end
-                          end
-                        end
-                      end
+                    #   html.div :class => "modal-body" do
+                    #     html.table :class => "table" do
+                    #       groups_of(Window.all, 3).each do |row|
+                    #         html.tr do
+                    #           row.each do |window|
+                    #             html.td do
+                    #               with_scope :window => window do
+                    #                 render widget
+                    #               end
+                    #             end
+                    #           end
+                    #         end
+                    #       end
+                    #     end
+                    #   end
 
-                      html.div :class => "modal-footer" do
-                        html.button "Close", :class => "btn btn-primary", "data-dismiss" => "modal", "aria-hidden" => true
-                      end
-                    end
+                    #   html.div :class => "modal-footer" do
+                    #     html.button "Close", :class => "btn btn-primary", "data-dismiss" => "modal", "aria-hidden" => true
+                    #   end
+                    # end
                   end
                 end
               end
