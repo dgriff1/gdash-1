@@ -5,3 +5,4 @@ log
 *.log
 pkg
 tmp
+.DS_Store

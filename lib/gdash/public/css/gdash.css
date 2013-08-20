@@ -1,0 +1,19 @@
+body.fullscreen .fullscreen-hidden {
+    display:none;
+}
+
+body {
+  padding-top: 50px;
+}
+
+body.fullscreen {
+  padding: 0px;
+  margin: 0px;
+}
+
+body.fullscreen .span12.fullscreen-expanded,
+body.fullscreen .span12.fullscreen-expanded *
+{
+  padding: 0px;
+  margin: 0px;
+}

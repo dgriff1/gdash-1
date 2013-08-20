@@ -27,7 +27,7 @@ module GDash
     end
 
     def page_nav dashboard
-      html.div :id => "page-nav", :class => "well" do
+      html.div :id => "page-nav", :class => "well fullscreen-hidden" do
         html.ul :class => "nav nav-pills nav-stacked" do
           dashboard.pages.each do |page|
             if page == current_page
@@ -45,7 +45,7 @@ module GDash
     end
 
     def window_nav
-      html.ul :id => "window-nav", :class => "nav nav-pills" do
+      html.ul :id => "window-nav", :class => "nav nav-pills fullscreen-hidden" do
         model.windows.each do |window|
           if (self.window.nil? && window.default) or (window.name == self.window.name)
             html.li :class => "active" do
@@ -86,26 +86,24 @@ module GDash
 
     def dashboard dashboard, options = {}
       html.div :class => "row-fluid" do
-        html.div :class => "span2" do
+        html.div :class => "span2 fullscreen-hidden" do
           page_nav dashboard
         end
 
-        html.div :class => "span10" do
+        html.div :class => "fullscreen-expanded" do
           html.div :class => "row-fluid" do
-            html.div :class => "span11" do
-              window_nav
-            end
+            window_nav
+          end
 
-            html.div :class => "span11" do
-              render current_page
-            end
+          html.div :class => "row-fluid" do
+            render current_page
           end
         end
       end
     end
 
     def page page, options = {}
-      html.h1 do
+      html.h1 :class => "fullscreen-hidden" do
         html.text!(page.title || "")
         html.br
         html.small(page.description || "")
@@ -120,7 +118,7 @@ module GDash
       active_tab_name = @active_tabs.shift
       active_tab = tab_set.tabs.select { |t| t.name == active_tab_name }.first || tab_set.tabs.first
 
-      html.ul :class => "nav nav-tabs" do
+      html.ul :class => "nav nav-tabs fullscreen-hidden" do
         tab_set.tabs.each do |tab|
           with_tab_route tab.name do
             render tab, :active => (active_tab.name == tab.name)
@@ -146,7 +144,7 @@ module GDash
     def section section, options = {}
       with_scope options.merge(:data_center => section.options[:data_center], :hosts => section.options[:hosts], :host => section.options[:host], :ganglia_prefix => section.options[:ganglia_prefix], :ganglia_cluster => section.options[:ganglia_cluster]) do
         html.div :class => "row-fluid" do
-          html.h3 section.title
+          html.h3 section.title, :class => "fullscreen-hidden"
           html.table :class => "table" do
             groups_of(section.widgets, section.width).each do |group|
               html.tr do

@@ -3,17 +3,20 @@
 %html{ :lang => "en" }
   %head
     %link{ :href => "/css/bootstrap.min.css", :rel => "stylesheet" }
+    %link{ :href => "/css/gdash.css", :rel => "stylesheet" }
     %script{ :src => "/js/jquery-1.8.1.min.js" }
     %script{ :src => "/js/bootstrap.min.js" }
+    %script{ :src => "/js/gdash.js" }
     - if @dashboard
       %title= @dashboard.title
-      %meta{ "http-equiv" => "refresh", :content => @dashboard.refresh }
     - else
       %title GDash
-    :css
-      .modal { max-height: 800px; max-width: 600px; }
-  %body{ :style => "padding-top: 50px;" }
-    .navbar.navbar-fixed-top.navbar-inverse
+    :javascript
+      window.GDash = {
+          refreshInterval: #{@dashboard.refresh}
+      };
+  %body
+    .navbar.navbar-fixed-top.navbar-inverse.fullscreen-hidden
       .navbar-inner
         %a.brand{ :href => dashboards_path } GDash
         %ul.nav
@@ -25,10 +28,13 @@
               %a{ :href => "#" }
                 %i.icon-share.icon-white
           %li
+            %a{ :href => "#fullscreen", :class => "fullscreen-toggle" }
+              %i.icon-resize-full.icon-white
+          %li
             %a{ :href => docs_path } Documentation
     .container-fluid
       = yield
-    .container-fluid
+    .container-fluid.fullscreen-hidden
       %h6
         Updated
         = Time.now
