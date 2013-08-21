@@ -56,9 +56,12 @@ module GDash
       end
     end
 
-    get "/save" do
-      Snapshot.generate!
-      halt 200
+    get "/snapshot" do
+      timestamp = DateTime.now.strftime("%Y%m%d%H%M%S")
+      attachment "gdash-snapshot-#{timestamp}.tar.gz"
+      stream do |out|
+        Snapshot.generate! out
+      end
     end
   end
 end

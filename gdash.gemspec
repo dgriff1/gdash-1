@@ -28,4 +28,5 @@ Gem::Specification.new do |gem|
   gem.add_dependency "uuid"
   gem.add_dependency "rest-client"
   gem.add_dependency "thread"
+  gem.add_dependency "minitar"
 end

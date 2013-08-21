@@ -26,5 +26,14 @@ module GDash
 
       Thin::Server.start address, port, GDash::App
     end
+
+    desc "snapshot TARBALL", "Starts a local server for viewing a snapshot"
+    method_options :address => :string, :port => :integer, :config => :string
+    def snapshot tarball
+      address = options[:address] || "0.0.0.0"
+      port = options[:port] || 3000
+
+      GDash::Snapshot::Server.run address, port, tarball
+    end
   end
 end

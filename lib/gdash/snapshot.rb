@@ -1,33 +1,113 @@
+class Sinatra::Helpers::Stream
+  def write *args, &block
+    send(:<<, *args, &block)
+  end
+end
+
 module GDash
-  class Snapshot < View
+  module Snapshot
+    class Server < Sinatra::Base
+      class << self
+        def run address, port, tarball
+          STDERR.puts "Creating temp dir"
+          Dir.mktmpdir do |dir|
+            STDERR.puts "Setting public folder to #{dir.inspect}"
+            set :public_folder, dir
+
+            STDERR.puts "Extracting tarball to #{dir.inspect}"
+            File.open tarball, "r" do |f|
+              zip = Zlib::GzipReader.new f
+              Archive::Tar::Minitar.unpack zip, dir
+            end
+
+            STDERR.puts "Starting thin server @ #{address}:#{port}"
+            Thin::Server.start address, port, self
+          end
+        end
+      end
+    end
+
+    class Renderer < View
+      def dashboard_path dashboard, page = nil, *tabs
+        options = tabs.extract_options!
+        page = (page || current_page).name
+        tabs = tabs.map { |tab| "/#{tab}" }.join
+        window = (options[:window] || self.window).name
+        "/dashboards/#{dashboard.name}/#{page}#{tabs}/#{window}.html"
+      end
+
+      def window_nav
+        html.ul :id => "window-nav", :class => "nav nav-pills fullscreen-hidden" do
+          model.windows.each do |window|
+            if (self.window.nil? && window.default) or (window.name == self.window.name)
+              html.li :class => "active" do
+                html.a window.title, :href => dashboard_path(model, current_page, *(tab_path + [{:window => window}]))
+              end
+            else
+              html.li do
+                html.a window.title, :href => dashboard_path(model, current_page, *(tab_path + [{:window => window}]))
+              end
+            end
+          end
+        end
+      end
+    end
+
     class << self
-      def generate!
-        STDERR.puts "Copying static files"
-        copy_static!
+      attr_reader :thread_pool
+      
+      def with_thread_pool size
+        @thread_pool = Thread::Pool.new size
+        yield if block_given?
+        @thread_pool.shutdown
+      end
 
-        STDERR.puts "Generating index"
-        generate_index!
+      def background &block
+        thread_pool.process &block
+      end
 
-        STDERR.puts "Generating dashboards"
-        Window.each do |window|
-          Dashboard.each do |dashboard|
-            dashboard.pages.each do |page|
-              tab_tree(page).each do |tab_path|
-                begin
-                  generate_page! dashboard, page, tab_path, window
-                rescue Exception => ex
-                  STDERR.puts "#{ex.class}: #{ex.message}"
+      def generate! output_stream
+        with_tarred_output_stream output_stream do
+          with_thread_pool 50 do
+            copy_static!
+            generate_index!
+            
+            Window.each do |window|
+              Dashboard.each do |dashboard|
+                dashboard.pages.each do |page|
+                  tab_tree(page).each do |tab_path|
+                    begin
+                      generate_page! dashboard, page, tab_path, window
+                    rescue Exception => ex
+                      STDERR.puts "Problem generating page: #{ex.class} - #{ex.message}"
+                    end
+                  end
                 end
               end
             end
           end
         end
+      end
 
-        STDERR.puts "Waiting for downloads to complete"
-        download_threads.shutdown
-        STDERR.puts "All downloads complete!"
+      def with_tarred_output_stream output_stream
+        @zip ||= Zlib::GzipWriter.new output_stream
+        @tar ||= Archive::Tar::Minitar::Output.new @zip
+        @writer ||= @tar.tar
+        @mutex ||= Mutex.new
+        yield if block_given?
+        @tar.close
+      end
 
-        STDERR.puts "Dashboards written to #{dir.inspect}"
+      def create_file name
+        buf = StringIO.new ""
+
+        yield buf if block_given?
+
+        @mutex.synchronize do
+          @writer.add_file_simple name.gsub(/^\//, ""), :mode => 0o644, :size => buf.size do |stream|
+            stream.write buf.string
+          end
+        end
       end
 
       def tab_tree page
@@ -57,48 +137,31 @@ module GDash
       end
 
       def generate_page! dashboard, page, tab_path, window
-        view = Snapshot.new(dashboard, :page => page, :window => window, :tab_path => tab_path)
-        filename = dir + view.dashboard_path(dashboard, page, *(tab_path + [:window => window]))
-        dirname = File.dirname(filename)
-        FileUtils.mkdir_p dirname
-        File.open filename, "w" do |file|
+        view = Renderer.new(dashboard, :page => page, :window => window, :tab_path => tab_path)
+        filename = view.dashboard_path(dashboard, page, *(tab_path + [:window => window]))
+        create_file filename do |file|
           html = haml layout, view, :dashboard => dashboard
-          fix_external_refs! html
-          file.write html.to_s
-          STDERR.puts "Wrote #{filename}"
-        end      
+          fix_images! html
+          file.write html
+        end
       end
 
       def generate_index!
-        filename = dir + "/index.html"
-        dirname = File.dirname(filename)
-        FileUtils.mkdir_p dirname
-        File.open filename, "w" do |file|
-          html = haml index
-          fix_external_refs! html
-          file.write html.to_s
-          STDERR.puts "Wrote #{filename}"
+        create_file "/index.html" do |file|
+          file.write haml(index)
         end      
       end
 
-      def tempdir
-        @tempdir ||= Dir.mktmpdir
-      end
-
-      def dir
-        unless @dir
-          timestamp = DateTime.now.strftime("%Y%m%d%H%M%S")
-          @dir = tempdir + "/snapshot-#{timestamp}"
-          FileUtils.mkdir_p @dir
-        end
-
-        @dir
-      end
-
       def copy_static!
-        FileUtils.cp_r File.absolute_path("#{__FILE__}/../public/css"), dir
-        FileUtils.cp_r File.absolute_path("#{__FILE__}/../public/js"), dir
-        FileUtils.cp_r File.absolute_path("#{__FILE__}/../public/img"), dir      
+        FileUtils.cd File.expand_path("#{__FILE__}/../public") do
+          Dir["**/*"].each do |filename|
+            next if File.directory? filename
+
+            create_file filename do |f|
+              f.write File.read(filename)
+            end
+          end
+        end
       end
 
       def haml template, view = Object.new, instance_variables = {}
@@ -111,95 +174,36 @@ module GDash
           scope.instance_variable_set :"@#{k}", v
         end
 
-        html = haml.render scope do
+        haml.render scope do
           view.to_html
         end
-
-        Nokogiri::HTML(html)
       end
-
-      def fix_external_refs! html
-        fix_stylesheets! html
-        fix_scripts! html
-        fix_links! html
-        fix_images! html
-      end
-
-      def fix_stylesheets! html
-        html.css("link").each do |stylesheet|
-          stylesheet["href"] = "#{dir}/#{stylesheet["href"]}"
-        end
-      end
-
-      def fix_scripts! html
-        html.css("script").each do |script|
-          script["src"] = "#{dir}/#{script["src"]}"
-        end
-      end
-
-      def fix_links! html
-        html.css("a").each do |link|
-          link["href"] = "#{dir}/#{link["href"]}"
-        end
-      end
-
-      def download_threads
-        @download_threads ||= Thread::Pool.new 50
-      end        
 
       def download! src, dest
-        download_threads.process do
+        background do
           res = RestClient.get(src)
-          File.open dest, "w" do |f|
+          create_file dest do |f|
             f.write res.body
           end
         end
       end
 
       def fix_images! html
-        image_dir = "#{dir}/images"
-        FileUtils.mkdir_p image_dir
-
+        html = Nokogiri::HTML(html)
         uuid = UUID.new
 
         html.css("img").each do |img|
           url = img["src"]
 
           if url =~ /^http/
-            filename = "#{image_dir}/#{uuid.generate}"
+            filename = "/images/#{uuid.generate}"
             download! url, filename
             img["src"] = filename
           end
         end
+
+        html.to_s
       end
-    end
-
-    def dashboard_path dashboard, page = nil, *tabs
-      options = tabs.extract_options!
-      page = (page || current_page).name
-      tabs = tabs.map { |tab| "/#{tab}" }.join
-      window = (options[:window] || self.window).name
-      "/dashboards/#{dashboard.name}/#{page}#{tabs}/#{window}.html"
-    end
-
-    def window_nav
-      html.ul :id => "window-nav", :class => "nav nav-pills fullscreen-hidden" do
-        model.windows.each do |window|
-          if (self.window.nil? && window.default) or (window.name == self.window.name)
-            html.li :class => "active" do
-              html.a window.title, :href => dashboard_path(model, current_page, *(tab_path + [{:window => window}]))
-            end
-          else
-            html.li do
-              html.a window.title, :href => dashboard_path(model, current_page, *(tab_path + [{:window => window}]))
-            end
-          end
-        end
-      end
-    end
-
-    def widget widget, options = {}
-      widget.to_s
     end
   end
 end
