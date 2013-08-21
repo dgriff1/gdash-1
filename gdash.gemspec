@@ -24,4 +24,8 @@ Gem::Specification.new do |gem|
   gem.add_dependency "redcarpet"
   gem.add_dependency "builder"
   gem.add_dependency "thor"
+  gem.add_dependency "nokogiri"
+  gem.add_dependency "uuid"
+  gem.add_dependency "rest-client"
+  gem.add_dependency "thread"
 end

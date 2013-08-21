@@ -55,5 +55,10 @@ module GDash
         redirect dashboards_path
       end
     end
+
+    get "/save" do
+      Snapshot.generate!
+      halt 200
+    end
   end
 end

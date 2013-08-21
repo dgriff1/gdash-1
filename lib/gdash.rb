@@ -10,6 +10,12 @@ require "active_support/core_ext"
 require "redcarpet"
 require "thor"
 require "builder"
+require "nokogiri"
+require "rest-client"
+require "uuid"
+require "thread/pool"
+require "fileutils"
+require "tmpdir"
 
 require "gdash/version"
 require "gdash/configuration"
@@ -34,6 +40,7 @@ require 'gdash/dashboard'
 require 'gdash/tab'
 require 'gdash/tab_set'
 require 'gdash/view'
+require 'gdash/snapshot'
 require 'gdash/nagios'
 require 'gdash/helper'
 require 'gdash/app'
