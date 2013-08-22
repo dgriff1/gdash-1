@@ -202,6 +202,20 @@ module GDash
           end
         end
 
+        html.css("a.click-enlarge").each do |link|
+          url = link["href"]
+
+          if url =~ /^http/
+            filename = "/images/#{uuid.generate}"
+            download! url, filename
+
+            link["href"] = filename
+            link.css("img").each do |img|
+              img["xxlarge"] = filename
+            end
+          end
+        end
+
         html.to_s
       end
     end

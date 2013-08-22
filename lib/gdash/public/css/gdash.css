@@ -12,8 +12,11 @@ body.fullscreen {
 }
 
 body.fullscreen .span12.fullscreen-expanded,
-body.fullscreen .span12.fullscreen-expanded *
-{
+body.fullscreen .span12.fullscreen-expanded * {
   padding: 0px;
   margin: 0px;
+}
+
+div.popover {
+  width: 1300px;
 }

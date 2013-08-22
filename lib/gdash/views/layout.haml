@@ -3,9 +3,11 @@
 %html{ :lang => "en" }
   %head
     %link{ :href => "/css/bootstrap.min.css", :rel => "stylesheet" }
+    %link{ :href => "/css/bootstrap-lightbox.min.css", :rel => "stylesheet" }
     %link{ :href => "/css/gdash.css", :rel => "stylesheet" }
     %script{ :src => "/js/jquery-1.8.1.min.js" }
     %script{ :src => "/js/bootstrap.min.js" }
+    %script{ :src => "/js/bootstrap-lightbox.min.js" }
     %script{ :src => "/js/gdash.js" }
     - if @dashboard
       %title= @dashboard.title
@@ -37,6 +39,9 @@
             %a{ :href => docs_path } Documentation
     .container-fluid
       = yield
+      .lightbox#xxlarge-lightbox.hide.fade{ :tabindex => "-1", :role => "dialog", "aria-hidden" => true }
+        .lightbox-content
+          %img
     .container-fluid.fullscreen-hidden
       %h6
         Updated
