@@ -143,7 +143,7 @@ module GDash
 
     def section section, options = {}
       with_scope options.merge(:data_center => section.options[:data_center], :hosts => section.options[:hosts], :host => section.options[:host], :ganglia_prefix => section.options[:ganglia_prefix], :ganglia_cluster => section.options[:ganglia_cluster]) do
-        html.div :class => "row-fluid" do
+        html.div :class => "row-fluid autoscroll" do
           html.h3 section.title, :class => "fullscreen-hidden"
           html.table :class => "table" do
             groups_of(section.widgets, section.width).each do |group|
