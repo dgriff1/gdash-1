@@ -21,7 +21,8 @@ div.popover {
   width: 1300px;
 }
 
-.fullscreen .fullscreen-overlay {
+.fullscreen h3.fullscreen-overlay {
   position: absolute;
-  opacity: 0.8;
+  opacity: 0.4;
+  font-size: 7em;
 }
