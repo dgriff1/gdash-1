@@ -20,3 +20,8 @@ body.fullscreen .span12.fullscreen-expanded * {
 div.popover {
   width: 1300px;
 }
+
+.fullscreen .fullscreen-overlay {
+  position: absolute;
+  opacity: 0.5;
+}
