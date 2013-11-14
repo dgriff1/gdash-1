@@ -4,6 +4,7 @@ module GDash
   describe Doc do
     before do
       File.open Doc.new(:test_doc).path, "w" do |f|
+        puts "Putting test content into #{f.path}"
         f.puts "# Test Doc"
       end
     end

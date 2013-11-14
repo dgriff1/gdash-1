@@ -33,7 +33,6 @@ require "gdash/data/set"
 require 'gdash/scope'
 require 'gdash/base'
 require 'gdash/named'
-require 'gdash/doc'
 require 'gdash/window'
 require 'gdash/windows'
 require 'gdash/data_center'
@@ -66,3 +65,5 @@ module GDash
     end
   end
 end
+# need to load config before we load the doc module
+require 'gdash/doc'
