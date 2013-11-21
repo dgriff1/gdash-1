@@ -10,18 +10,18 @@ module GDash
     let! :data_center_one do
       DataCenter.define :data_center_one, :title => "Foo"
     end
-    
+
     let! :data_center_two do
       DataCenter.define :data_center_two, :title => "Bar"
     end
-        
+
     let! :foo do
       GDash.dashboard :foo, :title => "Foobar" do
         # dashboard.dashboard :bar, :title => "BarBar"
         # dashboard.data_center = data_center_one
       end
     end
-    
+
     let! :baz do
       GDash.dashboard :baz, :title => "All About Baz" do
         # baz.data_center = data_center_two
@@ -32,11 +32,11 @@ module GDash
         end
       end
     end
-    
+
     let(:getting_started) { Doc.new(:getting_started) }
-    
+
     let(:window) { GDash.window :window }
-    
+
     let :helper do
       Class.new do
         include Helper
@@ -49,7 +49,7 @@ module GDash
       subject { helper.dashboards_path }
       it { should == "/" }
     end
-    
+
 
     describe "#dashboard_path" do
       context "without a window" do
@@ -93,25 +93,12 @@ module GDash
     describe "#dashbaord_nav" do
       subject { helper.dashboard_nav foo }
 
-      it { should have_selector ".well" }
-      it { should have_selector "ul.nav.nav-pills.nav-stacked" }
-      it { should have_selector "li.nav-header", :text => "Dashboards" }
-      it { should have_selector "li.active" }
-      it { should have_selector "a[href=#{helper.dashboard_path(foo).inspect}]", :text => foo.title }
+      it { should have_selector "a.dropdown-toggle[data-toggle='dropdown'][href='#']", :text => foo.title }
+      it { should have_selector "b.caret" }
+      it { should have_selector "ul.dropdown-menu[role='menu'][aria-labelledby='dropdownMenu']" }
       it { should have_selector "li" }
+      it { should have_selector "a[href=#{helper.dashboard_path(foo).inspect}]", :text => foo.title }
       it { should have_selector "a[href=#{helper.dashboard_path(baz).inspect}]", :text => baz.title }
-
-      context "with window" do
-        subject { helper.dashboard_nav foo, :window => Window.all.last }
-
-        it { should have_selector "div#dashboard-nav.well" }
-        it { should have_selector "ul.nav.nav-pills.nav-stacked" }
-        it { should have_selector "li.nav-header", :text => "Dashboards" }
-        it { should have_selector "li.active" }
-        it { should have_selector "a[href=#{helper.dashboard_path(foo, :window => Window.all.last).inspect}]", :text => foo.title }
-        it { should have_selector "li" }
-        it { should have_selector "a[href=#{helper.dashboard_path(baz, :window => Window.all.last).inspect}]", :text => baz.title }
-      end
     end
 
     describe "#window_nav" do
