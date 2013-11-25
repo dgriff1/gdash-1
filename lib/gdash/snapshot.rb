@@ -141,7 +141,7 @@ module GDash
         filename = view.dashboard_path(dashboard, page, *(tab_path + [:window => window]))
         create_file filename do |file|
           html = haml layout, view, :dashboard => dashboard
-          fix_images! html
+          html = fix_images! html
           file.write html
         end
       end
@@ -191,14 +191,11 @@ module GDash
       def fix_images! html
         html = Nokogiri::HTML(html)
         uuid = UUID.new
-        puts "Fix Images "
         html.css("img").each do |img|
           url = img["src"]
-          puts "URL #{url}"
 
           if url !~ /^\/img/
             filename = "/images/#{uuid.generate}"
-            puts "Downloading #{filename} #{url}"
             download! url, filename
             img["src"] = filename
           end
