@@ -22,7 +22,7 @@
   %body
     .navbar.navbar-fixed-top.navbar-inverse.fullscreen-hidden
       .navbar-inner
-        %a.brand{ :href => dashboards_path } Rally GDash
+        %a.brand{ :href => dashboards_path } #{GDash.config.org} GDash
         %ul.nav
           - if @dashboard.present?
             %li= dashboard_nav @dashboard
@@ -45,7 +45,6 @@
         .lightbox-content
           %img
     .container-fluid.fullscreen-hidden
-      %img{ :src => "/img/logo.jpg", :style => "height:40px;" }
       %h6
         Updated
         = Time.now
