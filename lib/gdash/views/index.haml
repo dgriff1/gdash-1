@@ -15,7 +15,7 @@
   %body
     .navbar.navbar-fixed-top.navbar-inverse
       .navbar-inner
-        %a.brand{ :href => dashboards_path } GDash
+        %a.brand{ :href => dashboards_path } #{GDash.config.org} GDash
         %ul.nav.pull-right
           - if @dashboard.present?
             %li
