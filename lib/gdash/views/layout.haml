@@ -17,12 +17,12 @@
       %title GDash
     :javascript
       window.GDash = {
-          refreshInterval: #{@dashboard.refresh}
+          refreshInterval: #{@dashboard && @dashboard.refresh || 60}
       };
   %body
     .navbar.navbar-fixed-top.navbar-inverse.fullscreen-hidden
       .navbar-inner
-        %a.brand{ :href => dashboards_path } GDash
+        %a.brand{ :href => dashboards_path } #{GDash.config.org} GDash
         %ul.nav
           - if @dashboard.present?
             %li= dashboard_nav @dashboard

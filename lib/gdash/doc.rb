@@ -1,7 +1,6 @@
 module GDash
   class Doc
-    DIR = File.expand_path(File.join(File.dirname(__FILE__), %w{.. .. doc}))
-
+    DIR = File.expand_path(File.join(File.dirname(__FILE__), %w{.. .. doc}, GDash.config.location ))
     class << self
       def [] file
         Doc.new file

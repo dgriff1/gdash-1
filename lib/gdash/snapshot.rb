@@ -55,7 +55,7 @@ module GDash
 
     class << self
       attr_reader :thread_pool
-      
+
       def with_thread_pool size
         @thread_pool = Thread::Pool.new size
         yield if block_given?
@@ -71,7 +71,7 @@ module GDash
           with_thread_pool 50 do
             copy_static!
             generate_index!
-            
+
             Window.each do |window|
               Dashboard.each do |dashboard|
                 dashboard.pages.each do |page|
@@ -129,11 +129,11 @@ module GDash
       end
 
       def layout
-        @layout ||= File.open(File.absolute_path("#{__FILE__}/../views/layout.haml")).read 
+        @layout ||= File.open(File.absolute_path("#{__FILE__}/../views/layout.haml")).read
       end
 
       def index
-        @index ||= File.open(File.absolute_path("#{__FILE__}/../views/index.haml")).read 
+        @index ||= File.open(File.absolute_path("#{__FILE__}/../views/index.haml")).read
       end
 
       def generate_page! dashboard, page, tab_path, window
@@ -141,7 +141,7 @@ module GDash
         filename = view.dashboard_path(dashboard, page, *(tab_path + [:window => window]))
         create_file filename do |file|
           html = haml layout, view, :dashboard => dashboard
-          fix_images! html
+          html = fix_images! html
           file.write html
         end
       end
@@ -149,7 +149,7 @@ module GDash
       def generate_index!
         create_file "/index.html" do |file|
           file.write haml(index)
-        end      
+        end
       end
 
       def copy_static!
@@ -191,11 +191,10 @@ module GDash
       def fix_images! html
         html = Nokogiri::HTML(html)
         uuid = UUID.new
-
         html.css("img").each do |img|
           url = img["src"]
 
-          if url =~ /^http/
+          if url !~ /^\/img/
             filename = "/images/#{uuid.generate}"
             download! url, filename
             img["src"] = filename
@@ -205,7 +204,7 @@ module GDash
         html.css("a.click-enlarge").each do |link|
           url = link["href"]
 
-          if url =~ /^http/
+          if url =~ /^\/img/
             filename = "/images/#{uuid.generate}"
             download! url, filename
 

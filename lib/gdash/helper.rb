@@ -74,52 +74,6 @@ module GDash
       end
     end
 
-    # def window_nav dashboard = nil
-    #   html = Builder::XmlMarkup.new
-
-    #   windows = dashboard.nil? ? Window.all : dashboard.windows
-    #   title = dashboard.nil? ? "Time Window" : dashboard.window.title
-
-    #   html.a :class => "dropdown-toggle", :href => "#", "data-toggle" => "dropdown" do
-    #     html.text! title
-    #     html.b :class => "caret" do
-    #     end
-    #   end
-
-    #   html.ul :class => "dropdown-menu", :role => "menu", "aria-labelledby" => "dropdownMenu" do
-    #     windows.each do |window|
-    #       path = dashboard.nil? ? dashboards_path : dashboard_path(dashboard, :window => window)
-    #       html.li do
-    #         html.a window.title, :href => path
-    #       end
-    #     end
-
-    #     path = dashboard.nil? ? dashboards_path : dashboard_path(dashboard)
-    #     html.li :class => "dropdown-submenu" do
-    #       html.a :href => "#", :class => "dropdown-toggle", "data-toggle" => "dropdown" do
-    #         html.text! "Custom"
-    #       end
-    #       html.div :class => "dropdown dropdown-menu", :style => "padding: 20px;" do
-    #         html.form :action => path, :method => :get do
-    #           html.fieldset do
-    #             html.legend "Custom Time Window"
-
-    #             html.input :type => "hidden", :name => "window", :value => "custom"
-
-    #             html.label "Start", :for => "start"
-    #             html.input :type => "text", :name => "start", :placeholder => "yyyy-mm-dd HH:MM:SS"
-
-    #             html.label "End", :for => "end"
-    #             html.input :type => "text", :name => "end", :placeholder => "yyyy-mm-dd HH:MM:SS"
-
-    #             html.input :type => "submit", :class => "btn btn-primary", :name => "go", :value => "Go!"
-    #           end
-    #         end
-    #       end
-    #     end
-    #   end
-    # end
-
     def doc_nav current = nil
       html = Builder::XmlMarkup.new
 
