@@ -90,12 +90,15 @@ module GDash
       end
 
       def with_tarred_output_stream output_stream
-        @zip ||= Zlib::GzipWriter.new output_stream
-        @tar ||= Archive::Tar::Minitar::Output.new @zip
-        @writer ||= @tar.tar
-        @mutex ||= Mutex.new
-        yield if block_given?
-        @tar.close
+        begin
+          zip = Zlib::GzipWriter.new output_stream
+          tar = Archive::Tar::Minitar::Output.new zip
+          @writer = tar.tar
+          @mutex ||= Mutex.new
+          yield if block_given?
+        ensure
+          tar.close
+        end
       end
 
       def create_file name
@@ -181,7 +184,8 @@ module GDash
 
       def download! src, dest
         background do
-          res = RestClient.get(src)
+          # not obvious - URI.join has no affect when src is absolute.  Magic.
+          res = RestClient.get(URI.join('http://localhost', src).to_s)
           create_file dest do |f|
             f.write res.body
           end
