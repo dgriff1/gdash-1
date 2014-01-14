@@ -1,13 +1,12 @@
 module GDash
   class Doc
-    DIR = File.expand_path(File.join(File.dirname(__FILE__), %w{.. .. doc}, GDash.config.location ))
     class << self
       def [] file
         Doc.new file
       end
 
       def all
-        Dir[File.join(DIR, "*.md")].map do |f|
+        Dir[File.join(GDash.config.documentation , "*.md")].map do |f|
           f = $1 if f =~ /.*\/([^\/]+)\.md$/
           Doc.new f
         end
@@ -27,7 +26,7 @@ module GDash
     end
 
     def path
-      File.join DIR, "#{name}.md"
+      File.join GDash.config.documentation, "#{name}.md"
     end
 
     def title
