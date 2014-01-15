@@ -12,14 +12,9 @@ module GDash
     subject { described_class.new :test_doc }
 
     its(:name) { should == :test_doc }
-    its(:path) { should == "#{described_class::DIR}/test_doc.md" }
+	its(:path) { should == "#{GDash.config.documentation}/test_doc.md" }
     its(:title) { should == "Test Doc" }
     its(:to_html) { should =~ /<h1>Test Doc<\/h1>/ }
-
-    describe "::DIR" do
-      subject { described_class }
-      it { should be_const_defined "DIR" }
-    end
 
     describe ".[]" do
       it "returns a doc of that name" do

@@ -26,7 +26,7 @@ module GDash
     end
 
     def path
-      File.join GDash.config.documentation, "#{name}.md"
+      File.join( GDash.config.documentation, "#{name}.md")
     end
 
     def title
