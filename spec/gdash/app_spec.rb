@@ -67,11 +67,11 @@ module GDash
     describe "Showing a help page" do
       describe "when :page exists" do
         before do
-          File.open File.expand_path(File.join(File.dirname(__FILE__), %w{.. .. doc prod foo.md})), "w" do |f|
+          File.open File.expand_path(File.join(File.dirname(__FILE__), %w{.. .. doc foo.md})), "w" do |f|
             f.puts "# Test"
           end
         end
-        after { File.unlink File.expand_path(File.join(File.dirname(__FILE__), %w{.. .. doc prod foo.md})) }
+        after { File.unlink File.expand_path(File.join(File.dirname(__FILE__), %w{.. .. doc foo.md})) }
         
         subject { get "/doc/foo" }
 
