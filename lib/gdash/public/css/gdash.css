@@ -1,6 +1,6 @@
 body.fullscreen .fullscreen-hidden {
     display:none;
-}
+} 
 
 body {
   padding-top: 50px;
@@ -26,3 +26,15 @@ div.popover {
   opacity: 0.4;
   font-size: 7em;
 }
+
+.lightbox-content p {
+  color: black;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}  
+
+.lightbox-content img {
+  height: 95%;
+}   
+
+
